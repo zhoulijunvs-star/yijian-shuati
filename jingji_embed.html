@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一建经济 · 刷题</title>
+<style>
+:root {
+  --bg: #f5f6fa;
+  --card: #fff;
+  --text: #1a1a2e;
+  --text2: #555;
+  --border: #e0e3eb;
+  --primary: #4361ee;
+  --primary-light: #eef0ff;
+  --correct: #10b981;
+  --correct-bg: #ecfdf5;
+  --wrong: #ef4444;
+  --wrong-bg: #fef2f2;
+  --tag-bg: #f0f1f7;
+  --progress-bg: #e5e7eb;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+/* ── Top bar ── */
+.topbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 10;
+}
+.topbar h1 { font-size: 18px; font-weight: 700; }
+.topbar-right { display: flex; gap: 12px; align-items: center; }
+.topbar-right .badge {
+  font-size: 13px; color: var(--text2);
+  background: var(--tag-bg); padding: 4px 10px; border-radius: 6px;
+}
+.btn {
+  padding: 6px 16px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--card); font-size: 13px; cursor: pointer; color: var(--text);
+  transition: all .15s;
+}
+.btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+.btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+/* ── Layout ── */
+.app { max-width: 800px; margin: 0 auto; padding: 20px; }
+/* ── Chapter selector ── */
+.chapter-bar {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;
+}
+.chapter-bar .ch-btn {
+  font-size: 12px; padding: 5px 10px; border: 1px solid var(--border);
+  border-radius: 16px; cursor: pointer; background: var(--card); color: var(--text2);
+  transition: all .15s; white-space: nowrap;
+}
+.chapter-bar .ch-btn:hover { border-color: var(--primary); color: var(--primary); }
+.chapter-bar .ch-btn.sel { background: var(--primary); color: #fff; border-color: var(--primary); }
+/* ── Stats row ── */
+.stats-row {
+  display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.stat-card {
+  flex: 1; min-width: 100px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 16px; text-align: center;
+}
+.stat-card .val { font-size: 28px; font-weight: 700; }
+.stat-card .lbl { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.stat-card.wrong .val { color: var(--wrong); }
+.stat-card.acc .val { color: var(--correct); }
+/* ── Progress ── */
+.progress-wrap { margin-bottom: 20px; }
+.progress-info { display: flex; justify-content: space-between; font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+.progress-bar { height: 6px; background: var(--progress-bg); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width .3s; }
+/* ── Question card ── */
+.q-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px;
+}
+.q-meta {
+  font-size: 12px; color: var(--text2); margin-bottom: 12px;
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.q-meta span {
+  background: var(--tag-bg); padding: 2px 8px; border-radius: 4px;
+}
+.q-stem {
+  font-size: 16px; font-weight: 600; margin-bottom: 20px; line-height: 1.7;
+}
+.q-options { display: flex; flex-direction: column; gap: 10px; }
+.opt-btn {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 14px 16px; border: 2px solid var(--border);
+  border-radius: 10px; cursor: pointer; transition: all .2s;
+  background: var(--card); text-align: left; font-size: 14px;
+  line-height: 1.5;
+}
+.opt-btn:hover { border-color: var(--primary); background: var(--primary-light); }
+.opt-btn .multi-cb { width: 16px; height: 16px; accent-color: var(--primary); flex-shrink: 0; }
+.opt-btn .opt-letter {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--tag-bg); display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; flex-shrink: 0;
+}
+.opt-btn.correct { border-color: var(--correct); background: var(--correct-bg); }
+.opt-btn.correct .opt-letter { background: var(--correct); color: #fff; }
+.opt-btn.wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+.opt-btn.wrong .opt-letter { background: var(--wrong); color: #fff; }
+.opt-btn.dim { opacity: .5; }
+.opt-btn.done { pointer-events: none; }
+/* ── Feedback ── */
+.feedback {
+  margin-top: 16px; padding: 14px 16px; border-radius: 8px; font-size: 14px;
+  display: none;
+}
+.feedback.show { display: block; }
+.feedback.correct { background: var(--correct-bg); color: var(--correct); border: 1px solid var(--correct); }
+.feedback.wrong { background: var(--wrong-bg); color: var(--wrong); border: 1px solid var(--wrong); }
+/* ── Note ── */
+.note-box { margin-top: 12px; display: none; }
+.note-box.show { display: block; }
+.note-box textarea {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 13px; font-family: inherit; resize: vertical; min-height: 48px;
+  background: #fafbfc;
+}
+.note-box textarea:focus { outline: none; border-color: var(--primary); }
+.note-box .note-hint { font-size: 11px; color: #999; margin-top: 2px; }
+.existing-note {
+  margin-top: 12px; padding: 10px 14px; background: #fffbeb; border-radius: 8px;
+  font-size: 13px; border: 1px solid #fde68a; display: flex; gap: 8px; align-items: flex-start;
+}
+.existing-note .note-icon { font-size: 16px; flex-shrink: 0; }
+.existing-note .note-text { flex: 1; color: #92400e; }
+/* ── Action row ── */
+.actions { display: flex; gap: 10px; margin-top: 16px; justify-content: center; }
+.btn-next {
+  padding: 10px 32px; border-radius: 8px; font-size: 15px; font-weight: 600;
+  border: none; cursor: pointer; background: var(--primary); color: #fff;
+  transition: all .15s;
+}
+.btn-next:hover { opacity: .9; }
+.btn-next:disabled { background: var(--progress-bg); cursor: not-allowed; color: #999; }
+/* ── Empty ── */
+.empty {
+  text-align: center; padding: 60px 20px; color: var(--text2);
+}
+.empty .icon { font-size: 48px; margin-bottom: 12px; }
+/* ── Wrong book ── */
+.wrong-book {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px; margin-top: 32px;
+}
+.wrong-book h3 { font-size: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.wrong-book .count { font-size: 12px; color: var(--wrong); font-weight: normal; }
+.wrong-item {
+  padding: 12px; border-bottom: 1px solid var(--border); font-size: 14px;
+  cursor: pointer; transition: background .15s;
+}
+.wrong-item:last-child { border-bottom: none; }
+.wrong-item:hover { background: var(--primary-light); }
+/* ── Analysis Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 100;
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--card); border-radius: 16px; padding: 28px; max-width: 640px;
+  width: 90%; max-height: 80vh; overflow-y: auto;
+}
+.modal h2 { font-size: 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.modal .close-btn {
+  margin-left: auto; background: none; border: none; font-size: 20px; cursor: pointer; color: #999;
+}
+.analysis-section { margin-bottom: 24px; }
+.analysis-section h3 { font-size: 14px; color: var(--text2); margin-bottom: 10px; }
+.chapter-bar-chart { display: flex; flex-direction: column; gap: 8px; }
+.cb-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.cb-label { min-width: 100px; text-align: right; color: var(--text2); }
+.cb-track { flex: 1; height: 20px; background: var(--progress-bg); border-radius: 4px; overflow: hidden; position: relative; }
+.cb-fill { height: 100%; border-radius: 4px; transition: width .5s; }
+.cb-fill.weak { background: #ef4444; }
+.cb-fill.medium { background: #f59e0b; }
+.cb-fill.strong { background: #10b981; }
+.cb-val { min-width: 50px; font-weight: 600; font-size: 12px; }
+.rec-card {
+  padding: 12px 16px; border-radius: 8px; margin-bottom: 8px; font-size: 13px;
+  border-left: 4px solid;
+}
+.rec-card.high { background: #fef2f2; border-color: #ef4444; }
+.rec-card.medium { background: #fffbeb; border-color: #f59e0b; }
+.rec-card.low { background: #ecfdf5; border-color: #10b981; }
+.rec-card .rec-title { font-weight: 600; margin-bottom: 2px; }
+.wrong-item .q-text { margin-bottom: 4px; }
+.wrong-item .q-meta-small { font-size: 12px; color: var(--text2); }
+.wrong-item .q-meta-small .your { color: var(--wrong); }
+.wrong-item .q-meta-small .ans { color: var(--correct); }
+/* ── Responsive ── */
+/* ── Info panel (collapsible on mobile) ── */
+.info-panel { transition: max-height 0.3s ease, opacity 0.3s ease; overflow: hidden; }
+.btn-toggle { font-size: 18px; padding: 4px 10px; min-width: 36px; text-align: center; }
+@media (max-width: 600px) {
+  .info-panel { max-height: 0; opacity: 0; }
+  .info-panel.open { max-height: 800px; opacity: 1; }
+  .btn-toggle { display: inline-block; }
+}
+@media (min-width: 601px) {
+  .btn-toggle { display: none; }
+  .info-panel { max-height: none; opacity: 1; }
+}
+  .topbar { padding: 10px 16px; }
+  .topbar h1 { font-size: 16px; }
+  .app { padding: 12px; }
+  .stats-row { gap: 8px; }
+  .stat-card { padding: 10px 12px; }
+  .stat-card .val { font-size: 22px; }
+  .q-card { padding: 16px; }
+  .q-stem { font-size: 15px; }
+  .opt-btn { padding: 12px; font-size: 13px; }
+  .data-table { font-size: 13px; }
+}
+/* ── Data table ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 14px;
+}
+.data-table th, .data-table td {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  text-align: center;
+  font-size: 13px;
+}
+.data-table th {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.data-table tbody td {
+  background: var(--card);
+}
+.data-table tr:nth-child(even) td {
+  background: #f9fafb;
+}
+
+/* ── Sidebar layout ── */
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 260px; min-width: 260px; background: var(--card);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh; overflow: hidden;
+}
+.sidebar-title {
+  padding: 14px 14px 10px; font-size: 13px; font-weight: 600;
+  color: var(--text2); border-bottom: 1px solid var(--border);
+  flex-shrink: 0; display: flex; justify-content: space-between; align-items: center;
+}
+.sidebar-title .total { font-weight: normal; font-size: 12px; }
+.q-nums {
+  flex: 1; overflow-y: auto; padding: 8px 6px;
+  display: flex; flex-wrap: wrap; align-content: flex-start; gap: 3px;
+}
+.q-num {
+  width: 30px; height: 30px; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--card); color: var(--text2);
+  transition: all .15s; flex-shrink: 0; user-select: none;
+}
+.q-num:hover { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+.q-num.current { border-color: var(--primary); background: var(--primary); color: #fff; font-weight: 700; transform: scale(1.1); z-index: 1; }
+.q-num.correct { background: var(--correct-bg); border-color: #a7f3d0; color: var(--correct); }
+.q-num.wrong { background: var(--wrong-bg); border-color: #fecaca; color: var(--wrong); }
+.q-num.correct.current { background: var(--correct); color: #fff; border-color: var(--correct); }
+.q-num.wrong.current { background: var(--wrong); color: #fff; border-color: var(--wrong); }
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.main .app { max-width: 100%; }
+/* Mobile */
+@media (max-width: 768px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; min-width: 100%; height: auto; max-height: 140px; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
+  .q-num { width: 26px; height: 26px; font-size: 10px; }
+  .q-nums { gap: 2px; padding: 6px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-title"><span>题目列表</span><span class="total"></span></div>
+    <div class="q-nums" id="qNums"></div>
+  </div>
+  <div class="main">
+<div class="topbar">
+  <h1>📘 一建经济 · 刷题</h1>
+  <div class="topbar-right">
+    <button class="btn btn-toggle" onclick="toggleInfoPanel()" id="btnToggle" title="菜单">☰</button>
+    <span class="badge" id="totalBadge">题库 0 题</span>
+    <button class="btn" id="btnMode" onclick="toggleMode()">顺序</button>
+    <button class="btn" id="btnAutoNext" onclick="toggleAutoNext()" style="background:#ecfdf5;border-color:#10b981;color:#10b981;">🔁 自动下一题</button>
+    <button class="btn" id="btnAnalyze" onclick="showAnalysis()">📊 分析</button>
+    <button class="btn" id="btnReset" onclick="resetProgress()">重置进度</button>
+  </div>
+</div>
+
+<div class="app">
+  <div class="info-panel" id="infoPanel">
+  <!-- Chapter selector -->
+  <div class="chapter-bar" id="chapterBar"></div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="val" id="statDone">0</div><div class="lbl">已做</div></div>
+    <div class="stat-card wrong"><div class="val" id="statWrong">0</div><div class="lbl">错题</div></div>
+    <div class="stat-card acc"><div class="val" id="statAcc">-</div><div class="lbl">正确率</div></div>
+    <div class="stat-card"><div class="val" id="statRemain">0</div><div class="lbl">剩余</div></div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-info"><span>进度</span><span id="progressPct">0%</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+  </div>
+
+  <!-- Question card -->
+  <div id="questionArea"></div>
+
+  <!-- Wrong book -->
+  <div class="wrong-book" id="wrongBook" style="display:none;">
+    <h3>📋 错题本 <span class="count" id="wrongCount"></span></h3>
+    <div id="wrongList"></div>
+  </div>
+</div>
+</div>
+
+<!-- Analysis Modal -->
+<div class="modal-overlay" id="analysisModal" onclick="if(event.target===this)hideAnalysis()">
+  <div class="modal">
+    <h2>📊 薄弱点分析 <button class="close-btn" onclick="hideAnalysis()">&times;</button></h2>
+    <div id="analysisContent"></div>
+  </div>
+</div>
+</div>
+
+<script>
+// ── State ──
+let allQuestions = [];
+let filteredQuestions = [];
+let currentIdx = 0;
+let mode = 'seq'; // seq | rand
+let autoNext = false;
+let answeredQ = {};  // id -> 'correct' | letter
+let selChapter = 'all';
+
+// ── Load data ──
+async function load() {
+  const QDATA = [{"id":1,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"下列关于利率高低影响因素，说法错误的是（ ）。","options":{"A":"利率的高低首先取决于社会平均利润率的高低，并随之变动","B":"借出资本要承担一定的风险，风险越大，利率也就越高","C":"时间越久，不可预见因素越多，利率越高","D":"利率在经济周期的扩张期会下降"},"answer":"D","explanation":"利率在经济周期的扩张期（经济繁荣）会上升，因为资金需求旺盛；在衰退期才会下降。A✓社会平均利润率是利率上限；B✓风险越大利率越高；C✓期限越长不确定性越大利率越高。故D错误。"},{"id":2,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"某施工企业从银行借款100 万元，期限3 年，年利率8%，按年计息并于每年末付息，则第3 年末企业需偿 还的本利和为（ ）万元。","options":{"A":"100","B":"124","C":"108","D":"126"},"answer":"C","explanation":"每年末付息，本金不变，按单利计息。年利息=100×8%=8万元，3年总利息=24万元，第3年末还本100万+当年利息8万=108万。算3年总本利和=100+8×3=124万。选C。"},{"id":3,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"某企业从银行借入资金1000 万元，期限5 年，年利率5%，按年计息，到期一次性还本付息。该笔借款按复 利和单利两种计息方式的总利息差额是（ ）万元。","options":{"A":"0","B":"15.506","C":"26.282","D":"40.096"},"answer":"C","explanation":"复利终值=1000×(1+5%)^5=1276.28万，利息=276.28万；单利利息=1000×5%×5=250万。差额=276.28-250=26.28万≈26.25万。选C。"},{"id":4,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"某企业拟向银行存入一笔期限1年的资金，采用复利计息，到期一次性取出本息。有四种存款方案可供选择，不考虑其他因素，该企业应选择的存款方案是（ ）。<br><table class=\"data-table\"><thead><tr><th>存款方案</th><th>计息方式</th><th>年名义利率</th></tr></thead><tbody><tr><td>方案一</td><td>按年计息</td><td>4%</td></tr><tr><td>方案二</td><td>按半年计息</td><td>4%</td></tr><tr><td>方案三</td><td>按季计息</td><td>3.5%</td></tr><tr><td>方案四</td><td>按月计息</td><td>3.5%</td></tr></tbody></table>","options":{"A":"方案一","B":"方案二","C":"方案三","D":"方案四"},"answer":"B","explanation":"存款应选择年有效利率最高的方案。年有效利率=(1+r/m)^m-1：方案一(4%，年)=4.00%；方案二(4%，半年)=(1+2%)²-1=4.04%；方案三(3.5%，季)≈3.53%；方案四(3.5%，月)≈3.56%。方案二年有效利率最高，故选B。"},{"id":5,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"某施工企业年初从银行借款200 万元，按季度计息并支付利息，季度利率为1.5%，则该企业一年支付的利 息总计为（ ）万元。","options":{"A":"6.00","B":"6.05","C":"12.00","D":"12.27"},"answer":"C","explanation":"按季计息并支付利息，即单利计息。年利息=200×1.5%×4=12万元。选C。"},{"id":6,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"关于年有效利率和年名义利率关系的说法，错误的是（ ）。","options":{"A":"年有效利率和年名义利率的关系实质上与复利和单利的关系一样","B":"每年计息周期数越多，则年有效利率和年名义利率的差异越大","C":"只要年名义利率大于零，则据此计算出来的年有效利率一定大于年名义利率","D":"单利计息时，年名义利率和年有效利率没有差异"},"answer":"C","explanation":"年有效利率≥年名义利率（等号仅在m=1时成立）。年有效利率可以等于年名义利率（每年计息1次时）。故C说\"一定大于\"是错误的。选C。"},{"id":7,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"关于资金时间价值的说法，错误的是（ ）。","options":{"A":"单位时间资金增值率一定的条件下，资金的时间价值与使用时间成正比","B":"不同时机生产经营获利的可能性及水平高低相同","C":"其他条件不变的情况下，资金的时间价值与资金数量成正比","D":"一定时间内等量资金的周转次数越多，资金的时间价值越多"},"answer":"B","explanation":"资金时间价值是资金在周转使用中随时间推移产生的增值，不是\"任何资金闲置都会自然增值\"。单位时间资金增值率一定时，时间越长价值越大是对的；总额一定时，早投入收益越大。选B（错误：并非任何情况时间越长价值越大）。"},{"id":8,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"multi","stem":"绘制现金流量图必需的要素有（ ）。","options":{"A":"现金流量的用途","B":"现金流量发生的时间","C":"现金流量的方向","D":"现金流量的来源","E":"现金流量的数额"},"answer":"BCE","explanation":"现金流量图的三个必备要素：大小（现金流数额）、方向（流入/流出）、作用点（时间点）。选BCE。"},{"id":9,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"下列关于现金流量图的描述，说法错误的是（ ）。","options":{"A":"现金流量图中的箭线只要能相对体现现金流量大小即可","B":"时间轴上的时点通常为年末","C":"箭线与时间轴的交点表示现金流量发生的时点","D":"时间轴上方的箭线表示现金流入"},"answer":"B","explanation":"现金流量图中，箭线长度按比例表示现金流大小，不是任意绘制。选B。"},{"id":10,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"某公司年初向银行存入一笔款项，存款年利率6%按复利计息在第三年末本利和为1157.63 万元。则该公司 年初应存入（ ）万元。","options":{"A":"971.97","B":"981.04","C":"1000.00","D":"1092.10"},"answer":"A","explanation":"已知F=1157.63，i=6%，n=3，求P。P=F×(P/F,6%,3)=1157.63×0.8396≈972万。选A。"},{"id":11,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"某施工企业每年年末存入银行100 万元，用于3 年后的技术改造，已知银行存款年利率为5%，按年复利计 息，则到第3 年末可用于技术改造的资金总额为（ ）。","options":{"A":"331.01","B":"330.75","C":"315.25","D":"315.00"},"answer":"C","explanation":"等额年金终值：F=100×(F/A,5%,3)=100×3.1525=315.25万。选C。"},{"id":12,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"关于一次支付现值、终值、计息期数和折现率相互关系得说法，正确的是（ ）。","options":{"A":"现值一定，计息期数相同，折现率越高，终值越小","B":"现值一定，折现率相同，计息期数越少，终值越大","C":"终值一定，折现率相同，计息期数越多，现值越大","D":"终值一定，计息期数相同，折现率越高，现值越小"},"answer":"D","explanation":"P一定，n相同，i越高F越大；F一定，n相同，i越高P越小；F一定，i相同，n越长P越小；P一定，i相同，n越长F越大。选D（i越高，F越大）。"},{"id":13,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"某企业现在对外投资200 万元，5 年后一次性收回本金和利息，若年基准收益率为i，已知（P/F，i，5） =0.2504，（F/P，i，5）=1.4693，则总计可收回投资（ ）万元。","options":{"A":"234.66","B":"250.50","C":"280.00","D":"293.86"},"answer":"D","explanation":"已知P=200，(F/P,i,5)=1.4693，则F=200×1.4693=293.86万。选D。"},{"id":14,"chapter":"第1章 资金时间价值计算及应用","kaodian":"","type":"single","stem":"某施工企业投资200 万元购入一台施工机械，计划从购买日起的未来6 年等额收回投资并获取收益，若基准 收益率为10%，复利计息，则每年末应获得的净现金流入为（ ）。","options":{"A":"200×（A/P，10%，6）","B":"200×（F/P，10%，6）","C":"200×（A/P，10%，7）","D":"200×（F/P，10%，7）"},"answer":"A","explanation":"已知P=200，i=10%，n=6，求A（等额年金）。A=P×(A/P,10%,6)=200×0.2296=45.92万≈45.9万。选A。"},{"id":15,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"技术方案经济效果评价的主要内容是分析论证技术方案的（ ）。","options":{"A":"技术先进性和经济合理性","B":"技术可靠性和财务盈利性","C":"财务盈利性和抗风险能力","D":"财务可行性和经济合理性"},"answer":"D","explanation":"经济效果评价的主要内容是分析论证技术方案的财务可行性和经济合理性，即\"经济合理性\"。选D。"},{"id":16,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"将技术方案经济效果评价分为静态分析和动态分析的依据是（ ）。","options":{"A":"评价方法是否考虑主观因素","B":"评价指标是否能够量化","C":"评价方法是否考虑时间因素","D":"经济效果评价是否考虑融资的影响"},"answer":"C","explanation":"静态分析不考虑资金时间价值，动态分析考虑资金时间价值。区分依据是是否考虑时间因素。选C。"},{"id":17,"chapter":"第2章 经济效果评价","kaodian":"","type":"multi","stem":"技术方案经济效果评价中的计算期包括技术方案的（ ）。","options":{"A":"投资建设期","B":"投产期","C":"投资前策划期","D":"达产期","E":"后评价期间"},"answer":"ABD","explanation":"技术方案计算期=建设期+运营期。不包括投产期（属于运营期的一部分）和达产期。选ABD。"},{"id":18,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"下列经济效果评价指标中，属于动态指标的（ ）。","options":{"A":"财务净现值","B":"流动比率","C":"资本金净利润率","D":"投资收益率"},"answer":"A","explanation":"动态指标考虑资金时间价值。财务净现值(FNPV)和财务内部收益率(FIRR)是动态指标，投资收益率和静态投资回收期是静态指标。选A。"},{"id":19,"chapter":"第2章 经济效果评价","kaodian":"","type":"multi","stem":"下列经济效果评价指标中，属于盈利能力评价指标的有（ ）。","options":{"A":"财务净现值","B":"利息备付率","C":"费用年值","D":"动态投资回收期","E":"资产负债率"},"answer":"ACD","explanation":"盈利能力指标：财务净现值、财务内部收益率、投资回收期等。偿债备付率和利息备付率是偿债能力指标。选ACD。"},{"id":20,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"某技术方案的净现金流量如下表，则该方案的静态投资回收期为（ ）年。<br><table class=\"data-table\"><thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead><tbody><tr><td>净现金流量（万元）</td><td>—</td><td>-1500</td><td>400</td><td>400</td><td>400</td><td>400</td><td>400</td></tr></tbody></table>","options":{"A":"3.25","B":"3.75","C":"4.25","D":"4.75"},"answer":"D","explanation":"静态投资回收期=累计净现金流首次为正的年份-1+上年累计绝对值/当年净现金流。逐年计算：0年-800,1年-1500,2年累计-1500+400=-1100,3年-600,4年-100... 需查表格数据计算。"},{"id":21,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"某投资方案建设期为1 年，第一年年初投资8000 万元，第二年年初开始盈利，运营期为4 年，运营期每年 年末净收益为3000 万元，则该投资方案的静态投资回收期为（ ）。","options":{"A":"2.67 年","B":"3.67 年","C":"2.27 年","D":"3.27 年"},"answer":"B","explanation":"建设期1年（投资8000万），运营期每年3000万。回收期=1+8000/3000=1+2.67=3.67年。含建设期=3.67年。选B。"},{"id":22,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"某技术方案的静态投资回收期为5.5 年，行业基准值为6 年，关于该方案经济效果评价的说法，正确的是 （ ）。","options":{"A":"该方案静态投资回收期短于行业基准值，表明资本周转的速度慢","B":"从静态投资回收期可以判断该方案前5 年各年均不盈利","C":"静态投资回收期短于行业基准值，不代表该方案内部收益率大于行业基准收益率","D":"静态投资回收期短，表明该方案净现值一定大于零"},"answer":"C","explanation":"静态投资回收期5.5年<基准6年，表明方案可行。回收期只能作为辅助指标，不能单独判断。选C（方案可行）。"},{"id":23,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"某技术方案现金流量如下表。设基准收益率为8%，通过计算财务净现值，可得到的结论是（ ）。<br><table class=\"data-table\"><thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></thead><tbody><tr><td>现金流入（万元）</td><td>-</td><td>300</td><td>400</td><td>400</td><td>300</td></tr><tr><td>现金流出（万元）</td><td>500</td><td>100</td><td>150</td><td>150</td><td>150</td></tr></tbody></table>","options":{"A":"58.23","B":"208.23","C":"192.81","D":"347.12"},"answer":"B","explanation":"计算NPV=各年净现金流×(P/F,8%,n)之和。NPV>0方案可行，NPV<0不可行。需计算表格数据。选B。"},{"id":24,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"某技术方案的净现金流量见下表，若基准收益率大于0，则该方案的财务净现值可能的范围是（ ）。<br><table class=\"data-table\"><thead><tr><th></th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr></thead><tbody><tr><td>净现金流量（万元）</td><td>-</td><td>-300</td><td>-200</td><td>200</td><td>600</td><td>600</td></tr></tbody></table>","options":{"A":"等于1400 万元","B":"大于900 万元，小于1400 万元","C":"等于900 万元","D":"小于900 万"},"answer":"D","explanation":"基准收益率>0时，NPV<各年净现金流简单相加（即NPV<累计净现金流）。因折现使远期现金流现值变小。该方案累计净现金流=140万（净现金总流入），故NPV<140万。选D。"},{"id":25,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"某具有常规现金流量的方案，当折现率为7%时，财务净现值为150 万元；当折现率为9%时，财务净现值为- 80 万元。该方案财务内部收益率的取值范围是（ ）。","options":{"A":"小于7%","B":"大于8%小于9%","C":"大于7%小于 8%","D":"大于9%"},"answer":"B","explanation":"FIRR在7%~9%之间。用插值法：FIRR≈7%+(9%-7%)×150/(150+80)=7%+2%×150/230=7%+1.3%=8.3%。选B（7%~9%）。"},{"id":26,"chapter":"第2章 经济效果评价","kaodian":"","type":"multi","stem":"某常规技术方案当折现率为10%时，财务净现值为-360 万元，当折现率为8%时，财务净现值为30 万元，则 关于该方案经济效果评价的说法，正确的有（ ）。","options":{"A":"内部收益率在8%～9%之间","B":"当行业基准收益率为8%时，方案可行","C":"当行业基准收益率为9%时，方案不可行","D":"当折现率为9%时，财务净现值一定大于0","E":"当行业基准收益率为10%时，内部收益率小于行业基准收益率"},"answer":"ABCE","explanation":"i=10%时NPV=-360<0,i=8%时NPV=30>0，FIRR在8%~10%之间。基准收益率若为8%，NPV=30>0方案可行；若<FIRR则可行。选ABCE。"},{"id":27,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"某技术方案净现金流量和财务净现值如下表，根据表中数据，关于该方案评价的说法，正确的是（ ）。 计算期（年） 0 1 2 3 4 5 6 7 净现金流量（万元） -240 -470 200 250 250 250 250 -240 财务净现值（折现率8%） 24.276 万元","options":{"A":"累计净现金流量小于零","B":"财务内部收益率可能小于8%","C":"静态投资回收期大于6 年","D":"项目在经济上可行"},"answer":"D","explanation":"累计NPV最大对应方案最优。根据表格，NPV累计值分析。选D。"},{"id":28,"chapter":"第2章 经济效果评价","kaodian":"","type":"single","stem":"某企业拟新建一项目，有两个备选方案技术均可行。甲方案投资5000 万元。计算期15 年，财务净现值为 200 万元；乙方案投资8000 万元，计算期20 年，财务净现值为300 万元。则关于两方案比选的说法，正确 的是（ ）。","options":{"A":"甲乙方案必须构造一个相同的分析期限才能比选","B":"甲方案投资少于乙方案，净现值大于零，故甲方按较优","C":"乙方案净现值大于甲方案，且都大于零，故乙方案较优","D":"甲方案计算期短，说明甲方案的投资回收速度快于乙方案"},"answer":"A","explanation":"寿命期不同方案比选不能用NPV直接比较。应用净年值(NAV)或最小公倍数法。甲NAV=200×(A/P,i,15)，乙NAV=300×(A/P,i,20)。选A（甲方案优于乙）。"},{"id":29,"chapter":"第3章 不确定性分析","kaodian":"","type":"single","stem":"某技术方案，年设计生产能力为8 万台，年固定成本为100 万元，单位产品售价为50 元，单位产品变动成本 为售价的55%，单位产品销售税金及附加为售价的5%，则达到盈亏平衡点时的生产能力利用率为（ ）。","options":{"A":"62.50%","B":"55.50%","C":"60.00%","D":"41.67%"},"answer":"A","explanation":"BEP(产量)=固定成本/(单价-单位变动成本-单位税金)=1000000/(50-50×55%-50×5%)=1000000/(50-27.5-2.5)=1000000/20=50000台。利用率=50000/80000=62.5%。选A。"},{"id":30,"chapter":"第3章 不确定性分析","kaodian":"","type":"single","stem":"某技术方案设计年产量为12 万吨，已知单位产品的销售价格为700 元（含税价格），单位产品的税金为165 元，单位可变成本为250 元，年固定成本为1500 万元，则以价格（含税价格）表示的盈亏平衡点是（ ）元 /吨。","options":{"A":"540","B":"510","C":"375","D":"290"},"answer":"A","explanation":"BEP(价格)=固定成本/产量+单位变动成本+单位税金=15000000/120000+250+165=125+250+165=540元。选A。"},{"id":31,"chapter":"第3章 不确定性分析","kaodian":"","type":"single","stem":"某技术方案年设计生产能力为10 万台，单台产品销售价格（含税）为2000 元，单台产品可变成本（含税） 为1000 元，单台产品税金及附加为150 元，若盈亏平衡点年产量为5 万台，则该方案的年固定成本为（ ） 万元。","options":{"A":"5000","B":"4250","C":"5750","D":"9250"},"answer":"B","explanation":"BEP产量=固定成本/(售价-变动成本-税金)=50000=FC/(2000-1000-150)=FC/850，FC=50000×850=4250万。选B。"},{"id":32,"chapter":"第3章 不确定性分析","kaodian":"","type":"multi","stem":"项目盈亏平衡分析时，下列成本费用中，属于固定成本的有（ ）。","options":{"A":"无形资产摊销费","B":"计件工资","C":"产品包装费","D":"生产设备燃料费","E":"固定资产折旧费"},"answer":"AE","explanation":"固定成本不随产量变化：工资及福利费(固定部分)、折旧费、修理费(固定部分)。计件工资和材料费属于变动成本。选AE。"},{"id":33,"chapter":"第3章 不确定性分析","kaodian":"考点2：敏感性分析★★★★","type":"single","stem":"某项目采用净现值指标进行敏感性分析，有关数据见下表（单位：万元），则各因素的敏感程度由大到小的顺序是（ ）。\n\n<table class=\"data-table\"><thead><tr><th>因素</th><th>-10%</th><th>0</th><th>+10%</th></tr></thead><tbody><tr><td>建设投资</td><td>914.93</td><td>861.44</td><td>807.94</td></tr><tr><td>营业收入</td><td>703.08</td><td>861.44</td><td>1019.80</td></tr><tr><td>经营成本</td><td>875.40</td><td>861.44</td><td>847.47</td></tr></tbody></table>","options":{"A":"营业收入—建设投资—经营成本","B":"建设投资—营业收入—经营成本","C":"经营成本—建设投资—营业收入","D":"营业收入—经营成本—建设投资"},"answer":"A","explanation":"敏感度系数|SAF|越大越敏感。计算：营业收入|(1019.8-861.44)/861.44/0.1|=1.84，建设投资|(807.94-861.44)/861.44/0.1|=0.62，经营成本|(847.47-861.44)/861.44/0.1|=0.16。排序：营业收入>建设投资>经营成本。选A。"},{"id":34,"chapter":"第3章 不确定性分析","kaodian":"","type":"single","stem":"在建设项目敏感性分析中，确定敏感性因素可以通过计算敏感度系数和（ ）来判断。","options":{"A":"盈亏平衡点","B":"评价指标变动率","C":"临界点","D":"不确定因素变动概率"},"answer":"C","explanation":"确定敏感性因素通过计算敏感度系数(SAF)和临界点来判断。选C。"},{"id":35,"chapter":"第3章 不确定性分析","kaodian":"","type":"single","stem":"单因素敏感分析过程包括：①确定敏感因素；②确定分析指标；③选取不确定因素；④计算不确定因素的变 化对分析指标的影响。正确的排列顺序是（ ）。","options":{"A":"③②④①","B":"①②③④","C":"②④③①","D":"②③④①"},"answer":"D","explanation":"敏感分析步骤：②确定分析指标→③选取不确定因素→④计算影响→①确定敏感因素。选D（②③④①）。"},{"id":36,"chapter":"第3章 不确定性分析","kaodian":"","type":"single","stem":"已知某投资方案财务内部收益率（FIRR）为10%，现选择4 个影响因素分别进行单因素敏感性分析计算结果 如下：当产品价格上涨10%时，FIRR=11.0%；当原材料价格上涨10%时，FIRR=9.5%：当建设投资上涨10% 时，FIRR=9.0%，当人民币汇率上涨10%时，FIRR=8.8%。根据上述条件判断，最敏感的因素是（ ）。","options":{"A":"建设投资","B":"原材料价格","C":"人民币汇率","D":"产品价格"},"answer":"C","explanation":"敏感性从高到低：产品价格(变化1%,FIRR变1%)，原材料价格(变化0.5%)，建设投资(变化1%)，汇率...选C。"},{"id":37,"chapter":"第3章 不确定性分析","kaodian":"","type":"single","stem":"关于敏感度系数的说法，正确的是（ ）。","options":{"A":"敏感度系数可以用于对敏感因素敏感性程度的排序","B":"敏感度系数大于零，表明评价指标与不确定因素反方向变化","C":"利用敏感度系数判别敏感因素的方法是绝对测定法","D":"敏感度系数的绝对值越大，表明评价指标对于不确定因素越不敏感"},"answer":"A","explanation":"SAF>0表示评价指标与不确定因素同方向变化；|SAF|越大越敏感。选A。"},{"id":38,"chapter":"第3章 不确定性分析","kaodian":"","type":"single","stem":"关于技术方案不确定因素临界点的说法，正确的是（ ）。","options":{"A":"若基准收益率固定，某不确定性因素的临界点百分比越小，说明方案对该因素就越敏感","B":"对同一个技术方案，随着基准收益率的提高，临界点也会变高","C":"不确定因素临界点的高低，不能作为判定风险的依据","D":"临界点是客观存在的，与设定的指标判断标准无关"},"answer":"A","explanation":"临界点是指不确定因素向不利方向变化的极限值，超过该值方案由可行变为不可行。选A。"},{"id":39,"chapter":"第4章 设备更新分析","kaodian":"","type":"multi","stem":"下列生产设备磨损形式中，属于无形磨损的有（ ）。","options":{"A":"长期超负荷运转，造成设备的性能下降、加工精度降低","B":"出现了加工性能更好的同类设备，使现有设备相对落后而贬值","C":"因设备长期封存不用，设备零部件受潮腐蚀，使设备维修费用增加","D":"技术特性和功能不变的同类设备的再生产价值降低，致使现有设备贬值","E":"出现效率更高、耗费更少的新型设备，使现有设备经济效益相对降低而贬值"},"answer":"BDE","explanation":"无形磨损：同类设备再生产价值降低（第I类）、新型设备出现使旧设备贬值（第II类）。设备变形、锈蚀、橡胶老化是有形磨损。选BDE。"},{"id":40,"chapter":"第4章 设备更新分析","kaodian":"","type":"single","stem":"关于设备磨损补偿方式的说法，正确的是（ ）。","options":{"A":"设备的无形磨损可以通过修理进行补偿","B":"设备的有形磨损只能通过更新进行补偿","C":"完全补偿说的是通过现代化改装进行补偿","D":"局部补偿包括大修理和现代化改装"},"answer":"D","explanation":"不可消除的有形磨损→更新；可消除的有形磨损→大修理；第II类无形磨损→现代化改装或更新。选D。"},{"id":41,"chapter":"第4章 设备更新分析","kaodian":"","type":"single","stem":"某设备年度费用曲线如图所示，依据下图判断，该设备的经济寿命为（ ）年。\n\n<svg viewBox=\"0 0 500 320\" xmlns=\"http://www.w3.org/2000/svg\" style=\"max-width:100%;background:#fff;margin:10px 0;\">\n  <!-- 坐标轴 -->\n  <line x1=\"60\" y1=\"270\" x2=\"460\" y2=\"270\" stroke=\"#333\" stroke-width=\"1.5\"/>\n  <line x1=\"60\" y1=\"20\" x2=\"60\" y2=\"270\" stroke=\"#333\" stroke-width=\"1.5\"/>\n  <polygon points=\"460,265 460,275 470,270\" fill=\"#333\"/>\n  <polygon points=\"55,20 65,20 60,10\" fill=\"#333\"/>\n  <text x=\"470\" y=\"275\" font-size=\"12\" fill=\"#333\">使用年限</text>\n  <text x=\"55\" y=\"15\" font-size=\"12\" fill=\"#333\">年均费用</text>\n\n  <!-- X轴刻度 n1 n2 n3 n4 -->\n  <line x1=\"120\" y1=\"270\" x2=\"120\" y2=\"275\" stroke=\"#333\" stroke-width=\"1\"/>\n  <text x=\"115\" y=\"288\" font-size=\"12\" fill=\"#333\">n₁</text>\n  <line x1=\"200\" y1=\"270\" x2=\"200\" y2=\"275\" stroke=\"#333\" stroke-width=\"1.5\"/>\n  <text x=\"195\" y=\"288\" font-size=\"12\" fill=\"#e74c3c\" font-weight=\"bold\">n₂</text>\n  <line x1=\"300\" y1=\"270\" x2=\"300\" y2=\"275\" stroke=\"#333\" stroke-width=\"1\"/>\n  <text x=\"295\" y=\"288\" font-size=\"12\" fill=\"#333\">n₃</text>\n  <line x1=\"400\" y1=\"270\" x2=\"400\" y2=\"275\" stroke=\"#333\" stroke-width=\"1\"/>\n  <text x=\"395\" y=\"288\" font-size=\"12\" fill=\"#333\">n₄</text>\n\n  <!-- 年资产消耗成本 (向下递减曲线) -->\n  <path d=\"M 80,40 Q 140,80 200,130 Q 260,175 340,200 Q 400,215 450,225\" fill=\"none\" stroke=\"#3498db\" stroke-width=\"2\" stroke-dasharray=\"6,3\"/>\n  <text x=\"380\" y=\"200\" font-size=\"11\" fill=\"#3498db\">年资产消耗成本</text>\n\n  <!-- 年运行成本 (向上递增曲线) -->\n  <path d=\"M 80,200 Q 140,160 200,130 Q 260,110 340,100 Q 400,95 450,92\" fill=\"none\" stroke=\"#e67e22\" stroke-width=\"2\" stroke-dasharray=\"6,3\"/>\n  <text x=\"395\" y=\"88\" font-size=\"11\" fill=\"#e67e22\">年运行成本</text>\n\n  <!-- 年平均使用成本 (U型曲线，两线之和) -->\n  <path d=\"M 80,80 Q 120,95 160,108 Q 190,120 200,125 Q 220,120 260,110 Q 300,105 340,110 Q 400,130 450,160\" fill=\"none\" stroke=\"#e74c3c\" stroke-width=\"2.5\"/>\n  <text x=\"140\" y=\"65\" font-size=\"11\" fill=\"#e74c3c\" font-weight=\"bold\">年平均使用成本</text>\n\n  <!-- n2 虚线和最低点标记 -->\n  <line x1=\"200\" y1=\"125\" x2=\"200\" y2=\"270\" stroke=\"#e74c3c\" stroke-width=\"1\" stroke-dasharray=\"4,3\"/>\n  <circle cx=\"200\" cy=\"125\" r=\"5\" fill=\"#e74c3c\"/>\n  <text x=\"170\" y=\"118\" font-size=\"11\" fill=\"#e74c3c\" font-weight=\"bold\">经济寿命←</text>\n</svg>","options":{"A":"n1","B":"n2","C":"n3","D":"n4"},"answer":"B","explanation":"经济寿命是年平均使用成本最低的年限，即图中年资产消耗成本与年运行成本交点n₂处。选B。"},{"id":42,"chapter":"第4章 设备更新分析","kaodian":"","type":"multi","stem":"关于设备技术寿命的说法，正确的有（ ）。","options":{"A":"设备的技术寿命主要由设备的无形磨损决定","B":"设备的技术寿命是指设备年平均维修费用最低对应的使用年限","C":"设备的技术寿命一般长于设备的自然寿命","D":"科学技术进步越快，设备的技术寿命越短","E":"设备的技术寿命主要是由有形磨损决定"},"answer":"AD","explanation":"技术寿命由无形磨损决定，设备技术寿命一般短于自然寿命。选AD。"},{"id":43,"chapter":"第4章 设备更新分析","kaodian":"","type":"single","stem":"某设备目前实际价值为30000元，有关资料如下表所示，则该设备的经济寿命为（ ）年。<br><table class=\"data-table\"><thead><tr><th>继续使用年限（年）</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr></thead><tbody><tr><td>年末净残值（元）</td><td>15000</td><td>7500</td><td>3750</td><td>3000</td><td>2000</td><td>900</td><td>600</td></tr><tr><td>年运行成本（元）</td><td>5000</td><td>6000</td><td>7000</td><td>9000</td><td>11500</td><td>14000</td><td>18200</td></tr><tr><td>年平均使用成本（元）</td><td>20000</td><td>16750</td><td>14750</td><td>13500</td><td>13300</td><td>13600</td><td>14300</td></tr></tbody></table>","options":{"A":"3","B":"4","C":"5","D":"6"},"answer":"C","explanation":"年平均使用成本=年均资产消耗成本+年均运行成本，最小值为经济寿命。计算各年：第2年最低。选C。"},{"id":44,"chapter":"第4章 设备更新分析","kaodian":"","type":"single","stem":"关于设备租赁的说法，错误的是（ ）。","options":{"A":"融资租赁通常适用于长期使用的贵重设备","B":"临时使用的设备宜采用经营租赁方式","C":"经营租赁的任一方可以以一定方式在通知对方后的规定期限内取消租约","D":"租赁期内，融资租赁承租人拥有租赁设备的所有权"},"answer":"D","explanation":"设备租赁费用包括租金+担保费+保证金利息。租赁费不包含设备运行成本。折旧由出租方计提。选D。"},{"id":45,"chapter":"第4章 设备更新分析","kaodian":"","type":"multi","stem":"对于承租人，与设备购置相比，设备经营租赁的优点有（ ）。","options":{"A":"在资金短缺的情况下，可以用较少的资金获得急需的设备","B":"针对临时性需要的设备，可以避免设备购置带来的闲置","C":"设备租金作为费用在所得税前扣除，减少所得税支出","D":"可以保持资金的流动状态，不会恶化资产负债状况","E":"可对租赁的设备进行技术改造或用于担保、抵押贷款"},"answer":"ABCD","explanation":"经营租赁优点：较少资金获得设备、获得良好技术服务、避免技术落后风险、保持资金流动性。选ABCD。"},{"id":46,"chapter":"第4章 设备更新分析","kaodian":"","type":"single","stem":"企业拟向租赁公司承租一台施工机械，机械价格为100 万元，租期4 年，每年年末支付租金，折现率为 8%，附加率为3%，按照附加率法计算，该企业每年应支付的租金为（ ）万元。","options":{"A":"36","B":"32","C":"33","D":"44"},"answer":"A","explanation":"附加率法：R=P(1+N×i)/N+P×r=100×(1+4×0.08)/4+100×0.03=100×1.32/4+3=33+3=36万。选A。"},{"id":47,"chapter":"第4章 设备更新分析","kaodian":"","type":"single","stem":"某施工企业以经营租赁方式租入一台设备，租赁保证费2 万元，担保费5 万元，年租金10 万元，预计租赁 设备年运行成本10 万元，其中原材料消耗2 万元，则设备第一年的租赁费是（ ）。","options":{"A":"19","B":"17","C":"20","D":"27"},"answer":"B","explanation":"租赁费=租金+担保费（一次性摊销）=10+5=15万。保证金2万不计入租赁费（期满退还）。选B。"},{"id":48,"chapter":"第5章 价值工程","kaodian":"","type":"single","stem":"某工程施工方案的计划工期为350 天，对方案运用高价值工程原理，优化后工期缩短了10 天，可实现同样 的功能，并降低了工程费用，根据价值工程原理，该价值提升的途径属于（ ）。","options":{"A":"功能提高、成本降低","B":"功能提高、成本不变","C":"功能不变、成本降低","D":"功能不变、成本不变"},"answer":"C","explanation":"工期缩短→成本降低，功能不变→价值提高。V=F/C，C↓且F不变→V↑，属于节约型。选C。"},{"id":49,"chapter":"第5章 价值工程","kaodian":"","type":"multi","stem":"运用价值工程原理提高产品价值的途径有（ ）。","options":{"A":"通过采用新方案，既提高产品功能，又降低产品成本","B":"通过设计优化，在产品成本不变的前提下，提高产品功能","C":"在保证产品功能不变的前提下，通过组织管理措施降低产品成本","D":"适当增加产品成本，同时大幅度提高产品功能和适用性","E":"采用新材料保证产品功能不变的前提下，成本略有增加"},"answer":"ABCD","explanation":"提高价值途径：(1)F↑/C↓双向型；(2)F↑/C→改进型；(3)F→/C↓节约型；(4)F↑↑/C↑投资型；(5)F↓/C↓↓牺牲型。选ABCD。"},{"id":50,"chapter":"第5章 价值工程","kaodian":"","type":"single","stem":"价值工程涉及价值、功能和寿命周期成本等三个基本要素，下列说法中不属于价值工程的特点的选项是 （ ）。","options":{"A":"价值工程需要进行量化分析","B":"价值工程的核心，是对产品进行成本分析","C":"价值工程将价值、功能和成本作为一个整体同时来考虑","D":"价值工程的价值是功能与费用的比较价值，不是单纯的提高或增加功能，也不是为降低成本而节省费用"},"answer":"B","explanation":"价值工程特点：以使用者功能需求为出发点、以功能分析为核心、系统研究功能成本、致力于提高价值。\"追求最低总成本\"表述不准确（追求价值最优）。选B。"},{"id":51,"chapter":"第5章 价值工程","kaodian":"","type":"single","stem":"价值工程中，功能整理是用系统的观点将已定义了的功能加以系统化，找出各局部功能相互之间的逻辑关系 是并列关系还是上下位置关系，表达这种功能之间关系可用（ ）。","options":{"A":"功能系统图","B":"功能评价图","C":"成本构成图","D":"功能定义图"},"answer":"A","explanation":"功能整理用\"功能系统图\"表达各功能间的逻辑关系（并列或上下位）。选A。"},{"id":52,"chapter":"第5章 价值工程","kaodian":"","type":"multi","stem":"功能分析是核心，主要包括（ ）三项内容。","options":{"A":"功能的定义","B":"功能的整理","C":"功能的计量","D":"功能的核算","E":"功能的监督"},"answer":"ABC","explanation":"价值工程核心是功能分析，包括：功能定义、功能整理、功能评价三项。选ABC。"},{"id":53,"chapter":"第5章 价值工程","kaodian":"","type":"single","stem":"某分项工程施工采用方案A 的成本为5 万元，在相同条件下，采用其他方案的成本为4.5 万元。对方案A 实 施价值工程时，可以认为方案A 的价值系数为（ ）。","options":{"A":"0.90","B":"0.10","C":"0.53","D":"1.11"},"answer":"A","explanation":"价值系数V=功能评价值/现实成本=4.5/5=0.9。选A。"},{"id":54,"chapter":"第5章 价值工程","kaodian":"","type":"multi","stem":"造成价值工程活动对象的价值系数V<1 的可能原因有（ ）。","options":{"A":"评价对象的目前成本偏低","B":"功能目前成本大于功能评价值","C":"可能存在着不足的功能","D":"实现功能的条件或方法不佳","E":"可能存在着过剩的功能"},"answer":"BDE","explanation":"V<1说明功能现实成本大于功能评价值，可能原因：存在过剩功能、实现功能条件不佳、成本偏高需改进。选BDE。"},{"id":55,"chapter":"第6章 财务会计基础","kaodian":"","type":"single","stem":"某企业年初花费30 万元购买企业拥有且预期会给企业带来经济利益的一套设备，在会计核算中应归属的会 计要素是（ ）。","options":{"A":"负债","B":"资产","C":"费用","D":"收入"},"answer":"B","explanation":"设备购买预期带来经济利益，属于资产。选B。"},{"id":56,"chapter":"第6章 财务会计基础","kaodian":"","type":"multi","stem":"根据现行《企业会计准则》，应列入流动负债的有（ ）。","options":{"A":"应收账款","B":"长期借款","C":"应交税金","D":"合同负债","E":"应付工资"},"answer":"CDE","explanation":"流动负债含应付账款、短期借款、应缴税费。长期借款和应付债券是非流动负债。选CDE。"},{"id":57,"chapter":"第6章 财务会计基础","kaodian":"","type":"multi","stem":"下列会计要素中，属于静态会计要素的有（ ）。","options":{"A":"收入","B":"资产","C":"费用","D":"负债","E":"所有者权益"},"answer":"BDE","explanation":"静态会计要素（资产负债表要素）：资产、负债、所有者权益。收入、费用、利润是动态要素。选BDE。"},{"id":58,"chapter":"第6章 财务会计基础","kaodian":"","type":"single","stem":"某企业2 年前20 万元购买的一台设备，累计已计提折旧4 万元，现在市场上购买同样的设备需要15 万元， 则在会计计量时该设备的历史成本和重置成本分别为（ ）。","options":{"A":"20 万元和15 万元","B":"16 万元和11 万元","C":"16 万元和15 万元","D":"20 万元和16 万元"},"answer":"A","explanation":"历史成本=20万（购买价），重置成本=15万（当前市价）。选A。"},{"id":59,"chapter":"第6章 财务会计基础","kaodian":"","type":"single","stem":"关于会计核算中历史成本计量原则的说法，正确的是（ ）。","options":{"A":"负债按照现在偿付该项债务所需支付的现金的金额计量","B":"资产按照市场参与者在交易日发生的有序交易中，出售资产所能收到的价格计量","C":"资产按照购置时所付出的代价的公允价值计量","D":"负债按照现在偿付该项债务所需支付的现金等价物的金额计量"},"answer":"C","explanation":"历史成本原则：资产按取得时实际成本计量，不考虑后续市价变动。选C。"},{"id":60,"chapter":"第6章 财务会计基础","kaodian":"","type":"single","stem":"财务会计的基本职能是（ ）。","options":{"A":"核算和预测","B":"预算和决算","C":"监督和决策","D":"核算和监督"},"answer":"D","explanation":"财务会计基本职能是核算和监督。选D。"},{"id":61,"chapter":"第6章 财务会计基础","kaodian":"","type":"single","stem":"从空间上界定会计工作的基本假设是（ ）。","options":{"A":"会计主体","B":"持续经营","C":"会计分期","D":"货币计量"},"answer":"A","explanation":"会计主体假设从空间上界定会计工作范围。选A。"},{"id":62,"chapter":"第6章 财务会计基础","kaodian":"","type":"single","stem":"某企业2023 年5 月30 日销售货物10 万元（当月无其他销售），到银行贷款2 万元，6 月3 日收到银行转 账货款8 万元，该企业5 月份应计销售收入为（ ）万元。","options":{"A":"12","B":"10","C":"2","D":"0"},"answer":"B","explanation":"权责发生制：5月销售10万计入5月收入，不论何时收款。选B。"},{"id":63,"chapter":"第6章 财务会计基础","kaodian":"","type":"single","stem":"根据我国现行《企业会计准则》，某施工企业2025 年3 月收到建设单位支付的2024 年完工工程的结算款 200 万元，则该笔款项在会计核算上正确的处理方式是计入（ ）。","options":{"A":"2025 年的收入","B":"2025 年的负债","C":"2024 年的负债","D":"2024 年的收入"},"answer":"D","explanation":"2024年完工工程收入已计入2024年，2025年收款不属于收入确认。选D。"},{"id":64,"chapter":"第6章 财务会计基础","kaodian":"","type":"single","stem":"企业对交易或者事项进行会计确认、计量和报告时，不应高估资产或者收益、低估负债或者费用，体现的是 （ ）原则。","options":{"A":"重要性","B":"谨慎性","C":"实质重于形式","D":"可比性"},"answer":"B","explanation":"不高估资产收益、不低估负债费用，体现谨慎性原则。选B。"},{"id":65,"chapter":"第6章 财务会计基础","kaodian":"","type":"single","stem":"同一企业不同时期发生的相同或者相似的交易或者事项，应当采用一致的会计政策，不得随意变更。体现的 是（ ）原则。","options":{"A":"相关性","B":"明晰性","C":"客观性","D":"可比性"},"answer":"D","explanation":"同一企业不同时期采用一致会计政策，体现可比性原则。选D。"},{"id":66,"chapter":"第7章 费用与成本","kaodian":"","type":"single","stem":"根据财务会计的有关规定，下列支出中，属于费用的是（ ）。","options":{"A":"购置固定资产的支出","B":"向所有者分红支出","C":"支付未按期纳税的滞纳金","D":"支付购置原材料的价款"},"answer":"D","explanation":"费用是企业日常活动中的经济利益流出。购置固定资产属资本性支出。选D。"},{"id":67,"chapter":"第7章 费用与成本","kaodian":"","type":"multi","stem":"下列施工企业的各项支出中，在财务会计核算时应作为资本性支出的有（ ）。","options":{"A":"新建办公楼支出","B":"购置大型设备支出","C":"员工年终奖金支出","D":"公益性捐赠支出","E":"财务费用支出"},"answer":"AB","explanation":"资本性支出含购建固定资产和无形资产。购买材料属收益性支出。选AB。"},{"id":68,"chapter":"第7章 费用与成本","kaodian":"","type":"single","stem":"下列施工企业的费用中，在会计核算时应计入生产费用的是（ ）。","options":{"A":"企业质量管理部门办公费","B":"项目部管理人员工资","C":"经营部门人员工资","D":"企业融资的财务费用"},"answer":"B","explanation":"生产费用与产品生产直接相关，如材料费。总部管理人员工资属期间费用。选B。"},{"id":69,"chapter":"第7章 费用与成本","kaodian":"","type":"single","stem":"某施工企业5 月份购买原材料380 万元，其中5 月份消耗120 万元，其余260 万元6 月份生产使用；施工用 的模板是3 月份租赁的，租期8 个月，并支付租金160 万元，按月均摊，6 月份企业办公费支出为10 万 元，不计算其他费用，则权责发生制下该企业6 月份的生产成本为（ ）万元。","options":{"A":"260","B":"270","C":"280","D":"290"},"answer":"C","explanation":"权责发生制：成本=5月消耗材料120万+模板当月摊销。选C。"},{"id":70,"chapter":"第7章 费用与成本","kaodian":"","type":"single","stem":"某施工机械购置费用为120 万元，折旧年限为6 年，年平均工作250 个台班，预计净残值率为3%，按工作 台班法提取折旧，该机械台班折旧费为（ ）元。","options":{"A":"800","B":"776","C":"638","D":"548"},"answer":"B","explanation":"台班折旧费=120万×(1-3%)/(6×250)=116.4万/1500=776元。选B。"},{"id":71,"chapter":"第7章 费用与成本","kaodian":"","type":"multi","stem":"下列固定资产相关费中，构成固定资产原值（原价）的有 （ ）。","options":{"A":"固定资产购买价款","B":"固定资产大修理费用","C":"固定资产发生的装卸费","D":"固定资产的预计净残值","E":"固定资产达到预定可使用状态前的安装费"},"answer":"ACE","explanation":"固定资产原值含买价、运杂费、安装费、相关税费。不含维修费和保养费。选ACE。"},{"id":72,"chapter":"第7章 费用与成本","kaodian":"","type":"multi","stem":"固定资产双倍余额递减法折旧的特点有（ ）。","options":{"A":"每年计算折旧的固定资产价值不变","B":"折旧率逐渐降低","C":"计算折旧时不考虑固定资产预计净残值","D":"折旧年限比平均年限法折旧年限短","E":"前期折旧额高，后期折旧额低"},"answer":"CE","explanation":"双倍余额递减法：折旧率固定不变、前期多提、最后两年改直线法。选CE。"},{"id":73,"chapter":"第7章 费用与成本","kaodian":"","type":"multi","stem":"制造成本法的构成要素包括（ ）。","options":{"A":"制造费用","B":"直接材料成本","C":"直接人工成本","D":"销售费用","E":"财务费用"},"answer":"ABC","explanation":"制造成本法构成：直接材料+直接人工+制造费用。管理费用属期间费用。选ABC。"},{"id":74,"chapter":"第7章 费用与成本","kaodian":"","type":"single","stem":"根据《企业会计准则第15 号一建合同》，属于工程成本直接费用的是（ ）。","options":{"A":"管理费用","B":"销售费用","C":"财务费用","D":"人工费用"},"answer":"D","explanation":"工程成本直接费用含人工费、材料费、机械使用费、其他直接费用。选D。"},{"id":75,"chapter":"第7章 费用与成本","kaodian":"","type":"single","stem":"从工程成本核算的角度,下列不属于工程直接费用中机械使用费的是（ ）。","options":{"A":"建设工程中自有施工机械的使用费","B":"工程施工租用外单位施工机械的租赁费","C":"施工企业总部车辆使用费","D":"施工机械进出场费"},"answer":"C","explanation":"机械使用费不含操作人员工资（计入人工费）。选C。"},{"id":76,"chapter":"第7章 费用与成本","kaodian":"","type":"single","stem":"企业会计核算中，施工企业行政管理部门使用的固定资产的维修费用属于（ ）。","options":{"A":"财务费用","B":"工程设备费用","C":"施工机具使用费","D":"管理费用"},"answer":"D","explanation":"行政管理部门固定资产维修费计入管理费用。选D。"},{"id":77,"chapter":"第7章 费用与成本","kaodian":"","type":"single","stem":"施工企业发生的期间费用中，应计入财务费用的是（ ）。","options":{"A":"企业财务管理软件采购费用","B":"财务管理人员的工资","C":"企业发行债券支付的手续费","D":"参与投标发生的投标费用"},"answer":"C","explanation":"财务费用含利息支出、汇兑损失、银行手续费等。发行股票手续费不计入。选C。"},{"id":78,"chapter":"第8章 收入","kaodian":"","type":"multi","stem":"销售商品或提供劳务取得的收入，对相关会计要素产生的影响可能是（ ）。","options":{"A":"资产增加","B":"负债减少","C":"所有者权益增加","D":"所有者权益减少","E":"资产减少，负债增加"},"answer":"ABC","explanation":"销售收入导致资产增加/负债减少/所有者权益增加。选ABC。"},{"id":79,"chapter":"第8章 收入","kaodian":"","type":"single","stem":"下列施工企业取得的收入中，属于让渡资产使用权收入的是（ ）。","options":{"A":"完成施工任务取得的收入","B":"出租自有设备取得的收入","C":"提供机械作业取得的收入","D":"销售建筑材料取得的收入"},"answer":"B","explanation":"让渡资产使用权收入含出租固定资产收入和利息收入。选B。"},{"id":80,"chapter":"第8章 收入","kaodian":"","type":"single","stem":"2025 年某施工企业施工合同收入为2000 万元，兼营销售商品混凝土收入为500 万元，出租起重机械收入为 80 万元，代收商品混凝土运输企业运杂费为100 万元，则2025 年该企业的营业收入为（ ）万元。","options":{"A":"2680","B":"2580","C":"2500","D":"2000"},"answer":"B","explanation":"营业收入=施工合同收入+销售商品+出租收入=2000+500+80=2580万。代收运费不算。选B。"},{"id":81,"chapter":"第8章 收入","kaodian":"","type":"single","stem":"建造合同收入包括合同规定的初始收入和（ ）形成的收入。","options":{"A":"材料销售、奖励","B":"合同变更、索赔、奖励","C":"让渡资产使用权、索赔","D":"成本加酬金合同"},"answer":"B","explanation":"建造合同收入=初始收入+合同变更、索赔、奖励等形成的收入。选B。"},{"id":82,"chapter":"第8章 收入","kaodian":"","type":"multi","stem":"根据《企业会计准则》，合同执行过程中，合同变更形成的收入确认为合同收入时，应同时满足的条件有 （ ）。","options":{"A":"合同变更增加了企业履约的义务","B":"客户能够认可因变更而增加的收入","C":"合同变更部分双方的义务已经开始履行","D":"客户已支付变更部分的相应款项","E":"该收入能够可靠地计量"},"answer":"BE","explanation":"合同变更收入确认条件：客户认可变更且金额能可靠计量。选BE。"},{"id":83,"chapter":"第8章 收入","kaodian":"","type":"single","stem":"某跨年度项目的合同造价为10000 万元，预计合同总成本8500 万元，资产负债表日以前会计年度累计已确 认的收入为6000 万元。该工程现已完成工程进度的80%。则当期应确认的合同收入为（ ）万元。","options":{"A":"1500","B":"2000","C":"2500","D":"4000"},"answer":"B","explanation":"完工百分比法：应确认收入=10000×80%=8000万，本期确认=8000-6000=2000万。选B。"},{"id":84,"chapter":"第8章 收入","kaodian":"","type":"single","stem":"某施工企业与业主订立的一项总造价为5000 万元的施工合同，合同期为3 年。第一年实际发生合同成本 1600 万元，年末预计为完成合同尚需发生成本3000 万元，则第一年合同完成进度为（ ）。","options":{"A":"92.0%","B":"34.8%","C":"53.3%","D":"32.0%"},"answer":"B","explanation":"完工进度=1600/(1600+3000)=34.78%，应确认收入=5000×34.78%=1739万。选B。"},{"id":85,"chapter":"第8章 收入","kaodian":"","type":"multi","stem":"某固定造价实施合同，合同造价为4000 万元，合同工期3 年。假定第一年完工进度为30%，第二年完成合 同工程量的35%，第三年完工交付使用。合同结果能可靠估计。关于该合同完工进度和收入确认的说法，正 确的有（ ）。","options":{"A":"第1 年应确认合同收入1200 万元","B":"第2 年应确认合同收入1400 万元","C":"第3 年合同完工进度为100%","D":"第3 年应确认合同收入1400 万元","E":"第2 年合同完工进度为35%"},"answer":"ABCD","explanation":"第一年=4000×30%=1200万；第二年=4000×35%=1400万；第三年=4000×35%=1400万。选ABCD。"},{"id":86,"chapter":"第9章 利润与所得税费用","kaodian":"","type":"single","stem":"某施工企业2024 年度工程结算收入为1000 万元，营业成本200 万元，税金及附加为100 万元，管理费用 200 万元，财务费用为100 万元。其他业务收入为200 万元，投资收益100 万元，净敞口套期收益50 万 元，营业外收入为100 万元，营业外支出为80 万元，所得税为100 万元，则企业当年营业利润为（ ）万 元。","options":{"A":"500","B":"750","C":"550","D":"670"},"answer":"B","explanation":"营业利润=1000+200-200-100-200-100=600万。选B。"},{"id":87,"chapter":"第9章 利润与所得税费用","kaodian":"","type":"single","stem":"下列事项中，会导致企业营业利润减少的是（ ）。","options":{"A":"固定资产盘亏","B":"所得税费用增加","C":"发生债务重组损失","D":"管理费用增加"},"answer":"D","explanation":"固定资产盘亏计入营业外支出不影响营业利润。资产减值损失减少营业利润。选D。"},{"id":88,"chapter":"第9章 利润与所得税费用","kaodian":"","type":"single","stem":"根据《公司法》第一百六十七条规定：“公司分配当年税后利润时，应当提取利润的百分之十列入公司法定 公积金。公司法定公积金累计额为公司注册资本的（ ）时，可以不再提取”。","options":{"A":"百分之三十以上","B":"百分之四十以上","C":"百分之五十以上","D":"百分之六十以上"},"answer":"C","explanation":"法定公积金累计额达注册资本50%时可不再提取。选C。"},{"id":89,"chapter":"第9章 利润与所得税费用","kaodian":"","type":"single","stem":"股东会作出分配利润的决议后，董事会应当在股东会决议作出之日起（ ）完成分配。","options":{"A":"三个月","B":"五个月","C":"六个月","D":"九个月"},"answer":"C","explanation":"公司法规定董事会应在决议作出之日起6个月内完成分配。选C。"},{"id":90,"chapter":"第9章 利润与所得税费用","kaodian":"","type":"single","stem":"在计算所得税时，企业已作为坏账损失处理后又收回的应收款项应列入企业收入中的（ ）。","options":{"A":"销售收入","B":"应收账款","C":"接受捐款收入","D":"其他收入"},"answer":"D","explanation":"已核销坏账又收回，计入其他收入。选D。"},{"id":91,"chapter":"第9章 利润与所得税费用","kaodian":"","type":"single","stem":"核算企业一定时期应纳税所得额时，下列收入中，属于不征税收入的是（ ）。","options":{"A":"提供专利使用所得的收入","B":"转让财产收入","C":"接受捐赠取得的收入","D":"接受财政拨款取得的收入"},"answer":"D","explanation":"不征税收入含财政拨款等。国债利息属免税收入（非不征税）。选D。"},{"id":92,"chapter":"第9章 利润与所得税费用","kaodian":"","type":"single","stem":"某施工企业2024 年利润总额8000 万元，企业当年发生公益性捐款支出1000 万元，现在计算2024 年度应纳 税所得额时该笔捐赠支出准予扣除的最大金额（ ）万元。","options":{"A":"1000","B":"250","C":"960","D":"125"},"answer":"C","explanation":"公益性捐赠扣除限额=8000×12%=960万，实际1000万只能扣960万。选C。"},{"id":93,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"反映企业在一定会计期间经营成果的报表是（ ）。","options":{"A":"利润表","B":"资产负债表","C":"现金流量表","D":"所有者权益变动表"},"answer":"A","explanation":"利润表反映一定会计期间的经营成果。选A。"},{"id":94,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"利润表的特点说法正确的是（ ）。","options":{"A":"反映在某一特定日期的收入实现和费用耗费情况以及获得利润","B":"反映所有者权益的构成情况","C":"考核企业的财务状况","D":"分析判断企业损益发展变化的趋势，预测企业未来的盈利能力"},"answer":"D","explanation":"利润表是动态报表，反映一定期间的经营成果。选D。"},{"id":95,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"根据现行《企业会计准则》，下列资产中属于现金流量表中现金等价物的是（ ）。","options":{"A":"应收账款","B":"银行承兑汇票","C":"存货","D":"可流通的股票"},"answer":"B","explanation":"现金等价物：期限短(≤3个月)、流动性强。3个月内到期的短期债券是现金等价物。选B。"},{"id":96,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"下列经济活动产生的现金中，不属于筹资活动产生的现金流量是（ ）。","options":{"A":"取得借款收到的现金","B":"分配股利支付的现金","C":"偿还债务支付的现金","D":"处置子公司收到的现金净额"},"answer":"D","explanation":"收回投资收到的现金属投资活动现金流。选D。"},{"id":97,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"关于财务报表附注的说法，错误的是（ ）。","options":{"A":"附注应当披露财务报表的编制基础","B":"附注是对财务报表中列示的重要项目的进一步文字说明或明细资料","C":"附注应当对财务报表中的每一项目作出进一步说明","D":"附注是对财务报表的补充"},"answer":"C","explanation":"财务报表附注是对报表项目的补充说明，不可省略。选C。"},{"id":98,"chapter":"第10章 财务分析","kaodian":"","type":"multi","stem":"根据现行《企业会计准则》，关于企业财务报告列报基本要求的说法，正确的有（ ）。","options":{"A":"企业应当以持续经营为基础编制财务报表","B":"重要项目应单独列报","C":"报表列示项目不应相互抵销","D":"当期报表列报项目与上期报表项目应当具有可比性","E":"企业至少应当按月编制财务报表"},"answer":"ABCD","explanation":"财务报告列报要求含以持续经营为基础、一致性、重要性、可比性等。选ABCD。"},{"id":99,"chapter":"第10章 财务分析","kaodian":"","type":"multi","stem":"根据现行《企业会计准则》，企业在财务报表显著位置至少应披露的项目有（ ）。","options":{"A":"编报企业名称","B":"资产负债表日或会计报表涵盖的会计期间","C":"人民币金额单位","D":"企业财务负责人姓名","E":"是否是合并财务报表"},"answer":"ABCE","explanation":"显著位置应披露：企业名称、资产负债表日、货币单位、合并标注。选ABCE。"},{"id":100,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"下列财务比率中，属于企业偿债能力分析指标的是（ ）。","options":{"A":"总资产周转率","B":"净资产收益率","C":"营业增长率","D":"流动比率"},"answer":"D","explanation":"偿债能力指标含流动比率、速动比率、资产负债率。选D。"},{"id":101,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"某企业资产负债表日的流动资产总额为300 万元（其中货币资金60 万元，存货160 万元，应收帐款等80 万 元），流动负债总额为80 万元，则该企业的速动比率为（ ）。","options":{"A":"3.75","B":"1.75","C":"1.25","D":"0.75"},"answer":"B","explanation":"速动比率=(流动资产-存货)/流动负债=(300-160)/80=1.75。选B。"},{"id":102,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"根据国家财税规定，企业可以用来偿还投资借款的资金来源是（ ）。","options":{"A":"利润、折旧、应交税金","B":"未分配利润、折旧、摊销费","C":"折旧、摊销费、应付工资","D":"未分配利润、应付工资、折旧"},"answer":"B","explanation":"偿还借款的资金来源含利润、折旧、摊销费。选B。"},{"id":103,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"某企业在运营期内平均每年的息税前利润为750 万，企业所得税为150 万，折旧费和摊销费为80 万。企业 应还本金额500 万元，利息金额为330 万，则该企业的利息备付率为（ ）。","options":{"A":"1.18","B":"1.5","C":"2.27","D":"2.5"},"answer":"C","explanation":"偿债备付率=(750+80-150)/(500+330)=680/830≈0.82。选C。"},{"id":104,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"下列财务指标中，数值越大则表示企业销售能力越强的指标是（ ）。","options":{"A":"流动比率","B":"净资产收益率","C":"总资产周转率","D":"资产负债率"},"answer":"C","explanation":"总资产周转率越大，企业销售能力越强。选C。"},{"id":105,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"某企业年初资产总额为500 万元，年末资产总额为540 万元，当年营业收入为900 万元，其中主营业务收入 为832 万元，则该企业一年中总资产周转率为（ ）次。","options":{"A":"1.80","B":"1.73","C":"1.60","D":"1.54"},"answer":"B","explanation":"总资产周转率=900/[(500+540)/2]=900/520≈1.73次。选B。"},{"id":106,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"企业应收账款周转率与上一年度相比有明显提高，说明该企业的经营状况是（ ）。","options":{"A":"企业管理效率降低","B":"更容易发生坏账损失","C":"收回赊销账款能力减弱","D":"应收账款收回速度变快"},"answer":"D","explanation":"应收账款周转率提高说明回款加快、坏账风险降低。选D。"},{"id":107,"chapter":"第10章 财务分析","kaodian":"","type":"multi","stem":"企业财务分析中，用于衡量资产管理效率的指标有（ ）。","options":{"A":"应收账款周转率","B":"总资产净利率","C":"存货周转率","D":"资本积累率","E":"资产负债率"},"answer":"AC","explanation":"资产管理效率指标含总资产周转率、应收账款周转率、存货周转率。选AC。"},{"id":108,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"三、盈利能力比率 指标 公式 内容 权益净利率 （净资产收益率） 净资产收益率= 净利润 股东权益总额 核心指标 总资产净利率 总资产净利率= 净利润 资产总额 【注】总额取（期初总额+期末总额）平均值。 企业的盈利能力只涉及正常的营业状况，因此，盈利能力分析应当排除以下项目： ①证券买卖等非正常经营项目； ②已经或将要停止的营业项目； ③重大事故或法律更改等特别项目； ④会计准则或财务制度变更带来的累积影响等因素。 数值越高，则表明企业全部资产的利用率就越高，盈利能力越强的财务指标是（ ）。","options":{"A":"营业增长率","B":"总资产净利率","C":"净资产收益率","D":"资产积累率"},"answer":"B","explanation":"【逐项解析】本题考点：盈利能力比率——总资产净利率。总资产净利率=净利润/平均资产总额，反映企业全部资产的利用效率。数值越高，表明资产利用率越高、盈利能力越强。注意区分：净资产收益率=净利润/股东权益，是杜邦分析核心指标，反映自有资本回报率，而非全部资产利用率。题干关键词「全部资产的利用率」直接指向总资产净利率，选B。"},{"id":109,"chapter":"第10章 财务分析","kaodian":"","type":"multi","stem":"为了客观分析企业盈利能力，收集相关分析数据时应当排除的项目有（ ）。","options":{"A":"证券买卖等非正常经营项目","B":"新开发刚投入生产的经营项目","C":"已经或将要停止的营业项目","D":"目前处于亏损状态的经营项目","E":"会计准则变更带来的累积影响"},"answer":"ACE","explanation":"分析盈利能力应排除证券买卖损益、会计准则变更影响、重大事故影响等非经常性损益。选ACE。"},{"id":110,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"四、发展能力比率 营业增长率= 本期营业收入增加额 上期营业收入总额 是评价企业成长状况和发展能力的重要指标。该指标是衡量企业经营状况和市场占有能力、预测企业经营业 务拓展趋势的重要标志，也是企业扩张资本的重要前提。指标值越高，表明营业收入增长速度越快。 资本积累率= 本年所有者权益增长额 年初所有者权益 该指标体现了企业资本的积累能力，是评价企业发展潜力的重要指标，也是企业扩大再生产的源泉。资本积 累率反映了投资者投入企业资本的保全性和增长性，该指标越高。表明企业的资本积累越多，企业资本保全 性越强，应对风险、持续发展的能力越强。 某企业上年初所有者权益总额为5000 万元，年末所有者权益相对年初减少200 万元。本年末所有者权益总 额为5500 万元，则该企业本年度的资本积累率为（ ）。","options":{"A":"10.00%","B":"10.42%","C":"14.58%","D":"14.00%"},"answer":"C","explanation":"营业增长率反映企业成长能力和发展潜力。选C。"},{"id":111,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"五、财务指标综合分析—杜邦财务分析体系 该体系是利用各主要财务比率指标之间的内在联系，对企业财务状况和经营成果进行综合系统评价的方法。 该体系是以权益净利率为核心指标，以总资产净利率和权益乘数为两个方面，重点揭示企业获利能力及财务 杠杆应用对权益净利率的影响，以及各相关指标之间的相互作用关系。 杜邦财务分析体系揭示的是（ ）对权益净利率的影响。","options":{"A":"总资产净利率及资产总额","B":"企业获利能力及财务杠杆应用","C":"资本积累率及销售收入","D":"企业增长率及资本积累率"},"answer":"B","explanation":"杜邦分析核心：权益净利率=总资产净利率×权益乘数。选B。"},{"id":112,"chapter":"第10章 财务分析","kaodian":"","type":"single","stem":"某企业2024 年实现净利润为1000 万元，营业收入为10000 万元，总资产周转率为0.8，权益乘数为1.5。 不考虑其他因素。采用杜邦财务分析体系计算的净资产收益率是（ ）。","options":{"A":"100%","B":"15%","C":"12%","D":"10%"},"answer":"C","explanation":"权益净利率=(1000/10000)×0.8×1.5=0.1×0.8×1.5=0.12=12%。选C。"},{"id":113,"chapter":"第11章 筹资管理","kaodian":"","type":"single","stem":"某施工企业在经营过程中，同时发行可转换债券和认股权证，该筹资方式属于（ ）。","options":{"A":"内源筹资","B":"权益筹资","C":"混合筹资","D":"债务筹资"},"answer":"C","explanation":"可转换债券和认股权证兼具股权和债权特征，属混合筹资。选C。"},{"id":114,"chapter":"第11章 筹资管理","kaodian":"","type":"multi","stem":"企业作为筹资主体时，内源筹资资金的来源有（ ）。","options":{"A":"留存收益","B":"债券筹资","C":"优先股筹资","D":"普通股筹资","E":"应收账款"},"answer":"AE","explanation":"内源筹资含留存收益和折旧。发行股票和债券属外源筹资。选AE。"},{"id":115,"chapter":"第11章 筹资管理","kaodian":"","type":"multi","stem":"关于项目融资特点的说法，正确的有（ ）。","options":{"A":"采用的信用结构比较灵活","B":"是以发起项目的企业为主体的融资活动","C":"可以合理分配投资风险","D":"属于无限追索贷款","E":"是投资人资产负债表之内的融资"},"answer":"AC","explanation":"项目融资特点含项目导向、有限追索、风险分担。选AC。"},{"id":116,"chapter":"第11章 筹资管理","kaodian":"","type":"multi","stem":"下列短期筹资方式中，属于商业信用形式的有（ ）。","options":{"A":"其他预付款","B":"应付账款","C":"短期借款","D":"应付票据","E":"预收账款"},"answer":"BDE","explanation":"商业信用含应付账款、应付票据、预收账款。短期借款属银行信用。选BDE。"},{"id":117,"chapter":"第11章 筹资管理","kaodian":"","type":"multi","stem":"对筹资方而言，短期负债筹资的特点有（ ）。","options":{"A":"筹资速度快","B":"筹资风险高","C":"筹资难度大","D":"限制条件较多","E":"筹资成本高"},"answer":"AB","explanation":"短期负债特点含筹资速度快、弹性好、成本低但风险高。选AB。"},{"id":118,"chapter":"第11章 筹资管理","kaodian":"","type":"multi","stem":"根据现行会计准则和税法，关于融资租赁的说法，正确的有（ ）。","options":{"A":"租赁期满时，租赁资产的所有权可以转移给承租人","B":"租赁期占资产可使用年限的大部分，通常等于或大于可使用年限的75%","C":"融资租赁在税法上被认定为分期付款购买","D":"承租人有购买租赁资产的选择权，所订立的购买价格远低于行使选择权时租赁资产的公允价值","E":"承租人产生的租赁费可作为当期费用扣除"},"answer":"ABCD","explanation":"融资租赁：租赁期长(≥寿命75%)、期满设备归承租人、租金含设备价款等。选ABCD。"},{"id":119,"chapter":"第11章 筹资管理","kaodian":"","type":"single","stem":"在长期股权筹资中，普通股和优先股筹资共同的特点是（ ）。","options":{"A":"股利取决于盈利水平，无固定股利负担","B":"不会改变股东对公司的控制权","C":"作为公司永久性资金无需归还","D":"股利取决于分配政策并定期支付"},"answer":"C","explanation":"普通股和优先股的共同特点是都不需要还本（属股权性质）。选C。"},{"id":120,"chapter":"第11章 筹资管理","kaodian":"","type":"single","stem":"企业以发行债券方式融资产生的资金成本中，属于资金占用费的是（ ）。","options":{"A":"债券代理发行费","B":"债券公证费","C":"债券发行广告费","D":"债券利息"},"answer":"D","explanation":"债券利息属于资金占用费。手续费属筹资费。选D。"},{"id":121,"chapter":"第11章 筹资管理","kaodian":"","type":"single","stem":"某企业拟从银行取得一笔贷款2000万元，期限3年，每年年末付息，到期一次还本。有四家银行提出的贷款条件见下表：该企业所得税率为25%，仅从资金成本的角度考虑，该企业应从（ ）银行贷款。<br><table class=\"data-table\"><thead><tr><th>银行</th><th>利率</th><th>筹资费率</th></tr></thead><tbody><tr><td>甲</td><td>7%</td><td>0.1%</td></tr><tr><td>乙</td><td>8%</td><td>0.2%</td></tr><tr><td>丙</td><td>6%</td><td>0.5%</td></tr><tr><td>丁</td><td>7.5%</td><td>0.2%</td></tr></tbody></table>","options":{"A":"甲","B":"乙","C":"丙","D":"丁"},"answer":"C","explanation":"资金成本=年利率×(1-税率)/(1-手续费率)，取最小方案。选C。"},{"id":122,"chapter":"第11章 筹资管理","kaodian":"","type":"single","stem":"某企业通过长期借贷和长期债劵两种方式筹资，其中长期借贷款3000 万元，债券2000 万元。期限均为3 年，每年结息一次，到期一次还本。长期借款年利率为6%，手续费率2%；长期债券年利率为6.5%；手续费 率1.5%，所得税率25%。关于该企业资金成本的说法，错误的是（ ）。","options":{"A":"长期债券的资金成本率为4.95%","B":"长期借款的资金成本率为4.59%","C":"两种筹款成本均属于债务资金成本","D":"企业筹资的综合资金成本率为4.77%"},"answer":"D","explanation":"【逐项解析】本题考点：资金成本率计算。长期借款资金成本=6%×(1-25%)/(1-2%)=4.5%/0.98=4.59%，B正确（√）。长期债券资金成本=6.5%×(1-25%)/(1-1.5%)=4.875%/0.985=4.95%，A正确（√）。两种均为债务资金成本（利息税前扣除），C正确（√）。综合资金成本=(3000×4.59%+2000×4.95%)/5000=(137.7+99)/5000=4.73%，D说4.77%是错误的，故选D。【法条依据】资金成本率=年资金占用费×(1-T)/[筹资总额×(1-f)]。"},{"id":123,"chapter":"第12章 营运资金管理","kaodian":"","type":"single","stem":"企业持有一定量的现金用于保证月末职工的工资发放，其置存的目的是为了满足（ ）需要。","options":{"A":"交易性","B":"投机性","C":"预防性","D":"风险管理"},"answer":"A","explanation":"发放工资属于满足交易性需求。选A。"},{"id":124,"chapter":"第12章 营运资金管理","kaodian":"","type":"single","stem":"企业为提高现金使用效率，利用已经开出了支票而银行还未将该款项划出这一时间段内的资金，此现金管理 的方法属于（ ）的方法。","options":{"A":"使用现金浮游量","B":"使现金流量同步","C":"加速收款","D":"推迟应付账款"},"answer":"A","explanation":"利用已开支票到银行划款的时间差，属于浮游量法。选A。"},{"id":125,"chapter":"第12章 营运资金管理","kaodian":"","type":"single","stem":"企业现金管理的目标是在资产的（ ）之间做出抉择，以获得最大的长期利益。","options":{"A":"流动性和风险","B":"风险和盈利能力","C":"流动性和盈利能力","D":"安全性和盈利能力"},"answer":"C","explanation":"现金管理目标是在流动性和盈利性之间权衡。选C。"},{"id":126,"chapter":"第12章 营运资金管理","kaodian":"","type":"single","stem":"某施工企业有四种现金持有方案如下表。按成本分析模式选择的最佳现金持有方案应为（ ）方案。<br><table class=\"data-table\"><thead><tr><th></th><th>甲</th><th>乙</th><th>丙</th><th>丁</th></tr></thead><tbody><tr><td>现金持有量</td><td>60000</td><td>70000</td><td>90000</td><td>100000</td></tr><tr><td>机会成本</td><td>6000</td><td>7000</td><td>9000</td><td>10000</td></tr><tr><td>管理成本</td><td>3000</td><td>3000</td><td>3000</td><td>3000</td></tr><tr><td>短缺成本</td><td>6000</td><td>5000</td><td>2000</td><td>0</td></tr></tbody></table>","options":{"A":"甲","B":"丁","C":"乙","D":"丙"},"answer":"B","explanation":"成本分析模式选总成本=机会成本+管理成本+短缺成本最低方案。选B。"},{"id":127,"chapter":"第12章 营运资金管理","kaodian":"","type":"single","stem":"关于企业现金持有成本的说法，正确的是（ ）。","options":{"A":"最佳现金持有量为机会成本、管理成本和短缺成本之和最小对应的现金持有量","B":"管理成本与现金持有量之间一般有显著的比例关系","C":"可以通过加速现金流转速度降低管理成本","D":"现金的短缺成本随现金持有量的增加而上升"},"answer":"A","explanation":"机会成本与现金持有量成正比。选A。"},{"id":128,"chapter":"第12章 营运资金管理","kaodian":"","type":"single","stem":"企业生产所需某种材料，年度采购总量为8000 吨，材料单价为400 元/吨，一次订货的变动成本为3000 元，每吨材料的年平均储备成本为300 元，则该材料的经济采购批量为（ ）吨。","options":{"A":"114","B":"200","C":"400","D":"300"},"answer":"C","explanation":"经济订货量Q=√(2×8000×3000/300)=400吨。选C。"},{"id":129,"chapter":"第12章 营运资金管理","kaodian":"","type":"single","stem":"下列属于储存成本的是（ ）。","options":{"A":"存货破损和变质损失","B":"材料供应中断造成的停工损失","C":"丧失销售机会的损失","D":"产成品库存缺货造成的拖欠发货损失"},"answer":"A","explanation":"储存成本含仓库费、保险费、存货占用资金利息等。运输费属订货成本。选A。"},{"id":130,"chapter":"第12章 营运资金管理","kaodian":"","type":"single","stem":"采用ABC 分析法进行存货管理，对A 类存货应采取的管理方法是（ ）。","options":{"A":"按总额灵活掌握","B":"根据实际情况采取灵活措施","C":"凭经验确定进货量","D":"认真规划，严格控制"},"answer":"D","explanation":"A类存货（占金额大）应重点管理，严格控制库存。选D。"},{"id":131,"chapter":"第12章 营运资金管理","kaodian":"","type":"single","stem":"某建筑企业按2/10，n/30 的条件购入货物100 万元，若该企业在第30 天付款，则放弃现金折扣的成本为 （ ）。","options":{"A":"2.00%","B":"2.04%","C":"36.73%","D":"73.47%"},"answer":"C","explanation":"放弃折扣成本=2%/98%×360/20≈36.73%。选C。"},{"id":132,"chapter":"第12章 营运资金管理","kaodian":"","type":"single","stem":"某施工企业需要从银行借款200 万元，期限1 年，有甲、乙、丙、丁四家银行愿意提供贷款，年利率为 7%，但利息支付方式不同：甲要求采用贴现法；乙要求采用收款法；丙、丁均要求采用加息法，并且丙要求 12 个月内等额还本付息，丁要求12 个月内等额本金偿还，利息随各期的本金一起支付，其他贷款条件都相 同，则该企业借款应选择的银行是（ ）。","options":{"A":"甲","B":"丙","C":"乙","D":"丁"},"answer":"C","explanation":"实际利率：收款法7%、贴现法7.53%、加息法≈14%。选丙(收款法)最低。选C。"},{"id":133,"chapter":"第12章 营运资金管理","kaodian":"","type":"multi","stem":"企业短期筹资时，贷款的实际利率高于名义利率的利息支付方法有（ ）。","options":{"A":"收款法","B":"贴现法","C":"固定利率法","D":"浮动利率法","E":"加息法"},"answer":"BE","explanation":"实际利率>名义利率：贴现法和加息法。收款法实际利率=名义利率。选BE。"},{"id":134,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"下列组成建设工程项目总概算的费用中，属于工程费用的是（ ）。","options":{"A":"勘察设计费用","B":"建设期利息","C":"办公生活家具购置费","D":"建设工程项目的设备购置费"},"answer":"D","explanation":"工程费用含设备工器具购置费和建筑安装工程费。选D。"},{"id":135,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"下列建设项目总投资中，属于动态投资部分的是（ ）。","options":{"A":"预备费和铺底流动资金","B":"工程建设其他费和铺底流动资金","C":"价差预备费和建设期利息","D":"建设期利息和铺底流动资金"},"answer":"C","explanation":"动态投资含价差预备费和建设期利息。选C。"},{"id":136,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"某建设项目设备工器具购置费为1000万元，建安费为2500万元，工程建设其他费为700万元，基本预备费210 万元，价差预备费310万元，建设期利息320万元，静态投资为（ ）万元。","options":{"A":"4410","B":"4200","C":"4720","D":"5040"},"answer":"A","explanation":"静态投资=设备+建安+其他费+基本预备费=1000+2500+700+210=4410万。选A。"},{"id":137,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"某项目拟从国外进口一套设备，重1000吨，装运港船上交货价300万美元，国际运费标准每吨360美元，海上 运输保险费率0.266%。美元银行外汇牌价7.03元人民币。则该设备国外运输保险费为（ ）万元。","options":{"A":"5.610","B":"5.625","C":"6.283","D":"6.300"},"answer":"D","explanation":"进口设备到岸价(CIF)=FOB+运费+保险费。综合计算选D。"},{"id":138,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"某工程采用的设备拟由设备成套公司供应，则成套公司的服务费在估价时应计入（ ）。","options":{"A":"建设管理费","B":"设备原价","C":"进口设备抵岸价","D":"设备运杂费"},"answer":"D","explanation":"设备成套公司服务费计入设备运杂费。选D。"},{"id":140,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"某施工企业投标报价时确定企业管理费率以人工费为基础计算，据统计资料，该施工企业生产工人年平均管 理费为1.2万元，年有效施工天数为240天，人工单价为300元/天，人工费占分部分项工程费的比例为75%， 则该企业的企业管理费费率应为（ ）。","options":{"A":"12.15%","B":"12.50%","C":"16.67%","D":"22.22%"},"answer":"C","explanation":"企业管理费率=12000/(240×300)=16.67%。选C。"},{"id":141,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"5.利润 工程造价管理机构再确定计价定额中的利润时，应以定额人工费或定额人工费与定额机械费之和作为计算基 础。 6.规费 社会保险费和住房公积金应以定额人工费为计算基础。 7.税金 指的是增值税，按税前工程造价乘以增值税税率确定。 税前工程造价：人工费、材料费、施工机具使用费、企业管理费、利润和规费之和。 根据《建筑安装工程费用项目组成》，建筑安装工程生产工人的高温作业临时津贴应计入（ ）。","options":{"A":"劳动保护费","B":"人工费","C":"规费","D":"企业管理费"},"answer":"B","explanation":"规费含社会保险费和住房公积金，以定额人工费为计算基础。选B。"},{"id":142,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"下列施工中发生的与材料有关的费用，属于建筑安装工程费中材料费的是（ ）。","options":{"A":"对原材料进行一般鉴定、检查所发生的费用","B":"原材料在运输装卸过程中不可避免的损耗费","C":"施工机械场外运输所需的辅助材料费","D":"机械设备日常保养所需的材料费用"},"answer":"B","explanation":"材料费含材料原价+运杂费+运输损耗+采购保管费。模板摊销属措施费。选B。"},{"id":143,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"为保障施工机械正常运转所需的随机配备工具附具的摊销和维护费用，属于施工机械使用费中的（ ）。","options":{"A":"折旧费","B":"维护费","C":"施工仪器使用费","D":"安拆费"},"answer":"B","explanation":"随机工具附具摊销和维护费属经常修理费。选B。"},{"id":144,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"施工企业按照规定标准对采购的建筑材料进行一般性鉴定、检查发生的费用应计入（ ）。","options":{"A":"材料费","B":"企业管理费","C":"人工费","D":"措施项目费"},"answer":"B","explanation":"一般性鉴定检查费计入企业管理费中的检验试验费。选B。"},{"id":145,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"multi","stem":"下列费用中，属于施工企业管理费的有（ ）。","options":{"A":"施工人员工资性津贴","B":"职工集体福利费","C":"施工现场场地清理费","D":"劳动保护费","E":"工程点交费"},"answer":"BD","explanation":"企业管理费含管理人员工资、办公费、差旅费等。社会保险属规费。选BD。"},{"id":146,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"multi","stem":"根据《建筑安装工程费用项目组成》，建筑安装工程的规费包括（ ）。","options":{"A":"劳动保险费","B":"企业按规定标准为职工缴纳的养老保险费","C":"企业为进行施工搭设临时设施的费用","D":"施工机械停用期间的维护和保养费用","E":"企业按规定标准为职工缴纳的住房公积金"},"answer":"BE","explanation":"规费含社会保险费(五险)和住房公积金。选BE。"},{"id":147,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"施工现场设立的安全警示标志，现场围挡等所需的费用属于（ ）费用。","options":{"A":"措施项目","B":"分部分项工程","C":"零星项目","D":"其他项目"},"answer":"A","explanation":"安全警示标志、现场围挡属安全文明施工费。选A。"},{"id":148,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"建筑工人实名制管理费应计入（ ）。","options":{"A":"规费","B":"工程建设其他项目费","C":"安全文明施工费","D":"分部分项工程费"},"answer":"C","explanation":"建筑工人实名制管理费计入企业管理费。选C。"},{"id":149,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"投标报价时必须按国家或省级、行政有关权力部门规定的标准计算，不得作为竞争性费用的是（ ）。","options":{"A":"暂列金额、规费、税金","B":"安全文明施工费、规费、税金","C":"暂估价、规费、税金","D":"计日工、安全文明施工、税金"},"answer":"B","explanation":"规费、安全文明施工费和税金不得作为竞争性费用。选B。"},{"id":150,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"multi","stem":"按照造价形成划分的建筑安装工程费用中，暂列金额主要用于（ ）。","options":{"A":"施工中可能发生的工程变更的费用","B":"总承包人为配合发包人进行专业工程发包产生的服务费用","C":"施工合同签订时尚未确定的工程设备采购的费用","D":"工程施工中合同约定调整因素出现时工程价款调整的费用","E":"在高海拔特殊地区施工增加的费用"},"answer":"ACD","explanation":"暂列金额用于工程变更、价款调整、索赔等预留费用。选ACD。"},{"id":151,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"multi","stem":"安全文明施工费等于计算基数×相应费率得出，计算基数为（ ）。","options":{"A":"定额人工费","B":"定额人工费+定额材料费","C":"定额人工费+定额机械费","D":"定额材料费+定额机械费","E":"定额分部分项工程费+定额中可以计量的措施项目费"},"answer":"ACE","explanation":"安全文明施工费计算基数可为：定额人工费、定额人工费+机械费、定额直接费。选ACE。"},{"id":152,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"考点4：工程建设其他费构成及计算★★★★","type":"single","stem":"下列费用中，属于工程建设其他费中研究试验费的是（ ）。","options":{"A":"承包人的措施项目费","B":"承包人的企业管理费","C":"发包人的研究试验费","D":"发包人的企业管理费"},"answer":"C","explanation":"建设管理费含建设单位管理费、工程监理费、工程质量监督费等。选C。"},{"id":153,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"建设单位对设计方案进行评审而发生的费用应计入工程建设其他费用中的（ ）。","options":{"A":"专项评价费","B":"勘察设计费","C":"工程监理费","D":"建设管理费"},"answer":"D","explanation":"设计方案评审费计入工程建设其他费中的专项评价费或建设管理费。选D。"},{"id":154,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"某建设项目的工程费用为1500万元，工程建设其他费用为200万元，场地准备和临时设施费按工程费用的5% 计算。则该项目的场地准备和临时设施费为（ ）万元。","options":{"A":"75","B":"93","C":"85","D":"100"},"answer":"A","explanation":"场地准备和临时设施费=1500×5%=75万元。选A。"},{"id":155,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"multi","stem":"关于联合试运转费的说法，正确的（ ）。","options":{"A":"不发生试运转或试运转收入大于费用支出的工程，不列联合试运转费","B":"当联合试运转收入小于试运转支出时，联合试运转费=联合试运转费用支出-联合试运转收入","C":"联合试运转费包括在试运转中暴露出来的因施工原因发生的处理费用","D":"联合试运转费包括单台设备的调试费用","E":"联合试运转支出包括施工单位参加试运转的人工费、专家指导费"},"answer":"ABE","explanation":"联合试运转费：净支出计入、不包括设备缺陷处理费、收入大于支出列盈余。选ABE。"},{"id":156,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"某建设工程项目建筑安装工程费为2000万元，设备及工器具购置费为800万元，工程建设其他费用为300万元 ，基本预备费率为8%，该项目的基本预备费为（ ）万元。","options":{"A":"160","B":"184","C":"248","D":"224"},"answer":"C","explanation":"基本预备费=(建安费+设备购置费+其他费)×费率=(2000+800+300)×8%=248万。选C。"},{"id":157,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"某项目建筑安装工程费、设备及工器具购置费合计为7000万元，建设期2年分别投入4000万元和3000万元， 建设期内预计年平均价格总水平上涨为5%，建设期贷款利息为735万元，工程建设其他费用为400万元，基本 预备费费率为10%，流动资金为800万元，则该项目的静态投资为（ ）万元。","options":{"A":"8948.5","B":"8140","C":"8940","D":"9748.5"},"answer":"B","explanation":"价差预备费=∑It[(1+f)^(m+t-0.5)-1]。第1年=4000×[(1.05)^1.5-1]≈303.8万；第2年=3000×[(1.05)^2.5-1]≈389.8万；合计≈693.6万。选B。"},{"id":158,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"single","stem":"采用简易计税方法计算建筑业增值税应纳税额时，增值税征收率为（ ）。","options":{"A":"6%","B":"9%","C":"3%","D":"13%"},"answer":"C","explanation":"简易计税方法下建筑业增值税征收率为3%。选C。"},{"id":159,"chapter":"第13章 建设项目总投资构成及计算","kaodian":"","type":"multi","stem":"计算一般纳税人增值税应纳税时，不得从销项税额中抵扣的进项税额有（ ）。","options":{"A":"从海关取得的海关进口增值税专用款书上注明的增值税额","B":"非正常损失的购进材料的发票上标明的增值税额","C":"非正常损失的在产品耗用的购进材料的进项税额","D":"用于集体福利购进货物的专用发票上标明的进项税额","E":"从销售方取得的增值税专用发票上注明的增值税额"},"answer":"BCD","explanation":"不得抵扣的进项税额：用于简易计税、免征增值税、集体福利、非正常损失等项目的购进。选BCD。"},{"id":160,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"以建筑物或构筑物各个分项工程和结构构件为对象编制的定额是（ ）。","options":{"A":"施工定额","B":"预算定额","C":"概算定额","D":"材料消耗定额"},"answer":"B","explanation":"以分项工程和结构构件为对象编制的是预算定额。选B。"},{"id":161,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"施工企业可以直接用来编制施工作业计划、签发施工任务单的定额是（ ）。","options":{"A":"预算定额","B":"概算定额","C":"施工定额","D":"工器具定额"},"answer":"C","explanation":"施工企业可直接用来编制施工作业计划的是施工定额。选C。"},{"id":162,"chapter":"第14章 工程计价依据","kaodian":"考点2：人工定额消耗量确定★★★★","type":"single","stem":"下列人工定额编制方法中，根据生产技术和施工组织条件，对施工过程中各工序采用测时法、写实记录法、工作日写实法测出各工序工时消耗等资料，制定出人工定额的方法是（ ）。","options":{"A":"技术测定法","B":"比较类推法","C":"统计分析法","D":"经验估计法"},"answer":"A","explanation":"技术测定法是根据生产技术和施工组织条件，对施工过程中各工序采用测时法、写实记录法、工作日写实法测出工时消耗资料来制定人工定额的方法（A正确）。B比较类推法适用于同类型规格多、工序重复；C统计分析法依据过去统计资料；D经验估计法凭经验估算。故选A。"},{"id":163,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"在进行施工作业时间研究时，下列方法中，属于技术测定方法的是（ ）。","options":{"A":"图纸分析法","B":"比较类推法","C":"经验估计法","D":"写实记录法"},"answer":"D","explanation":"技术测定法含测时法、写实记录法、工作日写实法。选D。"},{"id":164,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"编制人工定额时，工人工作时间中应予以合理考虑的情况是（ ）。","options":{"A":"由于水源或电源中断引起的停工时间","B":"由于工程技术人员和工人差错引起的工时损失","C":"由于劳动组织不合理导致工作中断所占用的时间","D":"由于材料供应不及时引起的停工时间"},"answer":"A","explanation":"编制人工定额时应合理考虑不可避免的中断时间和休息时间。选A。"},{"id":165,"chapter":"第14章 工程计价依据","kaodian":"","type":"multi","stem":"编制人工定额时需拟定施工的正常条件，其内容包括拟定（ ）。","options":{"A":"施工作业内容","B":"施工作业方法","C":"施工企业技术水平","D":"施工作业地点组织","E":"施工作业人员组织"},"answer":"ABDE","explanation":"拟定正常施工条件含施工作业内容、方法、地点组织、人员组织等。选ABDE。"},{"id":166,"chapter":"第14章 工程计价依据","kaodian":"","type":"multi","stem":"编制人工定额时，应计入定额时间的有（ ）。","options":{"A":"由于劳动组织不合理导致工作中断所占用的时间","B":"准备与结束工作时间","C":"工人必需的休息时间","D":"不可避免的中断时间","E":"由于材料供应不及时引起的停工时间"},"answer":"BCD","explanation":"应计入定额时间的有：准备与结束时间、基本工作时间、辅助工作时间、休息时间等。选BCD。"},{"id":167,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"实体性材料定额消耗量确定的方法中，主要适用于确定材料损耗量的方法是（ ）。","options":{"A":"理论计算法","B":"实验室试验法","C":"现场技术测定法","D":"现场统计法"},"answer":"C","explanation":"确定材料损耗量主要采用现场技术测定法。选C。"},{"id":168,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"关于周转性材料消耗及其定额的说法，正确的是（ ）。","options":{"A":"定额中周转材料消耗量应采用一次使用量和摊销量两个指标表示","B":"周转性材料消耗量只与周转性材料一次使用量和周转次数相关","C":"施工企业成本核算中，投标报价应采用周转性材料的一次使用量指标","D":"周转性材料的周转使用次数越多，则每周转使用一次材料的损耗越大"},"answer":"A","explanation":"周转性材料消耗与周转次数、一次使用量、摊销量和回收折价有关。选A。"},{"id":169,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"在机械工作时间消耗分类中，由于工人装料不足引起的机械不能满负荷工作的时间属于（ ）。","options":{"A":"有根据地降低负荷下的工作时间","B":"机械的多余工作时间","C":"正常负荷下的有效工作时间","D":"低负荷下的工作时间"},"answer":"D","explanation":"工人装料不足导致机械不满负荷属低负荷下工作时间（损失时间）。选D。"},{"id":170,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"下列机械工作时间消耗中，属于机械台班使用定额中不可避免的无负荷工作时间的是（ ）。","options":{"A":"汽车在运送土方时没有装满导致的延长时间","B":"筑路机在工作区末端调头的时间","C":"未及时供给机械燃料而导致的停工时间","D":"暴雨时压路机被迫停工时间"},"answer":"B","explanation":"不可避免无负荷工作时间含汽车运输空返等。选B。"},{"id":171,"chapter":"第14章 工程计价依据","kaodian":"","type":"multi","stem":"编制施工机械台班使用定额时，属于机械工作时间中损失时间的有（ ）。","options":{"A":"施工本身原因造成的停工时间","B":"非施工原因造成的停工时间","C":"违反劳动纪律引起的时间损失","D":"工人正常的休息时间","E":"低负荷下的工作时间"},"answer":"ABCE","explanation":"【逐项解析】机械工作时间中损失时间包括四类：多余工作时间、停工时间（含施工原因A和非施工原因B）、违反劳动纪律时间（C）、低负荷下工作时间（E）。ABCE均属损失时间。D错误：工人正常休息时间属于不可避免的中断时间，是必需消耗的时间，非损失时间。【记忆口诀】损失四类：多余+停工(AB)+违纪(C)+低负荷(E)。正常休息不浪费，属于必需消耗。"},{"id":172,"chapter":"第14章 工程计价依据","kaodian":"考点5：人工、材料与施工机具台班单价确定★★★","type":"single","stem":"施工企业采购的某建筑材料出厂价为3500元/吨，运费为400元/吨，运输损耗率为2%，采购保管费率为5%，则计入建筑安装工程材料费的该建筑材料单价为（ ）元/吨。","options":{"A":"4176.9","B":"4173.0","C":"3748.5","D":"3745.0"},"answer":"A","explanation":"【逐项解析】材料单价=(材料原价+运杂费)×(1+运输损耗率)×(1+采购保管费率)=(3500+400)×(1+2%)×(1+5%)=3900×1.02×1.05=3978×1.05=4176.9元/吨。选A。公式顺序：(原价+运费)→×损耗系数→×保管费系数。【法条依据】《建筑安装工程费用项目组成》(建标[2013]44号)。"},{"id":173,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"三、施工机械台班单价确定方法 机械台班单价=台班折旧费＋台班检修费＋台班维护费+ 台班安拆费及场外运费＋台班人工费＋台班燃料动力费＋台班其他费用 1.折旧费 ①台班折旧费 =机械预算价格×（1-残值率）/耐用总台班 ②耐用总台班 =折旧年限×年工作台班=检修间隔台班×检修周期 检修周期数=检修次数+1 某施工机械预算价格为200万元，预计可使用10年，每年平均工作250个台班，预计净残值40万元，按工作量 法计算折旧，则该机械台班折旧费为（ ）万元。","options":{"A":"0.8","B":"0.64","C":"0.08","D":"0.064"},"answer":"D","explanation":"机械台班单价含折旧费、检修费、维护费、安拆费、人工费、燃料动力费、其他费用。选D。"},{"id":174,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"2.检修费 除税系数=自行检修比例+委外检修比例/（1+税率） 【注】除税系数是指考虑一部分检修可以购买委外检修服务，从而需要扣除维护费中包括的增值税进项税额。 某大型施工机械预算价格为5万元，机械耐用总台班为1250台班，检修周期数为4，一次检修费为2000元，除 税系数0.8，维护费系数为60%。则该机械台班检修费为（ ）元。","options":{"A":"3.84","B":"5.12","C":"6.4","D":"10.7"},"answer":"A","explanation":"检修费=一次检修费×检修次数×除税系数/耐用总台班。选A。"},{"id":175,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"编制预算定额人工消耗量时，人工幅度差用工是指人工定额中未包括的，而在一般正常施工情况下又不可避 免的一些（ ）。","options":{"A":"零星用工","B":"返工用工","C":"低效率用工","D":"用工浪费"},"answer":"A","explanation":"人工幅度差是人工定额未包括但在正常施工下不可避免的零星用工。选A。"},{"id":176,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"完成某预算定额项目单位工程量的基本用工为2.8工日，辅助用工为0.7工日，超运距用工为0.9工日，人工 幅度差系数为10%。该定额的人工工日消耗量为（ ）工日。","options":{"A":"4.84","B":"4.75","C":"4.56","D":"4.68"},"answer":"A","explanation":"人工消耗量=(基本+辅助+超运距)×(1+幅度差)=(2.8+0.7+0.9)×1.1=4.84工日。选A。"},{"id":177,"chapter":"第14章 工程计价依据","kaodian":"","type":"single","stem":"施工过程中对隐蔽工程质量检查验收影响工人操作的时间，属于预算定额人工消耗量指标组成中的（ ）。","options":{"A":"基本用工","B":"辅助用工","C":"人工幅度差用工","D":"超运距用工"},"answer":"C","explanation":"隐蔽工程验收影响操作时间属人工幅度差。选C。"},{"id":178,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"下列单位工程概算中，属于设备及安装工程概算的是（ ）。","options":{"A":"通风空调工程概算","B":"电气照明工程概算","C":"弱电工程概算","D":"工器具及生产家具购置费用概算"},"answer":"D","explanation":"【逐项解析】单位工程概算分为建筑工程概算和设备及安装工程概算。A通风空调、B电气照明、C弱电均属于建筑工程概算。D工器具及生产家具购置费概算属于设备及安装工程概算，选D。【法条依据】建筑工程概算含土建、给排水、采暖通风、电气照明、弱电等；设备及安装工程概算含机械设备、电气设备、工器具及生产家具购置等。"},{"id":179,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"某拟建单位工程初步设计深度不够，不能准确地计算工程量，但工程设计采用的技术比较成熟而又有类似工 程概算指标可以利用时，编制该单位工程概算宜采用的方法是（ ）。","options":{"A":"概算定额法","B":"概算指标法","C":"预算单价法","D":"类似工程预算法"},"answer":"B","explanation":"设计深度不够但有类似概算指标时，宜采用概算指标法。选B。"},{"id":180,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"建设工程项目总概算是以整个建设工程项目为对象，确定项目从筹建至（ ）所需全部费用的文件。","options":{"A":"竣工结算","B":"项目报废","C":"竣工交付使用","D":"施工保修期满"},"answer":"C","explanation":"总概算确定项目从筹建至竣工交付使用所需全部费用。选C。"},{"id":181,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"下列建设工程项目总概算价值计算公式中，正确的是（ ）。","options":{"A":"总概算价值=工程费用+工程建设其他费用+预备费+铺底流动资金","B":"总概算价值=工程费用+工程建设其他费用+预备费","C":"总概算价值=工程费用+工程建设其他费用+预备费+建设期利息+铺底流动资金","D":"总概算价值=工程费用+工程建设其他费用+预备费+建设期利息"},"answer":"C","explanation":"总概算价值=工程费用+其他费用+预备费+建设期利息+铺底流动资金。选C。"},{"id":182,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"某新建住宅的建筑面积为4000㎡，按概算指标和地区材料预算价格计算出一般土建工程单位造价为1304元/ ㎡（其中人、料、机费用为900元/㎡），按照当地造价管理部门规定，企业管理费率为8%；规费以人、料、 机和企业管理费之和为计算基础，规费费率为15%；利润率以人、料、机、企业管理费和规费之和为计算基 础，利润率为7%；增值税税率为9%。由于土建工程与概算指标相比结构构件有部分变更，变更后每100㎡土 建工程的人、料、机费用比概算指标对应部分的费用增加3000元。则修正后的土建工程单位造价为（ ）元 /㎡。","options":{"A":"1070","B":"1155","C":"1236","D":"1347"},"answer":"D","explanation":"调整概算：结构差异修正。修正概算单价=1304+(1000-900)=1404元/㎡；总价=4000×1404/10000=561.6万。选D。"},{"id":183,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"multi","stem":"采用概算指标法计算设备安装工程费时，可采用的概算指标有（ ）。","options":{"A":"按占设备价值百分比的概算指标计算","B":"按每吨设备安装费的概算指标计算","C":"按设备台、套等单位计量的概算指标计算","D":"按占总投资百分比的概算指标计算","E":"按设备安装工程每平方米建筑面积的概算指标计算"},"answer":"ABCE","explanation":"设备安装工程概算指标含按设备原价百分比、按吨位、按座/台/套/组等。选ABCE。"},{"id":184,"chapter":"第15章 设计概算与施工图预算","kaodian":"考点2：施工图预算编制★★★★一、施工图预算的作用","type":"single","stem":"下列关于施工图预算对于施工单位作用的说法，不正确的是（ ）。","options":{"A":"施工图预算是确定投标报价的依据","B":"施工图预算是进行施工准备的依据","C":"施工图预算是报审项目投资额的依据","D":"施工图预算是控制施工成本的依据"},"answer":"C","explanation":"【逐项解析】ABD均为施工图预算对施工单位的作用：确定投标报价、进行施工准备、控制施工成本。C错误：「报审项目投资额」是施工图预算对建设单位的作用，非对施工单位的作用。故选C（不正确的）。【法条依据】施工图预算作用分三方面：建设单位/施工单位/其他。"},{"id":185,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"某建设项目只有一个单项工程。关于该项目施工图预算编制要求的说法，正确的是（ ）。","options":{"A":"应采用三级预算编制形式","B":"应采用二级预算编制形式","C":"不需编制施工图预算","D":"编制建设项目总预算和单项工程综合预算"},"answer":"B","explanation":"单项工程施工图预算采用三级预算编制：总预算+单项+单位。选B。"},{"id":186,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"采用定额单价法计算工程费用时，若分项工程施工工艺条件与定额单价不一致而造成人工、机械的数量增减 时，对定额的处理方法一般是（ ）。","options":{"A":"编制补充单价表","B":"直接套用定额单价","C":"按实际价格换算定额单价","D":"调量不换价"},"answer":"D","explanation":"定额单价法：工艺条件不一致时对定额单价进行换算调整。选D。"},{"id":187,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"实物量法编制施工图预算时，计算并复核工程量后紧接着进行的工作是（ ）。","options":{"A":"套定额单价，计算人料机费用","B":"套消耗定额，计算人料机消耗量","C":"汇总人料机费用","D":"计算管理费等其他各项费用"},"answer":"B","explanation":"实物量法：计算工程量后，计算人工、材料、机械消耗量→汇总费用。选B。"},{"id":188,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"关于施工图预算编制内容和要求的说法，正确的是（ ）。","options":{"A":"施工图总预算应控制在已批准的设计总概算投资范围以内","B":"当建设项目只有一个单项工程时，则不需要编制建设项目总预算","C":"单位工程预算编制依据的定额应为企业定额","D":"建设项目总预算是反映建设项目施工阶段投资总额的造价文件"},"answer":"A","explanation":"施工图预算含单位工程预算、单项工程预算、总预算三级。选A。"},{"id":189,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"根据现行规定，在审查概算的投资规模、生产能力等是否符合原批准的可行性研究报告或者立项批文时，若 发现概算总投资超过原批准投资估算的（ ）以上，需要进一步审查超估算的原因。","options":{"A":"5%","B":"10%","C":"3%","D":"8%"},"answer":"B","explanation":"概算总投资超原批准投资估算10%以上需进一步审查。选B。"},{"id":190,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"设计概算审查时，对图纸不全的复杂建筑安装工程投资，通过向同类工程的建设、施工企业征求意见判断其 合理性，这种审查方法属于（ ）。","options":{"A":"对比分析法","B":"专家意见法","C":"查询核实法","D":"联合会审法"},"answer":"C","explanation":"图纸不全时通过向同类工程企业征求意见判断合理性，属对比审查法（或查询核实法）。选C。"},{"id":191,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"multi","stem":"单位建筑工程概算审查的内容包括（ ）。","options":{"A":"审查相关的技术规范是否有错误","B":"审查工程量计算是否准确","C":"审查编制中定额套用是否恰当","D":"审查各项取费标准是否符合现行规定","E":"审查设计方案是否合理"},"answer":"BCD","explanation":"单位建筑工程概算审查含工程量、定额套用、费用计取、技术经济指标等。选BCD。"},{"id":192,"chapter":"第15章 设计概算与施工图预算","kaodian":"考点4：施工图预算审查★★★★","type":"single","stem":"施工图预算审查时，将若干分部分项工程按相邻且有一定内在联系的项目进行编组，利用同组中分项工程间具有相同或相近计算基数的关系审查工程量，这种方法是（ ）。","options":{"A":"分组计算审查法","B":"重点审查法","C":"筛选审查法","D":"对比审查法"},"answer":"A","explanation":"施工图预算审查含编制依据、工程量、单价套用、费用计取等。选A。"},{"id":193,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"single","stem":"当拟建工程与已完工程的建设条件和工程设计相同时，用已完工程的预算审查拟建工程的同类工程预算的方 法是（ ）。","options":{"A":"标准预算审查法","B":"分组审查法","C":"重点审查法","D":"对比审查法"},"answer":"D","explanation":"条件相同时用已完工程预算审查同类工程，属对比审查法。选D。"},{"id":194,"chapter":"第15章 设计概算与施工图预算","kaodian":"","type":"multi","stem":"采用筛选审查法审查建筑工程施工图预算时，需要先确定有关分部分项工程的单位建筑面积基本数值指标， 其指标包括 （ ）。","options":{"A":"定额","B":"工程量","C":"价格","D":"用工","E":"占地"},"answer":"BCD","explanation":"筛选审查法需先确定单位建筑面积的工程量、价格和用工量指标。选BCD。"},{"id":195,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"工程量清单为投标人的投标竞争提供了一个平等和共同的基础，其理由在于（ ）。","options":{"A":"投标人均应按工程量清单列出的项目不加修改的投标","B":"工程量清单列出的工程项目内容、数量和质量要求是投标人竞争的共同基础","C":"投标人均按工程量清单中确定的计量规划计算工程量","D":"工程量清单中的项目和综合单价是投标人平等竞争的基础和依据"},"answer":"B","explanation":"工程量清单为所有投标人提供了统一的报价基础，保证公平竞争。选B。"},{"id":197,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"在工程量清单计价中，如按分部分项工程单价组成来分，全费用综合单价的表述正确的是（ ）。","options":{"A":"人工费、材料费、施工机具使用费、企业管理费、风险费","B":"人工费、材料费、施工机具使用费、企业管理费","C":"人工费、材料费、施工机具使用费、企业管理费、利润、税金","D":"材料费、工程设备费、施工机具使用费、税金、风险费"},"answer":"C","explanation":"全费用综合单价含人工费、材料费、机械费、管理费、利润、规费和税金。选C。"},{"id":198,"chapter":"第16章 工程量清单计价","kaodian":"","type":"multi","stem":"工程量清单计价计算公式正确的有（ ）。","options":{"A":"措施项目费=∑措施项目工程量×措施项目综合单价","B":"分部分项工程费=∑分部分项工程量×分部分项工程综合单价","C":"单项工程造价=∑单位工程造价","D":"单位工程造价=∑分部分项工程费","E":"建设项目总造价=∑单项工程造价+工程建设其他费用+建设期利息"},"answer":"BC","explanation":"分部分项工程费=清单工程量×综合单价；措施项目费=计算基数×费率。选BC。"},{"id":199,"chapter":"第16章 工程量清单计价","kaodian":"考点3：工程量清单计价原理★★★★","type":"multi","stem":"根据《建设工程工程量清单计价标准》，关于工程量清单计价的说法，正确的有（ ）。","options":{"A":"国有资金投资的建设工程，宜采用工程量清单计价","B":"清单列项时工程量清单编码宜从小到大排列","C":"实际情况不宜采用单价计价、总价计价方式的，可采用费率计价","D":"专业工程暂估价已含增值税，增值税中可根据实际情况再计取一部分相应税金","E":"单价合同的工程措施项目清单的完整性及准确性应由承包人负责"},"answer":"BCE","explanation":"工程量清单计价原理含统一项目编码、项目名称、计量单位和工程量计算规则。选BCE。"},{"id":200,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"根据《建设工程工程量清单计价标准》（GB50500-2024），某分部分项工程的项目编码为01-02-03-004-005 ，其中“004”这一级编码的含义是（ ）。","options":{"A":"工程分类顺序码","B":"清单项目顺序码","C":"分部工程顺序码","D":"分项工程顺序码"},"answer":"D","explanation":"分部分项编码01-02-03-004-005中004是分部工程顺序码。选D。"},{"id":201,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"关于分部分项工程量清单中工程量计算的方法，正确的是（ ）。","options":{"A":"实际施工中的各种损耗应列入措施项目费中","B":"所有招标清单项目的工程量按实际施工工程量计算","C":"采用工程量清单计算规则计算时，工程实体的工程量是唯一的","D":"计算综合单价时需考虑施工方案增加的工程量，但不考虑施工中的材料损耗"},"answer":"C","explanation":"清单工程量按设计图示尺寸以实体工程量计算，不含损耗和预留量。选C。"},{"id":202,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"招标人员编制工程量清单时，对各专业工程现行《计算标准》中未包括的项目应作补充，则关于该补充项目 及其编码的说法，正确的是（ ）。","options":{"A":"该项目编码应由对应《计算标准》的代码和三位阿拉伯数字组成","B":"清单编制人应将补充项目报省级或行业工程造价管理机构备案","C":"清单编制人在最后一个清单项目后面自行补充该项目，不需编码","D":"该项目按《计算标准》中相近的清单项目编码"},"answer":"B","explanation":"补充项目编码应由01B001起顺序编制，同一招标工程不得重码。选B。"},{"id":203,"chapter":"第16章 工程量清单计价","kaodian":"","type":"multi","stem":"关于项目特征的说法，正确的有（ ）。","options":{"A":"分部分项工程量清单的项目特征是确定综合单价的重要前提","B":"项目特征主要涉及项目的自身特征、工艺特征及对项目施工方法可能产生影响的特征","C":"项目名称相同、项目特征不同的清单项目应分别列项","D":"项目特征是指构成清单项目自身价值的本质特征","E":"项目特征应根据《计算标准》的项目特征进行统一描述，招标人不应根据拟建项目实际情况更改项目特征 的描述"},"answer":"ABCD","explanation":"项目特征是区分清单项目的依据、确定综合单价的前提、履行合同的基础。选ABCD。"},{"id":204,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"根据《建设工程工程量清单计价标准》，编制措施项目清单时，对能准确计量的措施项目，其清单应列明（ ）。","options":{"A":"项目编码和项目名称","B":"项目编码和项目特征","C":"计量单位和项目名称","D":"计量单位和项目特征"},"answer":"A","explanation":"能准确计量的措施项目应采用单价计价。选A。"},{"id":205,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"编制其他项目清单时，关于计日工表中的材料和机械列项要求的说法，正确的是（ ）。","options":{"A":"材料和机械仅按实际使用数量列项","B":"材料和机械应按规格、型号详细列项","C":"材料应按使用数量详细列项，机械应按类别粗略列项","D":"材料应按供应厂商详细列项，机械应按型号粗略列项"},"answer":"B","explanation":"计日工表中材料和机械按名称、规格型号、计量单位列项。选B。"},{"id":206,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"在编制工程量清单时，招标人对施工中噪声污染提出防护要求的描述应列在（ ）中。","options":{"A":"其他项目清单的暂列金额","B":"措施项目清单的项目特征","C":"可能导致噪声污染的分部分项工程量清单的项目特征","D":"工程量清单编制总说明"},"answer":"D","explanation":"噪声污染防护要求应在措施项目清单中描述。选D。"},{"id":207,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"根据《建设工程工程量清单计价标准》（GB50500-2024）,关于工程项目清单编制的说法，正确的是（ ）","options":{"A":"其他项目清单中应列出总承包服务费","B":"暂估价应列出材料暂估价和工程设备暂估价，不考虑专业工程暂估价","C":"暂列金额一般应尽可能列高，以避免在实际中超出该数量","D":"计日工应按照招标工程的复杂程度估算一个数量，该数量一般要比实际大"},"answer":"A","explanation":"分部分项工程量清单的五要素含项目编码、名称、特征、计量单位和工程量计算规则。选A。"},{"id":208,"chapter":"第16章 工程量清单计价","kaodian":"","type":"multi","stem":"编制措施项目清单时，措施项目设置的依据有（ ）。","options":{"A":"投标企业的资质等级与规模","B":"拟建工程的合理施工组织设计","C":"拟建工程的合理施工技术方案","D":"招标文件中需要通过一定技术措施才能实现的要求","E":"实施中因变更可能产生的零星工作"},"answer":"BCD","explanation":"措施项目设置依据含施工组织设计、施工方案、工程特点、环境条件等。选BCD。"},{"id":209,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"投标人编制投标文件时，招标文件中已提供暂估价的材料价格应根据（ ）填报。","options":{"A":"投标人自主确定价格","B":"投标时当地的市场价格","C":"招标文件提供的价格","D":"政府主管部门公布的价格"},"answer":"C","explanation":"招标文件已提供暂估价的材料价格应按招标文件填报，不得变动。选C。"},{"id":210,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"关于最高投标限价编制的说法，正确的是（ ）。","options":{"A":"暂估价应采用基准日期的市场平均价格","B":"计算总承包服务费时，不考虑招标人是否自行供应材料和设备","C":"编制措施项目费时，针对无法计算工程量的措施项目，可以“项”为单位的方式计价，应包括除税金外的 全部费用","D":"综合单价应包括由招标人承担的风险费用"},"answer":"C","explanation":"最高投标限价应依据国家或省级计价定额和计价办法编制。选C。"},{"id":211,"chapter":"第16章 工程量清单计价","kaodian":"","type":"multi","stem":"关于最高投标限价的说法，正确的有（ ）。","options":{"A":"国有或非国有资金投资的建设工程招标，招标人必须编制最高投标限价","B":"最高投标限价应在招标文件中公布，在招标过程中不应上调，但可适当下浮","C":"最高投标限价是对招标工程项目规定的最高工程造价","D":"最高投标限价超过批准的概算时，招标人应将其报原概算审批部门审核","E":"投标人的投标报价高于最高投标限价的，其投标应予以拒绝"},"answer":"CDE","explanation":"最高投标限价应在招标文件公布、不得上浮或下调、超限价按废标处理。选CDE。"},{"id":212,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"投标人在确定分项工程的综合单价时，若出现某招标工程量清单项目特征描述与设计图纸不符，但均符合设 计规范，应以（ ）为准。","options":{"A":"招标工程量清单的项目特征描述","B":"设计图纸及其说明","C":"设计规范","D":"实际施工的项目特征"},"answer":"A","explanation":"清单项目特征与设计图纸不符时，以工程量清单项目特征描述为准。选A。"},{"id":213,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"某工程的招标工程量清单中人工挖土方数量为5800m³，投标单位根据己方施工方案确定的挖土工程量为11200m³，人工、材料、机械费用之和为50元/m³，综合单价确定为80元/m³，则在如下人工挖土方分项工程的综合单价分析表汇总，\"*\"位置对应的数量应为（ ）。<br><table class=\"data-table\"><thead><tr><th>项目编号</th><th>项目名称</th><th>计量单位</th><th colspan=\"4\">清单综合单价组成明细</th><th colspan=\"4\">单价</th><th colspan=\"4\">合计</th></tr><tr><td>定额编号</td><td>定额名称</td><td>定额单位</td><td>数量</td><td>人工费</td><td>材料费</td><td>机械费</td><td>管理费和利润</td><td>人工费</td><td>材料费</td><td>机械费</td><td>管理费和利润</td><td>人工费</td><td>材料费</td><td>机械费</td><td>管理费和利润</td></tr></thead><tbody><tr><td>...</td><td>人工挖土</td><td>M³</td><td>*</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr></tbody></table>","options":{"A":"1.93","B":"1.60","C":"0.63","D":"0.52"},"answer":"A","explanation":"综合单价按清单工程量计算：人材机=50×11200/5800≈96.55元/m³+管理费利润。选A。"},{"id":214,"chapter":"第16章 工程量清单计价","kaodian":"","type":"single","stem":"关于投标人的投标总价编制的说法，正确的是（ ）。","options":{"A":"为降低投标总价，投标人可以将暂列金额降至零","B":"投标总价可在分部分项工程费、措施项目费、其他项目费和税金合计金额上做出优惠","C":"开标前投标人来不及修改标书时，可在投标者致函中给出优惠比例，并将优惠后的总价作为新的投标价","D":"投标人对投标报价的任何优惠均应反映在相应清单项目的综合单价中"},"answer":"D","explanation":"投标总价应与各部分费用之和一致，不能进行总价优惠。选D。"},{"id":215,"chapter":"第16章 工程量清单计价","kaodian":"","type":"multi","stem":"下列材料中，属于编制最高投标限价和投标报价的共同依据的有（ ）。","options":{"A":"国家、地区或行业定额","B":"企业定额","C":"造价管理部门发布的工程造价信息","D":"投标人拟采用的施工方案","E":"施工现场自然条件"},"answer":"ACE","explanation":"编制最高投标限价和投标报价的共同依据含计价定额、计价办法、工程造价信息等。选ACE。"},{"id":216,"chapter":"第16章 工程量清单计价","kaodian":"","type":"multi","stem":"施工企业拟投标一个单独招标的分部分项工程项目，清单工程量10000m³。企业经测算完成该部分分项工程 施工直接消耗的人、料、机费用为200万元。估计管理费为16万元，风险费用2万元，利润为30万元。为完成 该分部分项工程的措施项目费估计为24万元（其中安全文明施工费18万元）。税金9万元。不考虑其他因素 ，关于该分部分项工程的说法正确的有（ ）。","options":{"A":"工料单价为200元/m³","B":"按现行清单价计价综合单价为248元/m³","C":"全费用综合单价为281元/m³","D":"按现行清单计价规范，为了中标税金可降至8万元","E":"按现行清单计价规范，措施项目费报价不能低于18万"},"answer":"ABE","explanation":"综合单价=(200万+16万+25万)×(1+9%)×(1+3%)/10000≈270元/m³。选ABE。"},{"id":217,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"某灌注桩计量支付条款约定工程量以米计算，若设计长度为20米的灌注桩承包人做了21米，监理工程师对施 工质量表示异议，则发包人应该按（ ）米支付价款。","options":{"A":"19","B":"20","C":"21","D":"22"},"answer":"B","explanation":"计量按合同约定工程量以设计长度20米计量，监理未确认的1米不计。选B。"},{"id":218,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"某土方工程签订了单价合同，招标清单中土方开挖工程量为8000m³,施工过程中承包人采用了放坡的开挖方 式，完工计量时，承包人因放坡增加土方开挖量1000m³,因工作面增加土方开挖量1600m³,因施工操作不慎塌 方增加土方开挖量500m³,则应予结算的土方开挖工程量为（ ）m³。","options":{"A":"11100","B":"10600","C":"9000","D":"8000"},"answer":"D","explanation":"单价合同按实际完成工程量计量。放坡增加量属施工措施，不予计量。选D。"},{"id":219,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"根据《建设工程工程量清单计价标准》（GB50500-2024）,工程量清单计价的某分部分项工程综合单价为500 元/m³,其中暂估材料单价300元，管理费率5%，利润率7%，工程实施后，暂估材料的单价确定为350元。结算 时该分部分项工程综合单 价为（ ）元/m³。","options":{"A":"350.00","B":"392.00","C":"550.00","D":"556.18"},"answer":"C","explanation":"调价后综合单价=500-300×(1+5%)×(1+3%)+调整后暂估价。选C。"},{"id":220,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"某土方工程招标文件清单工程量为3000m³,合同约定： 土方工程综合单价80元/m³,当实际工程量增加15%以上时，增加部分的工程量综合单价72元/m³。工程结束时 实际完成并经发包人确认的土方工程量为3600m³,则该土方工程价款为（ ）元。","options":{"A":"259200","B":"286800","C":"283200","D":"288000"},"answer":"B","explanation":"实际3450m³，超15%部分=3450-3000×(1+15%)=0(超15%以上无)。3450>3450，不超。全部按80元:3450×80=276000元。选B。"},{"id":221,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"由于发包人设计变更原因导致承包人未按期竣工，需对原约定竣工日期后继续施工的工程进行价格调整时， 宜采用的价格指数是（ ）。","options":{"A":"原约定竣工日期与实际竣工日期的两个价格指数中较低的一个","B":"原约定竣工日期与实际竣工日期的两个价格指数中较高的一个","C":"原约定竣工日期与实际竣工日期的两个价格指数的平均值","D":"承包人与发包人协商新的价格指数"},"answer":"B","explanation":"发包人原因导致工期延误，调整价格时宜采用原约定竣工日期的价格指数。选B。"},{"id":222,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"采用清单计价的某分部分项工程，最高投标限价的综合单价为320元，投标报价的综合单价为265元，该工程 投标报价下浮率为5%，结算时，该分部分项工程工程量比清单量增加了18%，且合同未确定综合单价调整方 法，则综合单价的处理方式是（ ）。","options":{"A":"上浮18%","B":"下调5%","C":"调整为258.4元","D":"可不调整"},"answer":"D","explanation":"工程量增加超15%时综合单价调整：P1<P0×(1-L)×(1-15%)时按P1。265<320×0.95×0.85=258.4? 265>258.4，不调。选D(不调整)。"},{"id":223,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"某施工项目因80年一遇的特大暴雨停工10天，承包人在停工期间按照发包人要求照管工程发生费用2万元， 承包人施工机具损坏10万元，已经建成的永久工程损坏损失20万元，之后应发包人要求修复被暴雨冲毁的道 路花费2.5万元，修复道路时因施工质量问题返工费用1万元，以上事件产生的费用和损失中，承包人应承担 （ ）万元。","options":{"A":"21","B":"13.5","C":"11","D":"10"},"answer":"C","explanation":"不可抗力：照管费2万发包人承担；机具损坏10万承包人承担；永久工程20万发包人承担；清理费发包人承担。选C(发包人承担22万)。"},{"id":224,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"因承包人原因造成工期延误，在工期延误期间出现法律法规与政策变化的，价款调整规则是（ ）。","options":{"A":"合同价格不予调整","B":"合同价格同法律法规变化调整","C":"合同价格调增的不予调整，合同价格调减的予以调整","D":"合同价格调减的不予调整，合同价格调增的予以调整"},"answer":"C","explanation":"承包人原因延误期间出现法律法规变化，价款不调整。选C。"},{"id":225,"chapter":"第17章 工程计量与支付","kaodian":"","type":"multi","stem":"提前竣工事件导致的工程索赔，可索赔的有（ ）。","options":{"A":"新增加投入人工的报酬","B":"可能造成不经济使用材料而损耗过大","C":"不经济使用机械","D":"材料提前交货可能增加的费用","E":"履约保函手续费的增加"},"answer":"ABCD","explanation":"提前竣工可索赔赶工费、人工降效费、材料增加费、机械增加费等。选ABCD。"},{"id":226,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"关于承包人索赔的说法，正确的是（ ）。","options":{"A":"承包人应在发出索赔意向通知书28天后，向发包人正式递交索赔报告","B":"承包人应在索赔事件发生后28天内，向发包人递交索赔意向通知书","C":"承包人接受索赔处理结果的，索赔款项应在竣工结算时进行支付","D":"具有持续影响的索赔事件，承包人不应索赔"},"answer":"B","explanation":"承包人应在知道或应当知道索赔事件发生后28天内提出索赔意向通知书。选B。"},{"id":227,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"某工程在施工过程中，由于发包人设计变更导致停工，承包人的工人窝工10个工日，每个工日单价为250元 ，窝工费每工日为50元；承包人租赁的一台挖土机窝工3个台班，挖土机台班租赁费为800元；承包人自有的 一台自卸汽车窝工3个台班，该自卸汽车台班折旧费为400元，台班单价为700元，则承包人可以向发包人索 赔的费用为（ ）元。","options":{"A":"6100","B":"4100","C":"5500","D":"7000"},"answer":"B","explanation":"窝工索赔=10×50(人工)+3×300(挖机)+3×100(自卸车)=500+900+300=1700元。选B。"},{"id":228,"chapter":"第17章 工程计量与支付","kaodian":"","type":"multi","stem":"下列承包人可同时索赔工期和费用的情形有（ ）。","options":{"A":"承包人遇到不利物质条件","B":"施工过程发现文物","C":"法律变化引起价格调整","D":"发包人要求向承包人提前交付工程设备","E":"承包人遇到异常恶劣的气候条件"},"answer":"AB","explanation":"可同时索赔工期和费用：发包人原因停工、设计变更等。选AB。"},{"id":229,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"九、现场签证 1.现场签证的范围 （1）施工合同范围以外零星工程的确认； （2）在工程施工过程中发生变更后需要现场确认的工程量； （3）非承包人原因导致的人工、设备窝工及有关损失； （4）符合施工合同规定的非承包人原因引起的工程量或费用增减； （5）确认修改施工方案引起的工程量或费用增减； （6）工程变更导致的工程施工措施费增减等。 2.现场签证的程序 （1）承包人应在接受发包人要求的7天内向发包人提出签证，发包人签证同意后施工。 （2）发包人应在收到承包人的签证报告48小时内给予确认或提出修改意见，否则视为该签证报告已经认可。 （3）发承包双方确认的现场签证费用与工程进度款同期支付。 3.现场签证费用的计算 第一种是完成合同以外的零星工作时，按计日工单价计算。 第二种是完成其他非承包人责任引起的事件，应按合同中的约定计算。 4.现场签证种类 有计日工单价的，可归并于计日工，如无计日工单价的，则归并于现场签证，以示区别。 5.现场签证应关注的问题 （1）时效性问题。 （2）重复计量问题。 （3）标书中对计日工的规定。 施工过程中，需要进行现场签证的事项是（ ）。","options":{"A":"工程变更导致的施工措施费增减","B":"完成施工合同以内的零星工程","C":"承包人原因导致设备窝工损失","D":"承包人原因引起的工程量增减"},"answer":"A","explanation":"现场签证范围含合同外零星工程、变更后现场确认的工程量等。选A。"},{"id":230,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"预付款的扣回价款应按合同约定的比例确定，合同没约定的，支付比例不宜低于累计完成工程总值的（ ）","options":{"A":"60%","B":"70%","C":"80%","D":"90%"},"answer":"C","explanation":"预付款扣回比例不宜低于累计完成工程总值的20%。选C。"},{"id":231,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"关于预付款的说法，正确的是（ ）。","options":{"A":"发包人应按合同约定向承包人支付预付款，应收取预付款的利息","B":"应在累计支付达到合同总价的一定比例后一次扣回","C":"提前解除合同的，尚未扣回的预付款应与合同价款一并结算","D":"发包人逾期支付预付款，承包人直接暂停施工"},"answer":"C","explanation":"预付款是发包人为解决承包人施工准备资金而预先支付的无息款项。选C。"},{"id":232,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"下列关于安全生产措施费的说法，正确的是（ ）。","options":{"A":"基准日期后合同适用的法律发生变化，由此增加的安全生产措施费用由承包人承担","B":"承包人对安全生产措施费应专款专用，并在财务账目中单独列项备案","C":"经发包人同意，承包人采取合同约定以外的安全措施所产生的的费用，由承包人承担","D":"发包人应在开工后42天内预付安全生产措施费总额的 60%"},"answer":"B","explanation":"安全生产措施费应在开工后28天内支付不低于总额的50%。选B。"},{"id":233,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"某工程采用单价合同计价方式，其中一个分项工程的全费用综合单价为500元/m³,合同约定：发包人从第一 个月起，从承包人工程进度款中按3%扣留质量保证金，监理人每月签发付款凭证的最低金额为25万元，在第 一个月承包人仅进行了该分项工程施工实际完成并经监理人计量的该分项工程量为450m³,第1个月监理人实 际的付款金额为（ ）万元。","options":{"A":"0","B":"21.825","C":"22.500","D":"25.000"},"answer":"A","explanation":"进度款=500×工程量×97%×90%(支付比例)，计算选A。"},{"id":234,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"某工程合同价6000万元，合同约定：工期6个月，预付款120万元，每月进度款按实际完成工程价款的80%支付，每月再单独支付安全生产措施费50万元，质量保证金按进度款的3%逐月扣留，预付款在最后两个月等额扣回。承包人每月实际完成工程价款金额如下：\n  第1月：800万元\n  第2月：1000万元\n  第3月：1000万元\n  第4月：1200万元\n  第5月：1200万元\n  第6月：800万元\n则第2个月发包人实际应支付的工程款金额为（ ）万元。","options":{"A":"850.0","B":"826.0","C":"824.5","D":"776.0"},"answer":"B","explanation":"【逐项解析】第2月：进度款=1000×80%=800万，质保金=800×3%=24万，加安全费50万，预付款在最后两月扣回（本月不扣）。应付=800-24+50=826万元。选B。【法条依据】进度款=完成工程量×支付比例；质保金≤3%。"},{"id":235,"chapter":"第17章 工程计量与支付","kaodian":"考点6：结算与支付★★","type":"single","stem":"关于质量保证金的说法，正确的是（ ）。","options":{"A":"承包人提供质量保证金，除专用合同条款另有约定外，原则上采用质量保证金保函方式","B":"承包人扣留质量保证金，除专用合同条款另有约定外，原则上采用工程竣工结算时一次性扣留","C":"发包人累计扣留质量保证金不得超过工程价款结算总额的3%","D":"工程项目竣工前，承包人已经提供履约担保的，发包人不得同时预留工程质量保证金"},"answer":"B","explanation":"施工过程结算款支付比例不宜低于结算价款总额的80%。选B。"},{"id":236,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"关于工程保修期的说法，正确的是（ ）。","options":{"A":"发包人未经竣工验收擅自使用工程的，保修期自转移占有之日起算","B":"各分部工程的保修应该是相同的","C":"工程保修期从工程完工之日起算","D":"工程保修期可以根据具体情况适当低于法定最低保修年限"},"answer":"A","explanation":"缺陷责任期一般为1年，最长不超过2年。选A。"},{"id":237,"chapter":"第17章 工程计量与支付","kaodian":"","type":"multi","stem":"根据《建设工程施工合同（示范文本）》（GF-2013-0201），对已缴纳履约保证金的承包人，其提交的竣工 结算申请单的内容","options":{"A":"竣工结算合同价格","B":"已经处理完的索赔资料","C":"发包人已支付承包人的款项","D":"应扣留的质量保证金","E":"发包人应支付承包人的合同价款"},"answer":"ACE","explanation":"竣工结算申请单内容含竣工结算合同价、已付工程款、应扣质保金、应付竣工付款额。选ACE。"},{"id":238,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"关于工程质量保证金的说法，正确的是（ ）。","options":{"A":"合同约定缺陷责任期终止后，发包人应按照合同中最终结清的相关规定，将剩余的质量保证金返还给承包 人","B":"在合同约定的缺陷责任期终止后，发包人退还剩余质量保证金，承包人不再承担质量保修责任","C":"承包人未按照合同约定履行工程缺陷修复义务的，发包人有权从质量保证金中扣除用于各种缺陷修复的支 出","D":"最终结清时，如果承包人被预留的质量保证金不足以抵减发包人工程缺陷修复费用的，发包人应承担不足 部分"},"answer":"A","explanation":"质保金比例不得高于工程价款结算总额的3%。选A。"},{"id":239,"chapter":"第17章 工程计量与支付","kaodian":"","type":"single","stem":"关于工程保修的说法，正确的是（ ）。","options":{"A":"保修期内因发包人使用不当造成工程的缺陷和损坏，可以委托承包人修复，发包人承担修复的费用但不用 支付承包人利润","B":"保修期内因特大地震造成工程的缺陷和损坏，可以委托承包人修复，发包人承担修复的费用并支付承包人 合理的利润","C":"保修期内因承包人原因造成工程的缺陷和损坏，承包人应负责修复并承担修复的费用，但不承担因工程缺 陷和损坏造成的人身及财产损失","D":"保修期内发包人发现已接受的工程存在任何缺陷应书面通知承包人修复，承包人接到通知后应在48小时内 到工程现场修复缺陷"},"answer":"B","explanation":"保修期从竣工验收合格之日起计算。选B。"},{"id":240,"chapter":"第18章 工程总承包计价","kaodian":"","type":"single","stem":"可行性研究报告批准后发包的项目，宜采用（ ）。","options":{"A":"EPC模式","B":"施工总承包","C":"平行承发包模式","D":"DB模式"},"answer":"A","explanation":"可行性研究报告批准后发包宜采用初步设计后清单模式。选A。"},{"id":241,"chapter":"第18章 工程总承包计价","kaodian":"","type":"multi","stem":"工程总承包计价在（ ）方面与工程量清单计价有所区别。","options":{"A":"投资控制目标","B":"建筑安装工程计价","C":"预备费","D":"基本计价方式","E":"计价过程"},"answer":"ABCD","explanation":"工程总承包计价在费用构成、清单编制、计量计价等方面与DBB不同。选ABCD。"},{"id":242,"chapter":"第18章 工程总承包计价","kaodian":"","type":"single","stem":"下列费用中不属于工程总承包其他费的是（ ）。","options":{"A":"工程总承包管理费","B":"施工勘察费","C":"设备购置费","D":"报批报建的代办服务费"},"answer":"C","explanation":"工程总承包其他费不含建设单位管理费（已含在建设管理费中）。选C。"},{"id":243,"chapter":"第18章 工程总承包计价","kaodian":"","type":"single","stem":"初步设计后清单编制中的第六级对应的是（ ）。","options":{"A":"单位工程分类码","B":"专业工程分类码","C":"扩大分部分类码","D":"扩大分项分类码"},"answer":"D","explanation":"初步设计后清单第六级对应分项工程。选D。"},{"id":244,"chapter":"第18章 工程总承包计价","kaodian":"考点2：工程总承包最高投标限价与投标报价编制★★","type":"single","stem":"工程总承包模式中，当发包人要求中明确设计方案但工程内容不确定、工程量不明确时，宜采用的合同价格形式是（ ）。","options":{"A":"固定总价合同","B":"固定单价合同","C":"可调单价合同","D":"成本加酬金合同"},"answer":"D","explanation":"总承包最高投标限价应依据发包人要求和初步设计文件编制。选D。"},{"id":245,"chapter":"第18章 工程总承包计价","kaodian":"考点4：工程总承包合同价款调整与索赔★★","type":"single","stem":"关于工程总承包合同变更的说法，正确的是（ ）。","options":{"A":"因发包人提出工程变更引起措施项目变化时，不予调整价款","B":"监理人发出变更指示一般无需征得发包人的同意","C":"变更指示通过监理人发出","D":"承包人可根据施工情况擅自变更，费用由发包人承担"},"answer":"C","explanation":"总承包变更估价原则：有适用项目的按适用价格，否则参照类似项目。选C。"},{"id":246,"chapter":"第18章 工程总承包计价","kaodian":"","type":"single","stem":"当合同中包含价格清单，履行期间出现工程变更，若变更在已标价工程量清单中无适用项目，但有类似项目 单价的。则变更估价的原则是（ ）。","options":{"A":"参照类似项目的费率或价格","B":"按照直接成本加适当利润的原则，由发包人确定变更单价","C":"按照合理的成本加利润的原则，由承包人确定变更工作的单价","D":"采用已标价工程量清单中的费率和价格"},"answer":"A","explanation":"变更无适用项目但有类似项目单价时，参照类似项目单价确定。选A。"},{"id":247,"chapter":"第19章 国际工程投标报价","kaodian":"","type":"single","stem":"下列投标人在国际工程标前会议上的做法，正确的是（ ）。","options":{"A":"对招标文件中图纸与技术说明矛盾之处，提出己方的修改意见","B":"提出对业主有利的设计方案修改意见","C":"详细阐述己方施工方案的优势和竞争力","D":"对工程内容范围不清的问题，请业主做出说明"},"answer":"D","explanation":"标前会议上应认真记录、澄清疑问、不轻易承诺修改。选D。"},{"id":248,"chapter":"第19章 国际工程投标报价","kaodian":"考点2：国际工程投标报价编制★★★","type":"single","stem":"国际工程投标报价组成中，下列属于现场管理费的是（ ）。","options":{"A":"工程辅助费","B":"检验试验费","C":"临时设施工程费","D":"工程保险费"},"answer":"B","explanation":"暂列金额是业主备用金，用于工程变更或不可预见情况。选B。"},{"id":249,"chapter":"第19章 国际工程投标报价","kaodian":"","type":"single","stem":"某国际工程，业主方在施工招标文件中暂定了500万元的 暂定金额，则承包商对该笔暂定金额的正确处理方式是（ ）。","options":{"A":"不计入投标总价，发生时由工程师决定是否使用","B":"计入投标总报价，并有权自主使用","C":"计入投标总报价，但无权决定自主使用","D":"不计入投标总价，在实际发生时由业主支付"},"answer":"C","explanation":"暂定金额只能按业主工程师的指示全部或部分使用。选C。"},{"id":250,"chapter":"第19章 国际工程投标报价","kaodian":"","type":"single","stem":"估价师根据以往实际经验获得有关资料，直接估算出分项工程中人工、材料的消耗量，从而估算出分项工程 的直接费单价，这种方法称为（ ）。","options":{"A":"经验估算法","B":"匡算估价法","C":"定额估价法","D":"作业估价法"},"answer":"B","explanation":"根据经验估算分项工程人工材料消耗量，属经验估算法。选B。"},{"id":251,"chapter":"第19章 国际工程投标报价","kaodian":"考点3：国际工程投标报价技巧★★★★","type":"single","stem":"根据国际工程投标报价策略，下列工程中宜采用低报价策略的是（ ）。","options":{"A":"工作简单且支付条件好的工程","B":"专业要求高且工期要求急的工程","C":"竞争对手少且施工条件差的工程","D":"技术复杂且投资规模大的工程"},"answer":"A","explanation":"报价可高一些的工程含施工条件差、专业要求高的等。选A。"},{"id":252,"chapter":"第19章 国际工程投标报价","kaodian":"","type":"multi","stem":"根据不平衡报价策略，下列说法正确的是（ ）。","options":{"A":"土石方工程、基础工程，可以报高价","B":"估计施工中工程量会增加的项目，可以报高价","C":"工程内容说明不清的项目，可以报高价","D":"能够早日结账收款的项目，可以报高价","E":"预计工程量可能减少的后期工程项目，可以报高价"},"answer":"ABD","explanation":"不平衡报价：先施工的报高价、工程量可能增加的报高价。选ABD。"},{"id":253,"chapter":"第19章 国际工程投标报价","kaodian":"","type":"single","stem":"关于工程量清单招标中计日工报价技巧的说法，正确的是（ ）。","options":{"A":"单纯对计日工报价应报低价","B":"招标文件中有名义工程量的计日工应报高价","C":"招标文件中有名义工程量的计日工应报低价","D":"单纯对计日工报价应报高价"},"answer":"D","explanation":"计日工报价：单价可适当报高（因按实结算量不固定）。选D。"},{"id":254,"chapter":"第19章 国际工程投标报价","kaodian":"","type":"single","stem":"国际工程项目招标中，如果业主规定了暂定工程量的分项内容和暂定总价款，且规定所有投标人都必须在总 报价中加入这笔固定金额，则投标人对该暂定工程的报价策略是（ ）。","options":{"A":"单价可适当降低","B":"总价应适当降低","C":"总价可适当提高","D":"单价可适当提高"},"answer":"D","explanation":"规定所有投标人必须加入固定金额的暂定工程，应适当提高单价（因量固定、价竞争）。选D。"},{"id":255,"chapter":"第13章 建设项目总投资构成及计算","type":"single","stem":"某施工材料采购原价为190元/吨，运杂费为40元/吨，运输损耗率为1%，采购保管费率为3%，则该材料的单价为（ ）元/吨。","options":{"A":"234.28","B":"237.66","C":"239.20","D":"239.27"},"answer":"D","explanation":"【逐项解析】材料单价=(材料原价+运杂费)×(1+运输损耗率)×(1+采购保管费率)=(190+40)×(1+1%)×(1+3%)=230×1.01×1.03=239.27元/吨。选D。公式顺序：原价+运费→乘以损耗系数→乘以保管费系数，不可颠倒。【法条依据】《建筑安装工程费用项目组成》(建标[2013]44号)。"},{"id":196,"chapter":"第16章 工程量清单计价","type":"single","stem":"招标方编制工程量清单时有以下工作：①确定项目编码；②确定清单项目名称；③确定计量单位；④计算工程数量；⑤确定项目特征。正确的顺序是（ ）。","options":{"A":"①②③④⑤","B":"①②⑤③④","C":"②③⑤④①","D":"②①⑤③④"},"answer":"D","explanation":"【逐项解析】工程量清单编制顺序：②确定清单项目名称→①确定项目编码→⑤确定项目特征→③确定计量单位→④计算工程数量。口诀：「名码特征单位量」→名(称)码(编码)特(征)单(位)量。选D。【法条依据】《建设工程工程量清单计价规范》GB50500。"}];
+const res = { json: async () => QDATA };  // embedded data
+  allQuestions = await res.json();
+  document.getElementById('totalBadge').textContent = `题库 ${allQuestions.length} 题`;
+  loadState();
+  renderChapters();
+  applyFilter();
+}
+
+// ── localStorage ──
+const LS_KEY = 'jingji_quiz_state_v2';
+function saveState() {
+  localStorage.setItem(LS_KEY, JSON.stringify({
+    answeredQ, mode, selChapter, autoNext
+  }));
+}
+function loadState() {
+  const raw = localStorage.getItem(LS_KEY);
+  if (raw) {
+    try {
+      const s = JSON.parse(raw);
+      answeredQ = s.answeredQ || {};
+      mode = s.mode || 'seq';
+      selChapter = s.selChapter || 'all';
+      autoNext = s.autoNext || false;
+      updateModeBtn();
+      updateAutoNextBtn();
+    } catch(e) {}
+  }
+}
+function resetProgress() {
+  if (confirm('确定要重置所有刷题进度？')) {
+    answeredQ = {};
+    notesQ = {};
+    selChapter = 'all';
+    saveState();
+    renderChapters();
+    applyFilter();
+    renderQuestionList();
+  }
+}
+
+// ── Notes ──
+let notesQ = {};
+const NOTES_KEY = 'jingji_quiz_notes_v2';
+
+function loadNotes() {
+  const raw = localStorage.getItem(NOTES_KEY);
+  if (raw) try { notesQ = JSON.parse(raw); } catch(e) {}
+}
+loadNotes();
+
+function saveNotes() {
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notesQ));
+}
+
+function getNote(qid) {
+  return notesQ[qid] || '';
+}
+
+function saveNote(qid) {
+  const el = document.getElementById('noteInput');
+  if (!el) return;
+  const text = el.value.trim();
+  if (text) {
+    notesQ[qid] = text;
+  } else {
+    delete notesQ[qid];
+  }
+  saveNotes();
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Chapters ──
+function getChapters() {
+  const set = new Set();
+  allQuestions.forEach(q => set.add(q.chapter));
+  return ['all', ...Array.from(set).sort((a,b) => {
+    const na = parseInt(a.match(/\d+/)?.[0] || '0');
+    const nb = parseInt(b.match(/\d+/)?.[0] || '0');
+    return na - nb;
+  })];
+}
+
+function renderChapters() {
+  const chapters = getChapters();
+  const bar = document.getElementById('chapterBar');
+  bar.innerHTML = chapters.map(ch => {
+    const cls = ch === selChapter ? 'ch-btn sel' : 'ch-btn';
+    const label = ch === 'all' ? '全部' : ch.replace(/^第\d+章\s*/, '');
+    return `<button class="${cls}" onclick="selectChapter('${ch}')">${label}</button>`;
+  }).join('');
+}
+
+function selectChapter(ch) {
+  selChapter = ch;
+  saveState();
+  renderChapters();
+  applyFilter();
+}
+
+// ── Filter ──
+function applyFilter() {
+  if (selChapter === 'all') {
+    filteredQuestions = [...allQuestions];
+  } else {
+    filteredQuestions = allQuestions.filter(q => q.chapter === selChapter);
+  }
+  currentIdx = 0;
+  updateStats();
+  renderQuestion();
+  renderQuestionList();
+}
+
+// ── Mode ──
+function toggleMode() {
+  mode = mode === 'seq' ? 'rand' : 'seq';
+  if (mode === 'rand') shuffleFiltered();
+  currentIdx = 0;
+  updateModeBtn();
+  saveState();
+  renderQuestion();
+  renderQuestionList();
+}
+
+function updateModeBtn() {
+  document.getElementById('btnMode').textContent = mode === 'seq' ? '顺序' : '随机';
+  document.getElementById('btnMode').classList.toggle('active', mode === 'rand');
+}
+
+function toggleAutoNext() {
+  autoNext = !autoNext;
+  updateAutoNextBtn();
+  saveState();
+}
+function toggleInfoPanel() {
+  document.getElementById('infoPanel').classList.toggle('open');
+}
+function updateAutoNextBtn() {
+  const btn = document.getElementById('btnAutoNext');
+  if (autoNext) {
+    btn.textContent = '🔁 自动下一题 ✓';
+    btn.style.background = '#ecfdf5';
+    btn.style.borderColor = '#10b981';
+    btn.style.color = '#10b981';
+  } else {
+    btn.textContent = '🔁 自动下一题';
+    btn.style.background = '';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  }
+}
+
+function shuffleFiltered() {
+  for (let i = filteredQuestions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filteredQuestions[i], filteredQuestions[j]] = [filteredQuestions[j], filteredQuestions[i]];
+  }
+}
+
+// ── Stats ──
+function updateStats() {
+  const total = filteredQuestions.length;
+  const doneCount = filteredQuestions.filter(q => answeredQ[q.id] !== undefined).length;
+  const wrongCount = filteredQuestions.filter(q => answeredQ[q.id] && answeredQ[q.id] !== 'correct').length;
+  const remain = total - doneCount;
+
+  document.getElementById('statDone').textContent = doneCount;
+  document.getElementById('statWrong').textContent = wrongCount;
+  document.getElementById('statAcc').textContent = doneCount > 0
+    ? Math.round((doneCount - wrongCount) / doneCount * 100) + '%' : '-';
+  document.getElementById('statRemain').textContent = remain;
+  document.getElementById('progressPct').textContent = Math.round(doneCount / total * 100) + '%';
+  document.getElementById('progressFill').style.width = (doneCount / total * 100) + '%';
+
+  // Wrong book
+  renderWrongBook();
+}
+
+// ── Render question ──
+let multiSelected = new Set();  // For multi-select questions
+
+function renderQuestion() {
+  const area = document.getElementById('questionArea');
+  if (filteredQuestions.length === 0) {
+    area.innerHTML = '<div class="empty"><div class="icon">✨</div><p>该章节暂无题目</p></div>';
+    return;
+  }
+  if (currentIdx >= filteredQuestions.length) {
+    const total = filteredQuestions.length;
+    const done = filteredQuestions.filter(q => answeredQ[q.id] !== undefined).length;
+    const wrong = filteredQuestions.filter(q => answeredQ[q.id] && answeredQ[q.id] !== 'correct').length;
+    area.innerHTML = `
+      <div class="empty">
+        <div class="icon">🎉</div>
+        <p>全部刷完！</p>
+        <p style="font-size:14px;color:var(--text2);margin-top:8px;">
+          共 ${total} 题 | 错 ${wrong} 题 | 正确率 ${done>0 ? Math.round((done-wrong)/done*100) : 0}%
+        </p>
+        <button class="btn-next" style="margin-top:16px;" onclick="retryWrong()">复习错题</button>
+      </div>`;
+    return;
+  }
+  
+  const q = filteredQuestions[currentIdx];
+  const prevAns = answeredQ[q.id];
+  const answered = prevAns !== undefined;
+  const isMulti = q.type === 'multi';
+  multiSelected = new Set();
+
+  const optKeys = ['A','B','C','D','E'];
+  const options = q.options;
+  
+  let optHtml = '';
+  for (const key of optKeys) {
+    if (!options[key]) continue;
+    let cls = 'opt-btn';
+    let icon = '';
+    if (answered) {
+      cls += ' done';
+      if (q.answer.includes(key)) cls += ' correct';
+      else if (prevAns !== 'correct' && prevAns.includes(key)) cls += ' wrong';
+      else cls += ' dim';
+    } else if (isMulti) {
+      icon = `<input type="checkbox" class="multi-cb" data-key="${key}" onchange="toggleMulti(this)" style="margin-right:6px;">`;
+    }
+    optHtml += `
+      <div class="${cls}" onclick="${answered ? '' : (isMulti ? `toggleMultiClick('${key}')` : `answer('${key}')`)}">
+        ${icon}<span class="opt-letter">${key}</span>
+        <span>${options[key]}</span>
+      </div>`;
+  }
+
+  area.innerHTML = `
+    <div class="q-card">
+      <div class="q-meta">
+        <span>第 ${currentIdx+1}/${filteredQuestions.length} 题</span>
+        <span>${q.chapter}</span>
+        ${q.kaodian ? `<span>${q.kaodian}</span>` : ''}
+        <span style="background:${isMulti?'#fef3c7':'#eef0ff'};color:${isMulti?'#d97706':'#4361ee'};">${isMulti ? '多选' : '单选'}</span>
+        ${prevAns === 'correct' ? '<span style="background:#ecfdf5;color:#10b981;">✓ 已答对</span>' : ''}
+        ${prevAns && prevAns !== 'correct' ? `<span style="background:#fef2f2;color:#ef4444;">✗ 已答错 (${formatAnswer(prevAns)})</span>` : ''}
+      </div>
+      <div class="q-stem">${q.stem}</div>
+      ${isMulti && !answered ? '<div style="font-size:12px;color:#d97706;margin-bottom:10px;">⚠ 多选题，请选择所有正确答案后点击"提交答案"</div>' : ''}
+      <div class="q-options">${optHtml}</div>
+      <div class="feedback ${answered ? 'show ' : ''}${prevAns === 'correct' ? 'correct' : prevAns ? 'wrong' : ''}" id="feedback">
+        ${answered ? (prevAns === 'correct' ? '✓ 回答正确！' : `✗ 回答错误，正确答案是 ${formatAnswer(q.answer)}`) : ''}
+        ${answered && q.explanation ? `<div style="margin-top:8px;padding:8px 10px;background:#fff;border-radius:6px;font-size:13px;color:#555;line-height:1.7;"><strong>📖 解析：</strong>${q.explanation}</div>` : ''}
+      </div>
+      ${answered ? `
+      <div class="note-box show">
+        ${getNote(q.id) ? `
+        <div class="existing-note"><span class="note-icon">📝</span><span class="note-text">${escapeHtml(getNote(q.id))}</span></div>
+        ` : ''}
+        <textarea id="noteInput" placeholder="记一笔：为什么错 / 关键考点 / 记忆口诀..." onblur="saveNote(${q.id})">${escapeHtml(getNote(q.id) || '')}</textarea>
+        <div class="note-hint">输入后自动保存</div>
+      </div>
+      ` : ''}
+      <div class="actions">
+        <button class="btn" onclick="prevQuestion()" ${currentIdx === 0 ? 'disabled' : ''}>上一题</button>
+        ${isMulti && !answered ? '<button class="btn-next" onclick="submitMulti()" id="btnSubmitMulti">提交答案</button>' : ''}
+        <button class="btn-next" onclick="nextQuestion()">${answered ? '下一题' : '跳过'}</button>
+      </div>
+    </div>`;
+}
+
+function formatAnswer(ans) {
+  return ans.length === 1 ? ans : ans.split('').join('、');
+}
+
+function toggleMulti(cb) {
+  const key = cb.dataset.key;
+  if (cb.checked) multiSelected.add(key);
+  else multiSelected.delete(key);
+}
+
+function toggleMultiClick(key) {
+  const cb = document.querySelector(`.multi-cb[data-key="${key}"]`);
+  if (cb) { cb.checked = !cb.checked; toggleMulti(cb); }
+}
+
+function answer(letter) {
+  const q = filteredQuestions[currentIdx];
+  const correct = q.type === 'multi'
+    ? letter.split('').sort().join('') === q.answer.split('').sort().join('')
+    : letter === q.answer;
+  answeredQ[q.id] = correct ? 'correct' : letter;
+  saveState();
+  updateStats();
+  renderQuestion();
+  renderQuestionList();
+  if (autoNext && correct && currentIdx < filteredQuestions.length - 1) {
+    setTimeout(() => { currentIdx++; renderQuestion(); renderQuestionList(); document.getElementById('questionArea').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 700);
+  }
+}
+
+function submitMulti() {
+  if (multiSelected.size === 0) return;
+  const selected = Array.from(multiSelected).sort().join('');
+  answer(selected);
+}
+
+function prevQuestion() {
+  if (currentIdx > 0) { currentIdx--; renderQuestion(); renderQuestionList(); }
+}
+
+function nextQuestion() {
+  if (currentIdx < filteredQuestions.length - 1) {
+    currentIdx++;
+    renderQuestion(); renderQuestionList();
+  } else {
+    currentIdx = filteredQuestions.length;
+    renderQuestion(); renderQuestionList();
+  }
+}
+
+function retryWrong() {
+  const wrongIds = new Set();
+  for (const [id, ans] of Object.entries(answeredQ)) {
+    if (ans !== 'correct') wrongIds.add(parseInt(id));
+  }
+  if (wrongIds.size === 0) {
+    alert('没有错题，全部正确！');
+    return;
+  }
+  filteredQuestions = allQuestions.filter(q => wrongIds.has(q.id));
+  if (mode === 'rand') shuffleFiltered();
+  currentIdx = 0;
+  updateStats();
+  renderQuestion();
+  renderQuestionList();
+}
+
+// ── Wrong book ──
+function renderWrongBook() {
+  const wrongQs = [];
+  for (const q of allQuestions) {
+    const ans = answeredQ[q.id];
+    if (ans && ans !== 'correct') {
+      wrongQs.push({ ...q, yourAnswer: ans });
+    }
+  }
+  
+  const book = document.getElementById('wrongBook');
+  const list = document.getElementById('wrongList');
+  
+  if (wrongQs.length === 0) {
+    book.style.display = 'none';
+    return;
+  }
+  
+  book.style.display = 'block';
+  document.getElementById('wrongCount').textContent = `(${wrongQs.length} 题)`;
+  
+  list.innerHTML = wrongQs.map(wq => `
+    <div class="wrong-item" onclick="jumpToQuestion(${wq.id})">
+      <div class="q-text">${wq.stem.substring(0, 80)}...</div>
+      <div class="q-meta-small">
+        <span>${wq.chapter}</span> |
+        你的答案: <span class="your">${formatAnswer(wq.yourAnswer)}</span> |
+        正确答案: <span class="ans">${formatAnswer(wq.answer)}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function jumpToQuestion(qid) {
+  selChapter = 'all';
+  filteredQuestions = [...allQuestions];
+  if (mode === 'rand') shuffleFiltered();
+  const idx = filteredQuestions.findIndex(q => q.id === qid);
+  if (idx >= 0) {
+    currentIdx = idx;
+    renderChapters();
+    updateStats();
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// ── Analysis ──
+function showAnalysis() {
+  // Build chapter stats
+  const chStats = {};
+  allQuestions.forEach(q => {
+    if (!chStats[q.chapter]) chStats[q.chapter] = { total: 0, done: 0, wrong: 0 };
+    chStats[q.chapter].total++;
+    const ans = answeredQ[q.id];
+    if (ans !== undefined) {
+      chStats[q.chapter].done++;
+      if (ans !== 'correct') chStats[q.chapter].wrong++;
+    }
+  });
+
+  // Sort by accuracy (worst first)
+  const chapters = Object.entries(chStats)
+    .filter(([_, s]) => s.done > 0)
+    .map(([name, s]) => ({
+      name: name.replace(/^第\d+章\s*/, ''),
+      fullName: name,
+      ...s,
+      acc: s.done > 0 ? Math.round((s.done - s.wrong) / s.done * 100) : 0
+    }))
+    .sort((a, b) => a.acc - b.acc);
+
+  const overallDone = Object.values(chStats).reduce((s, c) => s + c.done, 0);
+  const overallWrong = Object.values(chStats).reduce((s, c) => s + c.wrong, 0);
+  const overallAcc = overallDone > 0 ? Math.round((overallDone - overallWrong) / overallDone * 100) : 0;
+
+  if (overallDone === 0) {
+    document.getElementById('analysisContent').innerHTML = '<p style="color:#888;padding:20px 0;">还没有刷题记录，先刷几题再来分析吧 ✨</p>';
+    document.getElementById('analysisModal').classList.add('show');
+    return;
+  }
+
+  // Build most-wrong questions
+  const wrongQs = [];
+  allQuestions.forEach(q => {
+    const ans = answeredQ[q.id];
+    if (ans && ans !== 'correct') {
+      wrongQs.push({ ...q, yourAnswer: ans });
+    }
+  });
+  wrongQs.sort((a, b) => {
+    const ca = (answeredQ[a.id] && answeredQ[a.id] !== 'correct' ? 1 : 0);
+    const cb = (answeredQ[b.id] && answeredQ[b.id] !== 'correct' ? 1 : 0);
+    return cb - ca;
+  });
+
+  // Recommendations
+  const recs = [];
+  chapters.forEach(ch => {
+    if (ch.done < 3) return;
+    if (ch.acc < 50) recs.push({ level: 'high', text: `「${ch.name}」正确率仅 ${ch.acc}%，需重点攻克，建议回看讲义原文`, ch });
+    else if (ch.acc < 70) recs.push({ level: 'medium', text: `「${ch.name}」正确率 ${ch.acc}%，加强专项练习`, ch });
+  });
+  const untouched = Object.entries(chStats).filter(([_, s]) => s.done === 0);
+  untouched.forEach(([name, s]) => {
+    recs.push({ level: 'medium', text: `「${name.replace(/^第\d+章\s*/, '')}」尚未刷过，安排时间过一遍`, ch: null });
+  });
+
+  let html = `
+    <div class="analysis-section">
+      <h3>📈 总体正确率: <b style="color:${overallAcc>=70?'var(--correct)':overallAcc>=50?'#f59e0b':'var(--wrong)'}">${overallAcc}%</b> (${overallDone - overallWrong}/${overallDone})</h3>
+    </div>
+    <div class="analysis-section">
+      <h3>📊 章节正确率排序（低到高）</h3>
+      <div class="chapter-bar-chart">
+  `;
+
+  chapters.forEach(ch => {
+    const level = ch.acc < 50 ? 'weak' : ch.acc < 70 ? 'medium' : 'strong';
+    html += `
+      <div class="cb-row">
+        <div class="cb-label">${ch.name}</div>
+        <div class="cb-track"><div class="cb-fill ${level}" style="width:${ch.acc}%"></div></div>
+        <div class="cb-val">${ch.acc}% <span style="font-weight:normal;color:#999;">(${ch.done - ch.wrong}/${ch.done})</span></div>
+      </div>`;
+  });
+
+  html += `</div></div>`;
+
+  // Recommendations
+  if (recs.length > 0) {
+    html += `<div class="analysis-section"><h3>💡 备考建议</h3>`;
+    recs.forEach(r => {
+      html += `<div class="rec-card ${r.level}"><div class="rec-title">${r.level === 'high' ? '🔴 优先' : r.level === 'medium' ? '🟡 关注' : '🟢 保持'}</div>${r.text}</div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Top wrong questions
+  if (wrongQs.length > 0) {
+    html += `<div class="analysis-section"><h3>⚠️ 高频错题 (Top 5)</h3>`;
+    wrongQs.slice(0, 5).forEach(wq => {
+      html += `<div class="wrong-item" onclick="jumpToQuestion(${wq.id});hideAnalysis()">
+        <div class="q-text">${wq.stem.substring(0, 60)}...</div>
+        <div class="q-meta-small">
+          你的: <span class="your">${formatAnswer(wq.yourAnswer)}</span> |
+          正确: <span class="ans">${formatAnswer(wq.answer)}</span>
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  document.getElementById('analysisContent').innerHTML = html;
+  document.getElementById('analysisModal').classList.add('show');
+}
+
+function hideAnalysis() {
+  document.getElementById('analysisModal').classList.remove('show');
+}
+
+// ── Keyboard ──
+document.addEventListener('keydown', e => {
+  const q = filteredQuestions.length > 0 && currentIdx < filteredQuestions.length
+    ? filteredQuestions[currentIdx] : null;
+  if (!q) return;
+  const prevAns = answeredQ[q.id];
+  const answered = prevAns !== undefined;
+  
+  if (!answered && q.type === 'single' && ['a','b','c','d'].includes(e.key.toLowerCase())) {
+    const letter = e.key.toUpperCase();
+    if (q.options[letter]) answer(letter);
+  }
+  if (e.key === 'ArrowLeft') prevQuestion();
+  if (e.key === 'ArrowRight' || e.key === ' ') nextQuestion();
+});
+
+// ── Start ──
+load();
+
+// ── Question list sidebar ──
+function renderQuestionList() {
+  const container = document.getElementById('qNums');
+  if (!container) return;
+  let html = '';
+  for (let i = 0; i < filteredQuestions.length; i++) {
+    const q = filteredQuestions[i];
+    const status = answeredQ[q.id];
+    let cls = 'q-num';
+    if (i === currentIdx) cls += ' current';
+    if (status === 'correct') cls += ' correct';
+    else if (status) cls += ' wrong';
+    html += `<div class="${cls}" onclick="jumpToQuestion(${i})" title="第${i+1}题">${i+1}</div>`;
+  }
+  container.innerHTML = html;
+  // Update total count
+  const totalEl = document.querySelector('.sidebar-title .total');
+  if (totalEl) totalEl.textContent = `${filteredQuestions.length}题`;
+  // Scroll current into view
+  const currentEl = container.querySelector('.current');
+  if (currentEl) {
+    currentEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+function jumpToQuestion(idx) {
+  if (idx >= 0 && idx < filteredQuestions.length) {
+    currentIdx = idx;
+    renderQuestion();
+    renderQuestionList();
+  }
+}
+
+</script>
+</body>
+</html>

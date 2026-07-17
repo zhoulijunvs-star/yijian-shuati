@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一建刷题</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+}
+.card {
+  background: #fff; border-radius: 16px; padding: 40px; max-width: 420px; width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,.15); text-align: center;
+}
+.card h1 { font-size: 24px; margin-bottom: 4px; }
+.card .sub { font-size: 14px; color: #888; margin-bottom: 8px; }
+.card .total { font-size: 13px; color: #aaa; margin-bottom: 24px; }
+.subjects { display: flex; flex-direction: column; gap: 12px; }
+.btn-subject {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 20px; border-radius: 12px; border: 2px solid #e5e7eb;
+  background: #f9fafb; cursor: pointer; transition: all .2s;
+  font-size: 16px; font-weight: 600; text-decoration: none; color: #1a1a2e;
+}
+.btn-subject:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+.btn-subject.econ { border-color: #4361ee; }
+.btn-subject.econ:hover { background: #eef0ff; }
+.btn-subject.mgmt { border-color: #10b981; }
+.btn-subject.mgmt:hover { background: #ecfdf5; }
+.btn-subject.law { border-color: #f59e0b; }
+.btn-subject.law:hover { background: #fffbeb; }
+.btn-subject .emoji { font-size: 28px; }
+.btn-subject .info { text-align: left; }
+.btn-subject .info .count { font-size: 12px; color: #888; font-weight: normal; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>📚 一建刷题</h1>
+  <p class="sub">建设工程经济 · 项目管理 · 法规</p>
+  <p class="total">共计 1295 题 · 3 科齐全</p>
+  <div class="subjects">
+    <a class="btn-subject econ" href="jingji_embed.html">
+      <span class="emoji">📘</span>
+      <span class="info">
+        <div>建设工程经济</div>
+        <div class="count">254 题 · 蔺飞飞</div>
+      </span>
+    </a>
+    <a class="btn-subject mgmt" href="guanli_embed.html">
+      <span class="emoji">📗</span>
+      <span class="info">
+        <div>建设工程项目管理</div>
+        <div class="count">624 题 · 金月</div>
+      </span>
+    </a>
+    <a class="btn-subject law" href="fagui_embed.html">
+      <span class="emoji">📙</span>
+      <span class="info">
+        <div>建设工程法规</div>
+        <div class="count">417 题 · 王欣</div>
+      </span>
+    </a>
+  </div>
+</div>
+</body>
+</html>
