@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>建设工程经济 &mdash; 思维导图 | 蔺飞飞</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f8f5f0;color:#3a2f28}
+#app{display:flex;height:100vh}
+#sidebar{width:280px;background:#2c2416;color:#e8dcc8;overflow-y:auto;flex-shrink:0}
+#sidebar h1{padding:20px 16px;font-size:18px;border-bottom:1px solid #5a4a32;line-height:1.5}
+#sidebar h1 small{font-size:12px;color:#a09070}
+#sidebar .nav-item{padding:10px 16px;cursor:pointer;font-size:13px;border-left:3px solid transparent;transition:.2s;display:flex;justify-content:space-between}
+#sidebar .nav-item:hover{background:#3a3020;border-left-color:#c9a96e}
+#sidebar .nav-item .score{font-size:11px;color:#a09070}
+#sidebar .legend{padding:12px 16px;font-size:11px;line-height:1.8;border-top:1px solid #5a4a32;margin-top:auto}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+#main{flex:1;overflow:auto;padding:20px 30px}
+#main h2{font-size:20px;color:#8b6914;border-bottom:2px solid #d4a574;padding-bottom:8px;margin-bottom:20px}
+.chapter-block{margin-bottom:10px;border:1px solid #e0d0b8;border-radius:6px;overflow:hidden}
+.ch-header{display:flex;align-items:center;padding:12px 16px;background:#f5e8d0;cursor:pointer;user-select:none}
+.ch-header:hover{background:#ecd8b8}
+.ch-header .ch-num{width:36px;height:36px;background:#8b6914;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;margin-right:12px;flex-shrink:0}
+.ch-header .ch-title{flex:1;font-size:15px;font-weight:bold;color:#5a3a10}
+.ch-header .ch-meta{font-size:12px;color:#999;margin:0 10px}
+.ch-header.open .ch-arrow{transform:rotate(90deg);display:inline-block}
+.section{margin:8px 0;border-left:3px solid #d4a574;padding:6px 12px}
+.section-header{font-size:14px;font-weight:bold;color:#6b4410;cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px}
+.section-header:hover{color:#8b6914}
+.point{padding:4px 8px;margin:2px 0;border-radius:3px;font-size:12.5px}
+.point.f1{background:#fff8e8}.point.f2{background:#ffe8c8}.point.f3{background:#ffd8a0}.point.f4{background:#ffc070}
+.point.has-subs{cursor:pointer}
+.point.has-subs:hover{filter:brightness(0.95)}
+.point-tag{display:inline-block;padding:1px 5px;border-radius:2px;font-size:10px;margin-right:6px}
+.tag-1{background:#e8e0d0;color:#888}.tag-2{background:#f0c878;color:#6b4410}.tag-3{background:#e8a040;color:#fff}.tag-4{background:#c06030;color:#fff}
+.sub-list{margin-top:4px;padding:4px 0 4px 16px;border-top:1px dashed #e0d0b8}
+.sub-item{padding:2px 0;font-size:11px;color:#777;line-height:1.6}
+.tab-bar{display:flex;gap:4px;padding:12px 0;border-bottom:2px solid #e0d0b8;margin-bottom:16px;position:sticky;top:0;background:#f8f5f0;z-index:30}
+.tab-btn{padding:8px 20px;border:1px solid #d4a574;background:#fff;color:#8b6914;border-radius:20px;cursor:pointer;font-size:13px;transition:.2s;font-weight:bold}
+.tab-btn:hover{background:#f5e8d0}
+.tab-btn.active{background:#8b6914;color:#fff;border-color:#8b6914}
+.pyramid-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 0;max-width:900px;margin:0 auto}
+.pyramid-tier{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.pyramid-node{padding:10px 14px;border-radius:8px;text-align:center;font-size:12px;cursor:pointer;transition:.2s;border:2px solid transparent;min-width:80px}
+.pyramid-node:hover{transform:scale(1.05);z-index:10}
+.pyramid-node.tier1{background:#e8f0ff;border-color:#5a8ab5;color:#2a4a6a}
+.pyramid-node.tier2{background:#e8ffe8;border-color:#5a9a4a;color:#2a5a1a}
+.pyramid-node.tier3{background:#fff8e8;border-color:#d4a040;color:#6a4a10}
+.pyramid-node.tier4{background:#ffe8e8;border-color:#c06050;color:#6a2020}
+.pyramid-label{font-size:14px;font-weight:bold;color:#8b6914;text-align:center;padding:4px 0;width:100%}
+.pyramid-arrow{font-size:20px;color:#c0b0a0;text-align:center}
+.lc-wrap{padding:20px;overflow-x:auto}
+.lc-flow{display:flex;align-items:flex-start;gap:0;min-width:900px;padding-bottom:30px}
+.lc-stage{flex:1;min-width:90px;text-align:center;padding:0 4px}
+.lc-stage-header{padding:8px 4px;border-radius:8px 8px 0 0;font-size:12px;font-weight:bold;color:#fff}
+.lc-stage-body{padding:6px 2px;background:#faf6f0;border:1px solid #e0d0b8;border-top:none;border-radius:0 0 8px 8px;min-height:50px;font-size:10px;line-height:1.6}
+.lc-stage .ch-tag{display:block;padding:2px 4px;margin:2px 0;border-radius:3px;font-size:10px;cursor:pointer}
+.lc-arrow{display:flex;align-items:center;justify-content:center;font-size:20px;color:#c0b0a0;min-width:20px}
+.cmp-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.cmp-table th{background:#f5e8d0;padding:10px;text-align:left;font-weight:bold;color:#5a3a10;border-bottom:2px solid #d4a574}
+.cmp-table td{padding:8px 10px;border-bottom:1px solid #e8dcc8;vertical-align:top;line-height:1.7}
+.cmp-table tr:hover td{background:#fdf8f0}
+.cmp-title{font-size:15px;font-weight:bold;color:#8b6914;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #e0d0b8}
+.search-wrap{padding:12px 16px;border-bottom:1px solid #5a4a32}
+.search-wrap input{width:100%;padding:8px 10px;border:1px solid #5a4a32;border-radius:4px;background:#3a3020;color:#e8dcc8;font-size:13px;outline:none}
+.search-wrap input::placeholder{color:#a09070}
+.search-result{margin:2px 0;font-size:11px;color:#c9a96e;text-align:center;display:none}
+.hamburger{display:none;position:fixed;top:10px;left:10px;z-index:200;background:#2c2416;color:#e8dcc8;border:none;font-size:22px;padding:6px 10px;border-radius:6px;cursor:pointer}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90}
+@media(max-width:768px){#sidebar{position:fixed;left:-300px;top:0;bottom:0;z-index:100;transition:left .3s;width:280px}#sidebar.open{left:0}.overlay.open{display:block}.hamburger{display:block}#main{margin-left:0!important;padding:12px 8px}.tab-bar{flex-wrap:nowrap;overflow-x:auto;gap:4px;padding:8px 4px}.tab-btn{padding:6px 12px;font-size:11px;white-space:nowrap;flex-shrink:0}#main h2{font-size:16px}.pyramid-node{padding:6px 8px;font-size:10px;min-width:60px}.lc-flow{min-width:750px}.cmp-table{font-size:10px}}</style>
+</head>
+<body>
+<div id="app">
+<button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div id="sidebar">
+<h1>建设工程经济<br><small>蔺飞飞 &middot; 深度精讲 &middot; 20章 &middot; 113考点</small></h1>
+<div class="search-wrap">
+<input type="text" id="search-input" placeholder="搜索考点..." oninput="searchChapters(this.value)">
+<div class="search-result" id="search-result"></div>
+</div>
+<div id="nav-list"><div class="nav-item" onclick="document.getElementById('ch-1').scrollIntoView({behavior:'smooth'})">Ch1 资金时间价值计算及应用<span class="score">8考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-2').scrollIntoView({behavior:'smooth'})">Ch2 经济效果评价<span class="score">7考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-3').scrollIntoView({behavior:'smooth'})">Ch3 不确定性分析<span class="score">2考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-4').scrollIntoView({behavior:'smooth'})">Ch4 设备更新分析<span class="score">7考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-5').scrollIntoView({behavior:'smooth'})">Ch5 价值工程<span class="score">9考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-6').scrollIntoView({behavior:'smooth'})">Ch6 财务会计基础<span class="score">6考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-7').scrollIntoView({behavior:'smooth'})">Ch7 费用与成本<span class="score">5考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-8').scrollIntoView({behavior:'smooth'})">Ch8 08_收入（3-4 分）.md<span class="score">5考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-9').scrollIntoView({behavior:'smooth'})">Ch9 利润与所得税费用<span class="score">3考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-10').scrollIntoView({behavior:'smooth'})">Ch10 财务分析<span class="score">4考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-11').scrollIntoView({behavior:'smooth'})">Ch11 筹资管理<span class="score">6考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-12').scrollIntoView({behavior:'smooth'})">Ch12 营运资金管理<span class="score">5考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-13').scrollIntoView({behavior:'smooth'})">Ch13 建设项目总投资构成及计算<span class="score">8考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-14').scrollIntoView({behavior:'smooth'})">Ch14 工程计价依据<span class="score">8考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-15').scrollIntoView({behavior:'smooth'})">Ch15 设计概算与施工图预算<span class="score">4考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-16').scrollIntoView({behavior:'smooth'})">Ch16 工程量清单计价<span class="score">8考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-17').scrollIntoView({behavior:'smooth'})">Ch17 工程计量与支付<span class="score">7考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-18').scrollIntoView({behavior:'smooth'})">Ch18 工程总承包计价<span class="score">5考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-19').scrollIntoView({behavior:'smooth'})">Ch19 国际工程投标报价<span class="score">3考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-20').scrollIntoView({behavior:'smooth'})">Ch20 工程计价数字化与智能化<span class="score">3考点</span></div>
+</div>
+<div class="legend">
+<div><span class="legend-dot" style="background:#e8e0d0"></span> 了解</div>
+<div><span class="legend-dot" style="background:#f0c878"></span> 掌握</div>
+<div><span class="legend-dot" style="background:#e8a040"></span> 重点</div>
+<div><span class="legend-dot" style="background:#ffc070"></span> 核心</div>
+</div>
+</div>
+<div id="main">
+<div class="tab-bar">
+<button class="tab-btn active" onclick="switchTab('tree')">&#x1F332; 树形导图</button>
+<button class="tab-btn" onclick="switchTab('overview')">&#x1F517; 关系总览</button>
+<button class="tab-btn" onclick="switchTab('lifecycle')">&#x1F504; 知识流程</button>
+<button class="tab-btn" onclick="switchTab('compare')">&#x2696;&#xFE0F; 对比辨析 (15组)</button>
+</div>
+<div id="tab-tree"><div class="chapter-block" id="ch-1">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">1</div>
+<div class="ch-title">第1章 资金时间价值计算及应用</div>
+<div class="ch-meta">1节 · 8考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f1 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-1">★</span><b>&#9656; 计算周期小于资金收付周期时等值计算的处理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 影响企业行为</div><div class="sub-item">&#8226; 影响居民资产选择行为</div><div class="sub-item">&#8226; 影响政府行为</div></div></div>
+<div class="point f3 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-3">★★★</span><b>&#9656; 利率的影响因素</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 社会平均利润率的高低</div><div class="sub-item">&#8226; 资金市场供求对比状况</div><div class="sub-item">&#8226; 借出资金的用途和使用方式</div><div class="sub-item">&#8226; 借出资金期限的长短</div><div class="sub-item">&#8226; 政府宏观调控政策</div><div class="sub-item">&#8226; 经济周期所处阶段</div></div></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>利息的计算</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 名义利率和有效利率</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 年名义利率和年有效利率实质上就是单利和复利的关系；</div><div class="sub-item">&#8226; 年名义利率与年有效利率的差别受计息周期数的影响，当计息周期数为1 年时，两者相等；</div><div class="sub-item">&#8226; 每年计息期数越多（计息周期越短），两者相差就越大。</div></div></div>
+<div class="point f2"><span class="point-tag tag-2">★★</span><b>资金时间价值的影响因素</b></div>
+<div class="point f3 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-3">★★★</span><b>&#9656; 现金流量图</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 横轴为时间轴，向右延伸表示时间的延续，时间轴上每一刻度表示一个时间单位，可取年、半年、季</div><div class="sub-item">&#8226; 箭线方向表示现金流量的方向，即资金是流入还是流出，时间轴上方的箭线表示现金流入，下方的箭</div><div class="sub-item">&#8226; 箭线与时间轴的交点表示现金流量发生的时点（作用点）。</div><div class="sub-item">&#8226; 箭线长短相对表示现金流量的大小。由于分析对象多项资金收付差额可能较大，难以在现金流量图中</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 资金等值计算</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; P 发生在第一个系列A 的前一期，F 与最后一个系列A 发生在同一期。</div><div class="sub-item">&#8226; 一次支付公式中“n”表示计息周期个数；等额支付公式中的“n”表示A 的个数。</div><div class="sub-item">&#8226; 一次支付终值计算</div><div class="sub-item">&#8226; 一次支付现值计算</div><div class="sub-item">&#8226; 等额支付终值计算</div><div class="sub-item">&#8226; F5=100×[（1+4.8%）^5-1]/4.8%=550.3598 万元</div><div class="sub-item">&#8226; F6=550.3598×（1+4.8%）=576.7771 万元</div><div class="sub-item">&#8226; 偿债基金计算（终值算年金）</div></div></div>
+<div class="point f1"><span class="point-tag tag-1">★</span><b>计息周期小于资金收付周期时等值计算的处理</b></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-2">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">2</div>
+<div class="ch-title">第2章 经济效果评价</div>
+<div class="ch-meta">1节 · 7考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2"><span class="point-tag tag-2">★★</span><b>经济效果评价的分类和评价方法</b></div>
+<div class="point f3"><span class="point-tag tag-3">★★★</span><b>经济效果评价采用的计算期</b></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>经济评价指标</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 投资回收期分析</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 静态投资回收期计算：</div><div class="sub-item">&#8226; 当每年净收益不相同时：</div></div></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>财务净现值分析</b></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>财务内部收益率分析</b></div>
+<div class="point f2"><span class="point-tag tag-2">★★</span><b>多方案比选</b></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-3">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">3</div>
+<div class="ch-title">第3章 不确定性分析</div>
+<div class="ch-meta">1节 · 2考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 盈亏平衡分析</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 产量等于销售量，即当年生产的产品当年全部销售。</div><div class="sub-item">&#8226; 产量变化时，单位可变成本不变，即总成本费用（变动成本+固定成本）是产销量的线性函数。</div><div class="sub-item">&#8226; 产量变化时，销售单价不变，即销售收入是产销量的线性函数。</div><div class="sub-item">&#8226; 计算该项目以产量表示的盈亏平衡点。</div><div class="sub-item">&#8226; 计算该项目以生产能力利用率表示的盈亏平衡点。</div><div class="sub-item">&#8226; 计算该项目以产品售价表示的盈亏平衡点。</div><div class="sub-item">&#8226; 计算该项目达到设计生产能力时的年利润。</div><div class="sub-item">&#8226; /（2000-900-100）=600 万吨</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 敏感性分析</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 敏感度系数（相对测定法）</div><div class="sub-item">&#8226; 临界点（绝对测定法）</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-4">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">4</div>
+<div class="ch-title">第4章 设备更新分析</div>
+<div class="ch-meta">1节 · 7考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>设备租赁方案经济分析</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 设备磨损的类型</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 当技术进步表现为不断出现性能更完善、效率更高的新设备，但加工方法没有原则性变化时，将使原有设</div><div class="sub-item">&#8226; 当技术进步表现为采用新的加工对象，如原有设备的使用功能无法对新材料进行加工时，原设备必然要被</div><div class="sub-item">&#8226; 当技术进步表现为改变原有生产工艺，采用新的加工方法时，则为旧工艺服务的原有设备也将失去使用功</div><div class="sub-item">&#8226; 当技术进步表现为生产产品的更新换代时，不能适用于新产品生产的原有设备也将被淘汰。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 设备磨损的补偿方式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 对于材料和能耗等消耗高、性能差、使用操作条件不好、对环境污染严重的设备，应当用较先进的设备更</div><div class="sub-item">&#8226; 对整机性能尚可，有局部缺陷，个别技术经济指标落后的设备，应选择吸收新技术，不断地加以改造和现</div><div class="sub-item">&#8226; 若设备磨损主要是有形磨损所致，在磨损较轻时可以通过修理进行补偿。</div><div class="sub-item">&#8226; 若设备有形磨损较严重，需花费较高的修复费用，则应对其进行经济分析比较，以确定恰当的补偿方式。</div><div class="sub-item">&#8226; 若设备磨损太严重而无法修复，或虽然修复但其精度仍达不到要求的，则应该采取更新补偿方式。</div><div class="sub-item">&#8226; 若设备磨损主要是由无形磨损所致，则应采取现代化改装或全部更换。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 设备寿命</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 经济寿命估算</div><div class="sub-item">&#8226; 使设备在经济寿命内平均每年净收益（纯利润）达到最大；</div><div class="sub-item">&#8226; 使设备在经济寿命内年平均资产消耗成本和年平均运行成本总和达到最小。</div><div class="sub-item">&#8226; 经济寿命计算方法</div><div class="sub-item">&#8226; 年平均使用成本</div></div></div>
+<div class="point f1 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-1">★</span><b>&#9656; 设备更新策略</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 设备损耗严重，大修后性能、精度仍不能满足规定工艺要求的；</div><div class="sub-item">&#8226; 设备损耗虽在允许范围之内，但技术已经陈旧落后，能耗高、对环境污染严重，技术经济效果很不好</div><div class="sub-item">&#8226; 设备役龄长，大修虽然能恢复精度，但经济效果比更新方案差的。</div></div></div>
+<div class="point f3 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-3">★★★</span><b>&#9656; 设备更新方案的比选原则</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 设备更新分析只考虑现在和未来发生的现金流量</div><div class="sub-item">&#8226; 设备更新分析应站在咨询者（第三方）的视角分析问题</div><div class="sub-item">&#8226; 设备更新分析以费用年值法为主</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 设备更新方案经济分析</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 出租人承担设备的维修保养。</div><div class="sub-item">&#8226; 经营租赁的任何一方都可以随时以一定方式在通知对方的规定时间内取消或终止租赁。具有可撤销性、短</div><div class="sub-item">&#8226; 适用于技术进步快、用途较广泛、使用具有季节性的设备。</div><div class="sub-item">&#8226; 经营租赁设备的租赁费计入企业成本，可以减少企业所得税纳税基数。</div><div class="sub-item">&#8226; 承租人对设备的维修保养等承担责任。</div><div class="sub-item">&#8226; 适用于大型设备、专有技术设备等。</div><div class="sub-item">&#8226; 节省设备投资。资金短缺的情况下，用较少资金获得急需的设备。</div><div class="sub-item">&#8226; 加快设备更新速度。科学技术快速发展，设备更新速度大大提高，租赁可以引进先进技术，减少企业</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-5">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">5</div>
+<div class="ch-title">第5章 价值工程</div>
+<div class="ch-meta">1节 · 9考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f1 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-1">★</span><b>&#9656; 价值工程的概念</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 价值是对象的比较价值</div><div class="sub-item">&#8226; 对象的功能看作目标成本（也叫预计成本）</div><div class="sub-item">&#8226; 寿命周期成本是目前成本（也叫实际成本）</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 提高价值的途径</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 功能调整应以顾客/用户对功能的需求为依据；</div><div class="sub-item">&#8226; 提高对象价值应平衡用户体验和商业价值；</div><div class="sub-item">&#8226; 应从方案创新、替代方案选择和管理控制三方面寻求具体解决方案和办法。</div></div></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>价值工程的特点</b></div>
+<div class="point f1 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-1">★</span><b>&#9656; 价值工程实施步骤</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 对象选择</div><div class="sub-item">&#8226; 组成价值工程工作组 确定价值工程项目活动的参与者，组成具有内部分工和职责划分</div><div class="sub-item">&#8226; 制订工作计划</div><div class="sub-item">&#8226; 收集整理信息资料</div><div class="sub-item">&#8226; 功能分析</div><div class="sub-item">&#8226; 功能评价</div><div class="sub-item">&#8226; 方案创新</div><div class="sub-item">&#8226; 方案评价</div></div></div>
+<div class="point f1 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-1">★</span><b>&#9656; 价值工程准备阶段</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 设计维度</div><div class="sub-item">&#8226; 施工维度</div><div class="sub-item">&#8226; 市场维度</div><div class="sub-item">&#8226; 成本/费用维度 选择成本/费用高或占比大的工程或其分部分项工程</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 价值工程功能分析</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 功能定义</div><div class="sub-item">&#8226; 明确现有产品所具有的功能状况；</div><div class="sub-item">&#8226; 明确用户要求的功能；</div><div class="sub-item">&#8226; 便于确定功能系统结构；</div><div class="sub-item">&#8226; 为功能评价提供条件；</div><div class="sub-item">&#8226; 为改进和创新拓宽思路。</div><div class="sub-item">&#8226; 功能整理</div></div></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>价值工程功能评价</b></div>
+<div class="point f1"><span class="point-tag tag-1">★</span><b>价值工程创新阶段</b></div>
+<div class="point f1 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-1">★</span><b>&#9656; 价值工程实施阶段</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 组织落实，即把具体的实施方案落实到责任部门和有关人员，明确相关岗位 和人员的责任。</div><div class="sub-item">&#8226; 经费落实，即落实好实施方案所需经费的来源、保证措施和使用安排。</div><div class="sub-item">&#8226; 物资落实，即落实好实施方案所需的物资、装备等。</div><div class="sub-item">&#8226; 时间落实，即安排好实施方案的起止时间及各阶段的时间。</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-6">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">6</div>
+<div class="ch-title">第6章 财务会计基础</div>
+<div class="ch-meta">1节 · 6考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f3 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-3">★★★</span><b>&#9656; 会计要素和会计等式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 与该资源有关的经济利益很可能流入企业。</div><div class="sub-item">&#8226; 该资源的成本或者价值能够可靠地计量。</div><div class="sub-item">&#8226; 与该义务有关的经济利益很可能流出企业。</div><div class="sub-item">&#8226; 未来流出的经济利益的金额能够可靠地计量。</div><div class="sub-item">&#8226; 所有者权益</div></div></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>会计要素计量属性</b></div>
+<div class="point f1"><span class="point-tag tag-1">★</span><b>财务会计工作基本内容</b></div>
+<div class="point f2"><span class="point-tag tag-2">★★</span><b>会计假设</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 会计基础</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 收付实现制</div><div class="sub-item">&#8226; 权责发生制</div></div></div>
+<div class="point f2"><span class="point-tag tag-2">★★</span><b>会计核算原则</b></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-7">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">7</div>
+<div class="ch-title">第7章 费用与成本</div>
+<div class="ch-meta">1节 · 5考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>企业支出分类</b></div>
+<div class="point f1 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-1">★</span><b>&#9656; 费用与成本</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 与费用相关的经济利益很可能流出企业；</div><div class="sub-item">&#8226; 经济利益流出的结果会导致企业资产的减少或者负债的增加；</div><div class="sub-item">&#8226; 经济利益的流出额能够可靠地计量。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 固定资产</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 固定资产原价；</div><div class="sub-item">&#8226; 预计净残值；</div><div class="sub-item">&#8226; 固定资产使用寿命。</div><div class="sub-item">&#8226; 自行建造固定资产的成本，由建造该项资产达到预定可使用状态前所发生的必要支出构成。</div><div class="sub-item">&#8226; 投资者投入固定资产的成本，应当按照投资合同或协议约定的价值确定，但合同或协议约定价值不公允的</div><div class="sub-item">&#8226; 非货币性资产交换、债务重组、企业合并和融资租赁取得的固定资产的成本，应当分别按照相应会计准则</div><div class="sub-item">&#8226; 年限平均法</div><div class="sub-item">&#8226; 工作量法</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程成本核算</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 业务动因</div><div class="sub-item">&#8226; 持续动因</div><div class="sub-item">&#8226; 强度动因</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 施工企业期间费用核算</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 利息支出（减利息收入）---不包括资本化利息；</div><div class="sub-item">&#8226; 汇兑损失（减汇兑收益）；</div><div class="sub-item">&#8226; 相关的手续费；</div><div class="sub-item">&#8226; 因借入资金所付出的不符合资本化条件的借款费用；</div><div class="sub-item">&#8226; 除外币专门借款之外的其他外币借款本金及其利息所产生的汇兑差额等。</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-8">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">8</div>
+<div class="ch-title">第8章 08_第8章 收入（3-4 分）.md</div>
+<div class="ch-meta">1节 · 5考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f1 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-1">★</span><b>&#9656; 收入的特点</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 收入从企业的日常活动中产生，而不是从偶发的交易或事项中产生。</div><div class="sub-item">&#8226; 收入可能表现为企业资产的增加，也可能表现为企业负债的减少，或二者兼而有之。</div><div class="sub-item">&#8226; 收入能导致企业所有者权益的增加，收入是与所有者投入无关的经济利益的总流入。</div><div class="sub-item">&#8226; 收入只包括本企业经济利益的流入，不包括为第三方或客户代收的款项。</div></div></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>收入的分类</b></div>
+<div class="point f1"><span class="point-tag tag-1">★</span><b>收入确认和计量的原则</b></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 建造施工合同收入</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 先有买主（及客户），后有标的（即资产）；</div><div class="sub-item">&#8226; 建设周期长；</div><div class="sub-item">&#8226; 建造资产体积大、造价高；</div><div class="sub-item">&#8226; 一般不可取消。</div><div class="sub-item">&#8226; 每项资产均有独立的建造计划；</div><div class="sub-item">&#8226; 与客户就每项资产单独进行谈判，双方能够接受或拒绝与每项资产有关的合同条款；</div><div class="sub-item">&#8226; 每项资产的收入和成本可以单独辨认。</div><div class="sub-item">&#8226; 该组合同按一揽子交易签订；</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 完工百分比法</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 合同完工进度=已经完成的合同工程量÷合同预计总工程量×100%</div><div class="sub-item">&#8226; 合同完工进度=累计实际发生的合同成本÷合同预计总成本×100%</div><div class="sub-item">&#8226; 根据已完成合同工作的技术测量确定。</div><div class="sub-item">&#8226; 当期确认的合同收入= 实际合同总收入- 以前累计已确认收入</div><div class="sub-item">&#8226; 当期确认的合同收入=（合同总收入×完工进度）- 以前会计期间累计已确认收入</div><div class="sub-item">&#8226; 合同成本能够回收的，合同收入根据能够收回的实际合同成本来确认，合同成本在其发生的当期确认为费</div><div class="sub-item">&#8226; 成本不能回收的，应在发生时立即确认为费用，不确认收入。</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-9">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">9</div>
+<div class="ch-title">第9章 利润与所得税费用</div>
+<div class="ch-meta">1节 · 3考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 利润的计算</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 资产减值损失是指企业在会计期末对固定资产、无形资产、商誉等长期资产进行评估时，发现其账面价值</div><div class="sub-item">&#8226; 信用减值损失是指企业因债务人违约或信用状况恶化，导致其应收款项的预期现金流量减少，从而需要计</div><div class="sub-item">&#8226; 投资收益是指企业通过对外投资（如股票、债券、基金、房地产、股权等）所获得的回报，包括利息、股</div><div class="sub-item">&#8226; 净敞口套期收益是指企业在套期保值业务中，因市场价格波动或汇率变动等因素，导致套期工具和被套期</div><div class="sub-item">&#8226; 公允价值变动收益是指企业以公允价值计量且其变动计入当期损益的资产（如交易性金融资产、投资性房</div><div class="sub-item">&#8226; 资产处置收益是指企业通过出售、报废、毁损、对外投资、非货币性资产交换、债务重组等方式处置固定</div><div class="sub-item">&#8226; 营业外收入包括政府补助（如税收返还、财政补贴）、固定资产盘盈、出售无形资产收益、债务重组利得</div><div class="sub-item">&#8226; 营业外支出包括税收滞纳金、行政罚款、固定资产盘亏、报废损失、债务重组损失（企业豁免他人债</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 税后利润的分配</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 依法分配原则</div><div class="sub-item">&#8226; 资本保全分配原则</div><div class="sub-item">&#8226; 充分保护债权人利益原则</div><div class="sub-item">&#8226; 多方及长短期利益兼顾原则</div><div class="sub-item">&#8226; 公司持有的本公司股份不得分配利润</div><div class="sub-item">&#8226; 首先提取法定公积金。需要提取利润的10%列入公司法定公积金。如果公司法定公积金累计额已达到公司</div><div class="sub-item">&#8226; 在提取法定公积金后，公司还可以根据股东会决议提取任意公积金。</div><div class="sub-item">&#8226; 最后，公司弥补亏损和提取公积金后所余税后利润，有限责任公司按照股东实缴的出资比例分配利润。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 所得税费用</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 收入总额</div><div class="sub-item">&#8226; 销售货物收入；（2）提供劳务收入；</div><div class="sub-item">&#8226; 转让财产收入；（4）股息、红利等权益性投资收益；</div><div class="sub-item">&#8226; 利息收入；        （6）租金收入；</div><div class="sub-item">&#8226; 特许权使用费收入；企业提供专利权、非专利技术、商标权、著作权以及其他收入。</div><div class="sub-item">&#8226; 接受捐赠收入；</div><div class="sub-item">&#8226; 其他收入。包括企业资产溢余收入、逾期未退包装物押金收入、确实无法偿付的应付款项、已作坏账</div><div class="sub-item">&#8226; 不征税收入</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-10">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">10</div>
+<div class="ch-title">第10章 财务分析</div>
+<div class="ch-meta">1节 · 4考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 财务报表及其作用</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 企业的基本情况；</div><div class="sub-item">&#8226; 财务报表的编制基础；</div><div class="sub-item">&#8226; 遵循企业会计准则的声明；</div><div class="sub-item">&#8226; 重要会计政策和会计估计；</div><div class="sub-item">&#8226; 会计政策和会计估计变更以及差错更正的说明；</div><div class="sub-item">&#8226; 报表重要项目的说明；</div><div class="sub-item">&#8226; 或有和承诺事项、资产负债表日后非调整事项、关联方关系及其交易等需</div><div class="sub-item">&#8226; 有助于财务报表使用者评价企业管理资本的目标、政策及程序的信息；</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 财务报告列报基本要求</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 企业应当以持续经营为基础，应该根据实际发生的交易和事项，按照《企业会计准则》的规定进行确认和</div><div class="sub-item">&#8226; 除现金流量表按照收付实现制原则编制外，企业应当按照权责发生制原则编制财务报表；</div><div class="sub-item">&#8226; 财务报表项目的列报应当在各个会计期间保持一致，不得随意变更。但下列两种情况除外：①会计准则要</div><div class="sub-item">&#8226; 重要项目单独列报，重要性从项目的性质和金额两方面予以判断；</div><div class="sub-item">&#8226; 报表列示项目不应相互抵销；</div><div class="sub-item">&#8226; 当期报表列报项目与上期报表列报项目应当具有可比性；</div><div class="sub-item">&#8226; 企业至少应当按年编制财务报表。年度财务报表涵盖的期间短于一年的，应当披露年度财务报表的涵盖期</div><div class="sub-item">&#8226; 其他应披露的信息。①编报企业的名称；②资产负债表日或财务报表涵盖的会计期间；③人民币金额单</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 财务分析方法的分类</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 比率分析法</div><div class="sub-item">&#8226; 用于对比的不同时期的指标，在计算口径上必须一致。</div><div class="sub-item">&#8226; 剔除偶发项目的影响，使用于分析的数据能反映正常的经营状况。</div><div class="sub-item">&#8226; 重点分析某项有显著变化的指标，研究其变动原因，以采取对策，趋利避害。</div><div class="sub-item">&#8226; 因素分析法</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 财务比率</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 资产负债率</div><div class="sub-item">&#8226; 权益乘数</div><div class="sub-item">&#8226; 流动比率（短期）</div><div class="sub-item">&#8226; 速动比率（短期）</div><div class="sub-item">&#8226; 速动资产=流动资产-存货=货币资金+交易性金融资产+应收票据+应收账款+其他应收款</div><div class="sub-item">&#8226; 如果一个企业流动比率与上一年同期相比明显过高，则要检查其原因，是否是由资产结构不合理造成的，</div><div class="sub-item">&#8226; 利息备付率</div><div class="sub-item">&#8226; 偿债备付率</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-11">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">11</div>
+<div class="ch-title">第11章 筹资管理</div>
+<div class="ch-meta">1节 · 6考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>筹资主体</b></div>
+<div class="point f1 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-1">★</span><b>&#9656; 政府和社会资本合作模式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 政府和社会资本合作（PPP）的项目范围</div><div class="sub-item">&#8226; 政府和社会资本合作的具体模式</div><div class="sub-item">&#8226; 政府和社会资本合作的重点领域</div><div class="sub-item">&#8226; 政府和社会资本合作的建设实施管理方面</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 短期筹资方式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 筹资速度快，容易取得</div><div class="sub-item">&#8226; 筹资弹性好</div><div class="sub-item">&#8226; 筹资成本较低</div><div class="sub-item">&#8226; 筹资风险高</div><div class="sub-item">&#8226; 应付账款</div><div class="sub-item">&#8226; 应付票据（为商业承兑汇票和银行承兑汇票两种，支付期最长不超过6 个月）</div><div class="sub-item">&#8226; 预收账款</div><div class="sub-item">&#8226; 其他应付款项</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 长期筹资方式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 长期借款筹资</div><div class="sub-item">&#8226; 长期债券筹资</div><div class="sub-item">&#8226; 可转换债券筹资</div><div class="sub-item">&#8226; 融资租赁</div><div class="sub-item">&#8226; 属于融资租赁的满足条件</div><div class="sub-item">&#8226; 在租赁期届满时，租赁资产的所有权转移给承租人。</div><div class="sub-item">&#8226; 承租人有购买租赁资产的选择权，所订立的购买价款与预计行使选择权时租赁资产的公允价值相比足够</div><div class="sub-item">&#8226; 资产的所有权虽然不转移，但租赁期占租赁资产使用寿命的大部分（通常解释为≥75%）。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 资金成本</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 选择资金来源、确定筹资方案的重要依据，企业力求选择资金成本最低的筹资方式。</div><div class="sub-item">&#8226; 评价投资项目、比较投资方案和进行投资决策的经济标准，从企业投资决策的角度来讲，通常将资金成本</div><div class="sub-item">&#8226; 评价企业经营业绩的基准，即全部投资的利润率应高于资金成本，否则表明业绩欠佳，需要改善经营管</div></div></div>
+<div class="point f1"><span class="point-tag tag-1">★</span><b>资本结构</b></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-12">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">12</div>
+<div class="ch-title">第12章 营运资金管理</div>
+<div class="ch-meta">1节 · 5考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>存货管理</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 现金管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 力争现金流量同步；</div><div class="sub-item">&#8226; 使用现金浮游量；</div><div class="sub-item">&#8226; 加速收款；</div><div class="sub-item">&#8226; 推迟应付款的支付。</div><div class="sub-item">&#8226; 力争现金流量同步。企业要尽量使其现金流入和现金流出发生的时间趋于一致，这样可以使其持有的交易</div><div class="sub-item">&#8226; 使用现金浮游量。从企业开出支票到收票人收到支票并存入银行，至银行将款项划出企业账户，中间需要</div></div></div>
+<div class="point f1"><span class="point-tag tag-1">★</span><b>应收账款管理</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 存货的财务管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 指由于存货供应中断而造成的损失，包括材料供应中断造成的停工损失、产成品库存缺</div><div class="sub-item">&#8226; 如果生产企业以紧急采购代用材料解决库存材料中断之急，那么缺货成本表现为紧急额</div><div class="sub-item">&#8226; 决定进货项目</div><div class="sub-item">&#8226; 选择供应单位</div><div class="sub-item">&#8226; 决定进货时间</div><div class="sub-item">&#8226; 决定进货批量</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 短期负债管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 应付账款</div><div class="sub-item">&#8226; 应付票据</div><div class="sub-item">&#8226; 预收账款</div><div class="sub-item">&#8226; 其他应付款项</div><div class="sub-item">&#8226; /10、 n/30 指10 天内付款有2%的折扣，信用期是30 天，在10-30 天内付款没有折扣。</div><div class="sub-item">&#8226; 如果能以放弃低于折扣的隐含利息成本（实质上是一种机会成本）的利率借到资金，便应在现金折扣期内</div><div class="sub-item">&#8226; 收款法（到期还本时支付利息）；</div><div class="sub-item">&#8226; 贴现法（先从本金中扣除利息，再到期还本；实际利率稍高）；</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-13">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">13</div>
+<div class="ch-title">第13章 建设项目总投资构成及计算</div>
+<div class="ch-meta">1节 · 8考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>预备费计算</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 建设项目总投资构成</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 生产性建设项目总投资包括建设投资、建设期利息和流动资金三部分；</div><div class="sub-item">&#8226; 非生产性建设项目总投资包括建设投资和建设期利息两部分；</div><div class="sub-item">&#8226; 工程造价=建设投资；</div><div class="sub-item">&#8226; 固定资产投资可以分为静态投资部分和动态投资部分。静态投资部分包括建筑安装工程费、设备及工器具</div><div class="sub-item">&#8226; 建筑安装工程费包括建筑工程费和安装工程费。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 设备及工器具购置费构成及计算</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 一般指的是设备制造厂的交货价，即出厂价，按带有备件的出厂价计算。</div><div class="sub-item">&#8226; 如设备由设备成套公司供应，则以订货合同价为设备原价。</div><div class="sub-item">&#8226; 非标准设备原价有多种计算方法，如成本计算估价法、系列设备插入估价法、分部组合估价法、定额估价</div><div class="sub-item">&#8226; 使非标准设备计价的准确度接近实际出厂价，并且计算方法要简便。</div><div class="sub-item">&#8226; 卖方的责任是：负责在合同规定的装运港口和规定的期限内，将货物装上买方指定的船只并及时通知</div><div class="sub-item">&#8226; 买方的责任是：负责租船或订舱，支付运费，并将船期、船名通知卖方；承担货物装船后的一切费用</div><div class="sub-item">&#8226; 国产标准设备由设备制造厂交货地点起至工地仓库（或施工组织设计指定的需要安装设备的堆放地</div><div class="sub-item">&#8226; 进口设备则由我国到岸港口、边境车站起至工地仓库（或施工组织设计指定的需要安装设备的堆放</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 建筑安装工程费构成及计算</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 分部分项工程费</div><div class="sub-item">&#8226; 措施项目费</div><div class="sub-item">&#8226; 安全文明施工费：包括环境保护费、文明施工费、安全施工费、临时设施费、建筑工人实名制管理费。</div><div class="sub-item">&#8226; 夜间施工增加费：是指因夜间施工所发生的夜班补助费、夜间施工降效、夜间施工照明设备摊销及照明用</div><div class="sub-item">&#8226; 二次搬运费：是指因施工场地条件限制而发生的材料、构配件、半成品等一次运输不能到达堆放地点，必</div><div class="sub-item">&#8226; 冬雨季施工增加费：是指在冬季或雨季施工需增加的临时设施、防滑、排除雨雪，人工及施工机械效率降</div><div class="sub-item">&#8226; 已完工程及设备保护费：是指竣工验收前，对已完工程及设备采取的必要保护措施所发生的费用。</div><div class="sub-item">&#8226; 工程定位复测费：是指工程施工过程中进行全部施工测量放线和复测工作的费用。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 工程建设其他费构成及计算</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 应由科技三项费用（即新产品试制费、中间试验费和重要科学研究补助费）开支的费用。</div><div class="sub-item">&#8226; 应在建筑安装费用中列支的施工企业对建筑材料、构件和建筑物进行一般鉴定、检查所发生的费用。</div><div class="sub-item">&#8226; 应由勘察设计费或工程费用中开支的费用。</div><div class="sub-item">&#8226; 不包括：</div></div></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>预备费</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 增值税计算</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 下列进项税额准予从销项税额中抵扣：</div><div class="sub-item">&#8226; 从销售方取得的增值税专用发票上注明的增值税额。</div><div class="sub-item">&#8226; 从海关取得的海关进口增值税专用缴款书上注明的增值税额。</div><div class="sub-item">&#8226; 购进农产品，除取得增值税专用发票或者海关进口增值税专用缴款书外，</div><div class="sub-item">&#8226; 自境外单位或者个人购进劳务、服务、无形资产或者境内的不动产，从税务机关或者扣缴义务人取</div><div class="sub-item">&#8226; 下列项目的进项税额不得从销项税额中抵扣：</div><div class="sub-item">&#8226; 用于简易计税方法计税项目、免征增值税项目、集体福利或者个人消费的购进货物、劳务、服务、</div><div class="sub-item">&#8226; 非正常损失的购进货物，以及相关的劳务和交通运输服务;</div></div></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>建设期利息与流动资金计算</b></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-14">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">14</div>
+<div class="ch-title">第14章 工程计价依据</div>
+<div class="ch-meta">1节 · 8考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>工程定额的分类</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 1：工程定额的分类</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 是工程定额中分项最细、定额子目最多的一种定额，也是工程定额中的基础性定额；</div><div class="sub-item">&#8226; 是施工企业管理工作的基础；</div><div class="sub-item">&#8226; 是施工企业编制施工组织设计和施工工作计划的依据；是组织和指挥施工生产的有效工具，企业通过下达</div><div class="sub-item">&#8226; 是编制施工预算，加强企业成本管理和经济核算的基础；</div><div class="sub-item">&#8226; 是计算工人劳动报酬的依据；</div><div class="sub-item">&#8226; 施工定额有利于推广先进技术，施工定额水平中包含某些已成熟的先进施工技术和经验，工人要达到或超</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 人工定额消耗量确定</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 拟定施工作业的内容；</div><div class="sub-item">&#8226; 拟定施工作业的方法；</div><div class="sub-item">&#8226; 拟定施工作业地点的组织；</div><div class="sub-item">&#8226; 拟定施工作业人员的组织。</div><div class="sub-item">&#8226; 辅助工作时间---如：筛沙子、淋石灰膏等消耗的时间（机手并动的情况下，不应再计</div><div class="sub-item">&#8226; 准备与结束工作时间---执行任务前或任务完成后所消耗的工作时间，如：工作地点、</div><div class="sub-item">&#8226; 不可避免的中断时间---由于施工工艺特点引起的工作中断所必需的时间，如：第一遍</div><div class="sub-item">&#8226; 偶然工作时间---抹灰工不得不补上偶然遗留的墙洞等，由于偶然工作能获得一定产品</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 材料定额消耗量的确定</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 第一次制造时的材料消耗（一次使用量）；</div><div class="sub-item">&#8226; 每周转使用一次材料的损耗（第二次使用时需要补充）；</div><div class="sub-item">&#8226; 周转使用次数；</div><div class="sub-item">&#8226; 周转材料的最终回收及其回收折价。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 施工机具定额台班消耗量确定</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 有根据降低负荷下的工作时间---汽车运输重量轻体积大的货物时，不能充分利用汽车的</div><div class="sub-item">&#8226; 不可避免的无负荷工作时间---筑路机在工作区末端调头</div><div class="sub-item">&#8226; 不可避免的中断时间（与工艺特点有关）---汽车装货和卸货时的停车、灰浆泵转移工作</div><div class="sub-item">&#8226; 不可避免的中断时间（与机械有关）---机械使用与保养</div><div class="sub-item">&#8226; 多余工作时间---工人没有及时供料而使机械空运转</div><div class="sub-item">&#8226; 施工本身造成的停工时间---未及时供给机械燃料引起的停工</div><div class="sub-item">&#8226; 非施工本身造成的停工时间---暴雨时压路机的停工</div><div class="sub-item">&#8226; 低负荷下工作时间---工人装车的砂石数量不足引起的汽车在降低负荷的情况下工作所延</div></div></div>
+<div class="point f3 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-3">★★★</span><b>&#9656; 人工、材料与施工机具台班单价确定</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 台班折旧费</div><div class="sub-item">&#8226; 耐用总台班</div><div class="sub-item">&#8226; 安拆费及场外运费</div><div class="sub-item">&#8226; 一次安拆费应包括施工现场机械安装和拆卸一次所需的人工费、材料费、机械费、安全监测部门的检</div><div class="sub-item">&#8226; 一次场外运费应包括运输、装卸、辅助材料、回程等费用。</div><div class="sub-item">&#8226; 年平均安拆次数按施工机械的相关技术指标，结合具体情况综合确定。</div><div class="sub-item">&#8226; 运输距离均按平均30km计算。</div><div class="sub-item">&#8226; 安拆复杂、移动需要起重机运输的重型施工机械，其安拆费及场外运费单独计算。</div></div></div>
+<div class="point f3 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-3">★★★</span><b>&#9656; 预算定额及其基价</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 预算定额是编制施工图预算、确定建筑安装工程造价的基础。</div><div class="sub-item">&#8226; 预算定额是编制最高投标限价的基础。</div><div class="sub-item">&#8226; 预算定额是编制施工组织设计、进行经济分析的依据。</div><div class="sub-item">&#8226; 预算定额是编制概算定额的基础。</div><div class="sub-item">&#8226; 按社会平均水平确定预算定额的原则。</div><div class="sub-item">&#8226; 简明适用的原则。</div><div class="sub-item">&#8226; 人工消耗量指标的确定</div><div class="sub-item">&#8226; 基本用工---指完成分项工程的主要用工量。例如，砌筑各种墙体工程的砌砖、调制砂浆以及运输砖和</div></div></div>
+<div class="point f1"><span class="point-tag tag-1">★</span><b>工程造价指标与指数</b></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-15">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">15</div>
+<div class="ch-title">第15章 设计概算与施工图预算</div>
+<div class="ch-meta">1节 · 4考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>施工图预算编制</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 设计概算编制</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 单位建筑工程概算编制方法</div><div class="sub-item">&#8226; m³。若已建成工程概算指标为536元/㎡。则新建工程修正概算指标为多少？</div><div class="sub-item">&#8226; 单位设备及安装工程概算编制方法</div><div class="sub-item">&#8226; 按占设备价值的百分比（安装费费率）的概算指标计算。设备安装费=设备原价×设备安装费费率</div><div class="sub-item">&#8226; 按每吨设备安装费的概算指标计算。</div><div class="sub-item">&#8226; 按座、台、套、组、根或功率等为计量单位的概算指标计算。</div><div class="sub-item">&#8226; 按设备安装工程每平方米建筑面积的概算指标计算。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 设计概算审查</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 有助于促进编制人员提高编制质量；</div><div class="sub-item">&#8226; 有助于促进设计的技术先进性与经济合理性的统一；</div><div class="sub-item">&#8226; 可以使建设项目总投资力求做到准确、完整，缩小概算与预算之间的差距，避免实际投资大幅突破概算；</div><div class="sub-item">&#8226; 有利于核定建设项目的投资规模；</div><div class="sub-item">&#8226; 有利于合理分配投资资金、加强投资计划管理。</div><div class="sub-item">&#8226; 内部审核一般实行编制、审核、审定三级质量管理制度。设计概算与施工图预算编制的项目负责人是</div><div class="sub-item">&#8226; 设计概算与施工图预算外部审查或评审是指第三方审核。咨询企业接受委托人委托开展第三方审查应</div><div class="sub-item">&#8226; 定额和标准的时效性。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 施工图预算审查</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 审查施工图预算的编制是否符合现行国家、行业、地方政府有关法律、法规和规定要求。</div><div class="sub-item">&#8226; 审查工程量计算的准确性、工程量计算规则与计量标准或定额规则的一致性。</div><div class="sub-item">&#8226; 审查在施工图预算的编制过程中，各种计价依据使用是否恰当，各项费率计取是否正确；审查依据主</div><div class="sub-item">&#8226; 审查各种要素市场价格选用是否合理。</div><div class="sub-item">&#8226; 审查施工图设计中是否存在擅自扩大建设规模、提高建设标准等现象。审查施工图预算是否超过设计</div><div class="sub-item">&#8226; 全面审查法</div><div class="sub-item">&#8226; 标准预算审查法</div><div class="sub-item">&#8226; 分组计算审查法</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-16">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">16</div>
+<div class="ch-title">第16章 工程量清单计价</div>
+<div class="ch-meta">1节 · 8考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>工程量清单计价过程</b></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程量清单的作用</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程量清单为投标人的投标竞争提供了平等和共同的基础；</div><div class="sub-item">&#8226; 工程量清单是建设工程计价的依据；</div><div class="sub-item">&#8226; 工程量清单是工程付款和结算的依据；</div><div class="sub-item">&#8226; 工程量清单是调整工程价款、处理工程索赔的依据。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 工程量清单计价</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工料单价=人工费+材料费+施工机具使用费</div><div class="sub-item">&#8226; 综合单价=人工费+材料费+施工机具使用费+管理费+利润</div><div class="sub-item">&#8226; 全费用综合单价=人工费+材料费+施工机具使用费+管理费+利润+税金</div><div class="sub-item">&#8226; 分部分项工程费=Σ（分部分项工程量×分部分项工程综合单价）</div><div class="sub-item">&#8226; 措施项目费=Σ（措施项目工程量×措施项目综合单价）+Σ单项措施费</div><div class="sub-item">&#8226; 其他项目费=暂列金额+暂估价+计日工+总承包服务费+其他</div><div class="sub-item">&#8226; 单位工程报价=分部分项工程费+措施项目费+其他项目费+税金</div><div class="sub-item">&#8226; 单项工程报价=Σ单位工程报价</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 工程量清单计价原理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 使用财政资金或国有资金投资的建设工程，应采用工程量清单计价。</div><div class="sub-item">&#8226; 工程量清单可按分部分项工程项目清单、措施项目清单、其他项目清单、增值税分别编制，并主要以</div><div class="sub-item">&#8226; 工程量清单的清单项目应根据招标图纸及技术标准规范、相应工程国家及行业工程量计算标准和计价</div><div class="sub-item">&#8226; 工程量清单编制按相应工程国家及行业工程量计算标准的清单项目分类、计量单位和工程量计算规则</div><div class="sub-item">&#8226; 工程量清单的清单项目价款确定可采用单价计价、总价计价方式，根据工程项目特点及实际情况不宜</div><div class="sub-item">&#8226; 工程量清单的清单项目综合单价及合价应为税前(不含增值税）的全费用价格，由人工费、材料费、施</div><div class="sub-item">&#8226; 综合单价分析表应明确各清单项目综合单价及按项计价项目价格的费用构成计算方法，其综合单价和</div><div class="sub-item">&#8226; 采用单价合同的工程，分部分项工程项目清单的准确性、完整性应由发包人负责；</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 工程量清单编制</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 《建设工程工程量清单计价标准》GB/T50500—2024和相关的国家及行业工程量计算标准。</div><div class="sub-item">&#8226; 国家及省级、行业建设主管部门颁发的工程量计量计价规定，以及根据工程需要补充的工程量计算规</div><div class="sub-item">&#8226; 招标文件、合同条款及其相关资料。</div><div class="sub-item">&#8226; 工程招标图纸及其相关资料。</div><div class="sub-item">&#8226; 与建设工程有关的技术标准规范。</div><div class="sub-item">&#8226; 施工现场情况、地勘水文资料、工程特点及交付标准。</div><div class="sub-item">&#8226; 其他相关资料。</div><div class="sub-item">&#8226; 土壤类别：三类土</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 最高投标限价编制</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 国有资金投资的建设工程招标，招标人必须编制最高投标限价。根据《招标投标法》的规定，国有资</div><div class="sub-item">&#8226; 最高投标限价超过批准的概算时，招标人应将其报原概算审批部门审核。国有资金投资的工程项目原</div><div class="sub-item">&#8226; 投标人的投标报价高于最高投标限价的，招标人应拒绝其投标。</div><div class="sub-item">&#8226; 最高投标限价应由具有编制能力的招标人或受其委托具有相应资质的工程造价咨询人编制和复核。工</div><div class="sub-item">&#8226; 最高投标限价应在招标文件中公布，不应上浮或下调，招标人应将最高投标限价及有关资料报送工程</div><div class="sub-item">&#8226; 《建设工程工程量清单计价标准》GB/T50500—2024；</div><div class="sub-item">&#8226; 招标文件（包括招标工程量清单、合同条款、招标图纸、技术标准规范等）及其补遗、澄清或修改；</div><div class="sub-item">&#8226; 相关国家及行业工程量计算标准，以及根据工程需要补充的工程量计算规则；</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 投标报价编制</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 投标人可依据计价标准的规定自主确定投标报价，并应对已标价工程量清单填报价格的一致性及合理</div><div class="sub-item">&#8226; 严禁投标人的投标报价低于成本价，高于招标人公布的最高投标限价。</div><div class="sub-item">&#8226; 投标工期不应超过招标人的计划工期或澄清修正的计划工期。</div><div class="sub-item">&#8226; 投标人应在接收招标文件后，在规定时间内根据招标工程的特点、合同要求及现场踏勘情况，复查措</div><div class="sub-item">&#8226; 采用单价合同的招标工程，投标人应在接收招标文件后，在约定时间内对招标工程量清单的分部分项</div><div class="sub-item">&#8226; 采用总价合同的招标工程，投标人应在接收招标文件后，在约定时间内对招标工程量清单的分部分项</div><div class="sub-item">&#8226; 投标人的投标价应包括招标文件中规定的由承包人承担范围及幅度内的风险费用。如招标文件中未明</div><div class="sub-item">&#8226; 采用单价合同的工程，投标人应按要求完整填报工程量清单中所有清单项目的综合单价及合价和（或</div></div></div>
+<div class="point f4"><span class="point-tag tag-4">★★★★</span><b>合同价款约定</b></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-17">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">17</div>
+<div class="ch-title">第17章 工程计量与支付</div>
+<div class="ch-meta">1节 · 7考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程计量</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 合同工程需要工程计量的，应以承包人按合同要求已完成且应予计量的工程进行计量。</div><div class="sub-item">&#8226; 发承包双方应在合同约定的时间节点或工程形象目标节点或工程进度点进行工程计量。</div><div class="sub-item">&#8226; 合同约定执行物价变化价格调整的分部分项工程项目清单，应按约定的调价周期相对应的已完成工程</div><div class="sub-item">&#8226; 承包人实施的下列工程及工作不予计量：</div><div class="sub-item">&#8226; 承包人为完成永久工程所实施的临时工程，合同约定应予计量的临时工程除外。</div><div class="sub-item">&#8226; 承包人原因造成超出合同约定工程范围的工程。</div><div class="sub-item">&#8226; 承包人所完成、但不符合合同图纸及合同规范要求的工程。</div><div class="sub-item">&#8226; 承包人拆除及迁离不符合合同图纸及合同规范要求的工程或工作。</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 合同价格调整</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 当Q1&gt;1.15Q0时：</div><div class="sub-item">&#8226; 当Q1&lt;0.85Q0时：</div><div class="sub-item">&#8226; 综合单价偏差</div><div class="sub-item">&#8226; 当P0＜P2×（1-15%）×（1-L）时，P1按照P2×（1-L）×（1-15%）调整；</div><div class="sub-item">&#8226; 当P0＞P2×（1＋15%）时，P1按照P2×（1＋15%）调整；</div><div class="sub-item">&#8226; 当P0＞P2×（1-15%）×（1-L）或P0＜P2×（1＋15%）时，可不调整。</div><div class="sub-item">&#8226; 某工程项目最高投标限价的综合单价为350元，投标报价的综合单价为406元，工程变更后的综合单价</div><div class="sub-item">&#8226; 某工程项目招标工程量清单数量为1520m³,施工中由于设计变更调整为1824m³,增加20%，该项目最高投</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 工程变更价款确定</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 采用单价合同的工程，因工程变更或工程量清单缺陷引起分部分项工程项目清单的清单项目或清单工</div><div class="sub-item">&#8226; 相同施工条件下实施相同项目特征的清单项目，应采用相应的合同单价。</div><div class="sub-item">&#8226; 相同施工条件下实施类似项目特征的清单项目或类似施工条件下实施相同项目特征的清单项目，应采用类</div><div class="sub-item">&#8226; 相同施工条件下实施不同项目特征的清单项目或不同施工条件下实施相同项目特征的清单项目，发承包双</div><div class="sub-item">&#8226; 不同施工条件下实施不同项目特征的清单项目，发承包双方可依据工程实施情况，结合同类工程类似清单</div><div class="sub-item">&#8226; 采用单价合同的工程，因工程变更或工程量清单缺陷引致分部分项工程项目清单的清单项目或清单工</div><div class="sub-item">&#8226; 引致合同工期实质性延长或缩短的：</div><div class="sub-item">&#8226; 为完成工程变更而需增加的额外措施项目，且该费用未包括在上述规定计价范围的，增加的措施项目</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 工程索赔</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 合同工程实施期间，在合同基准日后发生以下法律法规及政策性变化引致合同价款增减变化和（或）</div><div class="sub-item">&#8226; 新增的法律法规及政策性规定。</div><div class="sub-item">&#8226; 修改原有的法律法规及政策性规定。</div><div class="sub-item">&#8226; 废止原有的法律法规及政策性规定。</div><div class="sub-item">&#8226; 政府对相关法律法规的解释发生了变化。</div><div class="sub-item">&#8226; 因承包人原因导致工期延长，在工期延长期间出现上述规定的法律法规及政策性变化的，合同价格调</div><div class="sub-item">&#8226; 因发包人原因导致工期延长，在工期延长期间出现上述规定的法律法规及政策性变化的，合同价格调</div><div class="sub-item">&#8226; 因非发承包双方原因导致工期延长，在工期延长期间出现上述规定的法律法规及政策性变化的，合同</div></div></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 合同价款期中支付</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 除按规定完成的预付款支付及其扣回，按规定完成的安全生产措施费的支付或除进度款支付条款规定</div><div class="sub-item">&#8226; 已完工程总值的支付额度、预付款的扣回价款应按合同约定的比例确定，合同没约定的，支付比例不</div><div class="sub-item">&#8226; 前期累计已支付款项应按照上一期进度款支付证书所列明的累计应付进度款计算，不应考虑发包人实</div><div class="sub-item">&#8226; 如承包人未按规定提交期中价款支付申请给发包人，或承包人提交的期中价款支付申请未考虑按合同</div><div class="sub-item">&#8226; 发包人应按合同约定向承包人支付预付款，且不应向承包人收取预付款的利息。承包人应将预付款专</div><div class="sub-item">&#8226; 合同工程的预付款金额可依据合同约定按合同价款及预付款支付比例计算确定。预付款支付比例应符</div><div class="sub-item">&#8226; 承包人应在合同约定时间内提交预付款支付申请给发包人审核，发包人应在收到支付申请后及时审核</div><div class="sub-item">&#8226; 如合同约定承包人需提供预付款保函的，发包人应在承包人提供预付款保函后支付预付款，预付款保</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 结算与支付</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程竣工结算价款总额；</div><div class="sub-item">&#8226; 累计已实际支付的金额；</div><div class="sub-item">&#8226; 应预留的质量保证金（已提供其他工程质量担保方式的除外）；</div><div class="sub-item">&#8226; 实际应支付的竣工结算款金额。</div></div></div>
+<div class="point f3 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-3">★★★</span><b>&#9656; 质量保证金及保修</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 保修责任</div><div class="sub-item">&#8226; 修复费用</div><div class="sub-item">&#8226; 保修期内，因承包人原因造成工程的缺陷、损坏，承包人应负责修复，并承担修复的费用以及因工程</div><div class="sub-item">&#8226; 保修期内，因发包人使用不当造成工程的缺陷、损坏，可以委托承包人修复，但发包人应承担修复的</div><div class="sub-item">&#8226; 因其他原因造成工程的缺陷、损坏，可以委托承包人修复，发包人应承担修复的费用，并支付承包人</div><div class="sub-item">&#8226; 修复通知</div><div class="sub-item">&#8226; 未能修复</div><div class="sub-item">&#8226; 缺陷责任期终止后，承包人应在约定时间内向发包人提交最终结清申请书和相关证明材料。最终结清</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-18">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">18</div>
+<div class="ch-title">第18章 工程总承包计价</div>
+<div class="ch-meta">1节 · 5考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f3 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-3">★★★</span><b>&#9656; 工程总承包计价原理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 若发包人未编制发包人要求，或编制的发包人要求不能实现工程建设目标时，不宜采用工程总承包模</div><div class="sub-item">&#8226; 若发包人以施工图项目进行工程计量和计价，不宜采用工程总承包模式，宜采用施工总承包。</div><div class="sub-item">&#8226; 投标人没有足够的时间或信息仔细审核发包人要求，或没有足够的时间或信息进行设计、风险评估和</div><div class="sub-item">&#8226; 施工涉及实质性地下工程或投标人无法检查的其他区域的工程；</div><div class="sub-item">&#8226; 发包人要密切监督或控制承包人的工作，或审查大部分施工图纸。</div><div class="sub-item">&#8226; 可行性研究报告批准后发包的，宜采用设计采购施工总承包（EPC）模式；</div><div class="sub-item">&#8226; 方案设计批准后发包的，可采用设计采购施工总承包（EPC）或设计施工总承包（DB）模式；</div><div class="sub-item">&#8226; 初步设计批准后发包的，宜采用设计施工总承包（DB）模式。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程总承包最高投标限价与投标报价编制</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 在可行性研究或方案设计后发包的，发包人宜采用投资估算中与发包范围一致的估算金额为限额，按</div><div class="sub-item">&#8226; 在初步设计后发包的，发包人宜采用初步设计概算中与发包范围一致的概算金额为限额，按照相关规</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程总承包合同价款约定</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 国家法律发生变化；</div><div class="sub-item">&#8226; 专用合同条款中约定的人工、主要材料等市场价格变化超过合同约定幅度；</div><div class="sub-item">&#8226; 可行性研究报告批准或方案设计后发包，发包人要求和方案设计发生变更；初步设计后发包，发包人</div><div class="sub-item">&#8226; 不可预见的地质条件、地下掩埋物等变化；</div><div class="sub-item">&#8226; 不可抗力。</div><div class="sub-item">&#8226; 承包人发现并告知发包人，发包人承担并向承包人支付合理利润；承包人未发现，承包人自行承担。</div><div class="sub-item">&#8226; 无论承包人发现与否，下列错误由发包人承担，并向承包人支付合理利润：</div><div class="sub-item">&#8226; 发包人要求中或合同中约定由发包人负责的或不可变的数据和资料；</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程总承包合同价款调整与索赔</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 发包人变更指示</div><div class="sub-item">&#8226; 因发包人变更发包人要求或初步设计文件，导致承包人施工图设计修改并造成成本、工期增加的，应</div><div class="sub-item">&#8226; 因发包人提出工程变更引起承包人施工方案改变并导致措施项目发生变化时，承包人提出调整措施项</div><div class="sub-item">&#8226; 当发包人提出的工程变更因非承包人原因删减了合同中的某项原定工作或工程，致使承包人发生的费</div><div class="sub-item">&#8226; 承包人合理化建议</div><div class="sub-item">&#8226; 承包人对方案设计或初步设计文件进行的设计优化，如满足发包人要求，其形成的利益应归承包人享</div><div class="sub-item">&#8226; 承包人需要对发包人要求作出改变的，应以书面形式向发包人提出合理化建议。经发包人认为可以缩</div><div class="sub-item">&#8226; 变更估价的原则</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程总承包项目结算与支付</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 可调总价合同的竣工结算价=签约合同价—预备费±合同约定调整价款和索赔的金额；</div><div class="sub-item">&#8226; 固定总价合同的竣工结算价=签约合同价±索赔金额。未支付的价款=竣工结算价格—已支付的合同价</div><div class="sub-item">&#8226; 资料完备性审核。</div><div class="sub-item">&#8226; 差异性审核。</div><div class="sub-item">&#8226; 变更审核。</div><div class="sub-item">&#8226; 合同管理审核。</div><div class="sub-item">&#8226; 工程签证的审核。</div><div class="sub-item">&#8226; 材料与设备采购审核。</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-19">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">19</div>
+<div class="ch-title">第19章 国际工程投标报价</div>
+<div class="ch-meta">1节 · 3考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f3 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-3">★★★</span><b>&#9656; 国际工程投标报价程序</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 对工程内容范围不清的问题应当提请说明，但不要表示或提出任何修改设计方案的要求。</div><div class="sub-item">&#8226; 对招标文件中图纸与技术说明互相矛盾之处，可请求说明应以何者为准，但不要轻易提出修改技术要</div><div class="sub-item">&#8226; 对含糊不清、容易产生歧义理解的合同条件，可以请求给予澄清、解释，但不要提出任何改变合同条</div><div class="sub-item">&#8226; 投标人应注意提问的技巧，不要批评或否定业主在招标文件中的有关规定，提问的问题应是招标文件</div></div></div>
+<div class="point f3"><span class="point-tag tag-3">★★★</span><b>国际工程投标报价编制</b></div>
+<div class="point f4 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-4">★★★★</span><b>&#9656; 国际工程投标报价技巧</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工条件差的工程；</div><div class="sub-item">&#8226; 专业要求高的技术密集型工程，而本公司在这方面有专长，声望也较高；</div><div class="sub-item">&#8226; 总价低的小型工程以及自己不愿做、又不方便不投标的工程；</div><div class="sub-item">&#8226; 特殊的工程，如港口码头、地下开挖工程等；</div><div class="sub-item">&#8226; 工期要求急的工程；</div><div class="sub-item">&#8226; 竞争对手少的工程；</div><div class="sub-item">&#8226; 支付条件不理想的工程。</div><div class="sub-item">&#8226; 施工条件好的工程；</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-20">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">20</div>
+<div class="ch-title">第20章 工程计价数字化与智能化</div>
+<div class="ch-meta">1节 · 3考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">本章考点<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; BIM在工程计价中的应用</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工图预算BIM应用的典型流程为：①开始→②创建施工图预算模型→③确定工程量清单项目→④计算</div><div class="sub-item">&#8226; BIM应用效果评价方法可分为定性评价和定量评价。定量评价方法主要包括投入产出比、平衡计分卡、</div><div class="sub-item">&#8226; 自动生成工程量清单，提升计价准确性和效率。</div><div class="sub-item">&#8226; 实时更新模型参数，增强设计与施工的协同。</div><div class="sub-item">&#8226; 与企业定额关联，快速生成定额清单，助力成本控制和优化。</div><div class="sub-item">&#8226; 数据质量要求严格。</div><div class="sub-item">&#8226; 标准化不足影响兼容性。</div><div class="sub-item">&#8226; 跨部门协同难。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 人工智能在工程计价中的应用</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 智能化提高计价精度与效率。</div><div class="sub-item">&#8226; 智能决策支持与动态成本预测。</div><div class="sub-item">&#8226; 智能算法优化设计与施工协同。</div><div class="sub-item">&#8226; 数据隐私与安全风险。</div><div class="sub-item">&#8226; 算法透明性与解释难题。</div><div class="sub-item">&#8226; 模型开发与行业适配要求。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 大数据在工程计价中的应用</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 规模性：构成大数据的数据集规模庞大。</div><div class="sub-item">&#8226; 多样性：数据来源广泛、类型多样。</div><div class="sub-item">&#8226; 高速性：单位时间内数据流量大。</div><div class="sub-item">&#8226; 多变性：大数据的其他特征，即规模性、多样性和高速性等特征处于多变状态。</div><div class="sub-item">&#8226; 收集阶段：采集原始数据并按原始数据形式存储。</div><div class="sub-item">&#8226; 准备阶段：将原始数据转化为干净的、有组织的信息。</div><div class="sub-item">&#8226; 分析阶段：利用有组织的信息产生合成的知识。</div><div class="sub-item">&#8226; 行动阶段：运用合成的知识为组织生成价值。</div></div></div>
+</div></div>
+</div></div>
+</div>
+<div id="tab-overview" style="display:none"><h2>&#x1F4D0; 四层知识金字塔</h2><p style="color:#999;margin-bottom:16px">从基础到应用，逐层递进</p><div class="pyramid-wrap"><div class="pyramid-tier"><div class="pyramid-node tier4" onclick="document.getElementById('ch-19').scrollIntoView({behavior:'smooth'})">Ch19 国际投标</div><div class="pyramid-node tier4" onclick="document.getElementById('ch-20').scrollIntoView({behavior:'smooth'})">Ch20 数字化</div></div><div class="pyramid-label">&#9650; 综合 &#9650;</div><div class="pyramid-arrow">&#9650;</div><div class="pyramid-tier"><div class="pyramid-node tier3" onclick="document.getElementById('ch-13').scrollIntoView({behavior:'smooth'})">Ch13 总投资</div><div class="pyramid-node tier3" onclick="document.getElementById('ch-14').scrollIntoView({behavior:'smooth'})">Ch14 计价依据</div><div class="pyramid-node tier3" onclick="document.getElementById('ch-15').scrollIntoView({behavior:'smooth'})">Ch15 概预算</div><div class="pyramid-node tier3" onclick="document.getElementById('ch-16').scrollIntoView({behavior:'smooth'})">Ch16 清单计价</div><div class="pyramid-node tier3" onclick="document.getElementById('ch-17').scrollIntoView({behavior:'smooth'})">Ch17 计量支付</div><div class="pyramid-node tier3" onclick="document.getElementById('ch-18').scrollIntoView({behavior:'smooth'})">Ch18 总承包</div></div><div class="pyramid-label">&#9650; 计价 &#9650;</div><div class="pyramid-arrow">&#9650;</div><div class="pyramid-tier"><div class="pyramid-node tier2" onclick="document.getElementById('ch-6').scrollIntoView({behavior:'smooth'})">Ch6 会计</div><div class="pyramid-node tier2" onclick="document.getElementById('ch-7').scrollIntoView({behavior:'smooth'})">Ch7 费用</div><div class="pyramid-node tier2" onclick="document.getElementById('ch-8').scrollIntoView({behavior:'smooth'})">Ch8 收入</div><div class="pyramid-node tier2" onclick="document.getElementById('ch-9').scrollIntoView({behavior:'smooth'})">Ch9 利润</div><div class="pyramid-node tier2" onclick="document.getElementById('ch-10').scrollIntoView({behavior:'smooth'})">Ch10 分析</div><div class="pyramid-node tier2" onclick="document.getElementById('ch-11').scrollIntoView({behavior:'smooth'})">Ch11 筹资</div><div class="pyramid-node tier2" onclick="document.getElementById('ch-12').scrollIntoView({behavior:'smooth'})">Ch12 营运</div></div><div class="pyramid-label">&#9650; 财务 &#9650;</div><div class="pyramid-arrow">&#9650;</div><div class="pyramid-tier"><div class="pyramid-node tier1" onclick="document.getElementById('ch-1').scrollIntoView({behavior:'smooth'})">Ch1 资金</div><div class="pyramid-node tier1" onclick="document.getElementById('ch-2').scrollIntoView({behavior:'smooth'})">Ch2 评价</div><div class="pyramid-node tier1" onclick="document.getElementById('ch-3').scrollIntoView({behavior:'smooth'})">Ch3 不确定</div><div class="pyramid-node tier1" onclick="document.getElementById('ch-4').scrollIntoView({behavior:'smooth'})">Ch4 设备</div><div class="pyramid-node tier1" onclick="document.getElementById('ch-5').scrollIntoView({behavior:'smooth'})">Ch5 价值</div></div><div class="pyramid-label">&#9650; 基础 &#9650;</div></div></div>
+<div id="tab-lifecycle" style="display:none"><h2>&#x1F504; 知识流程</h2><p style="color:#999;margin-bottom:16px">按学习路径排列各章</p><div class="lc-wrap"><div class="lc-flow"><div class="lc-stage"><div class="lc-stage-header" style="background:#5a8ab5">投资</div><div class="lc-stage-body"><span class="ch-tag" style="background:#5a8ab520;color:#5a8ab5;cursor:pointer" onclick="document.getElementById('ch-1').scrollIntoView({behavior:'smooth'})">Ch1<br><small>利率等值</small></span><span class="ch-tag" style="background:#5a8ab520;color:#5a8ab5;cursor:pointer" onclick="document.getElementById('ch-2').scrollIntoView({behavior:'smooth'})">Ch2<br><small>FNPV</small></span><span class="ch-tag" style="background:#5a8ab520;color:#5a8ab5;cursor:pointer" onclick="document.getElementById('ch-3').scrollIntoView({behavior:'smooth'})">Ch3<br><small>盈亏</small></span></div></div><div class="lc-arrow">&#8594;</div><div class="lc-stage"><div class="lc-stage-header" style="background:#5a9a4a">设备</div><div class="lc-stage-body"><span class="ch-tag" style="background:#5a9a4a20;color:#5a9a4a;cursor:pointer" onclick="document.getElementById('ch-4').scrollIntoView({behavior:'smooth'})">Ch4<br><small>磨损</small></span><span class="ch-tag" style="background:#5a9a4a20;color:#5a9a4a;cursor:pointer" onclick="document.getElementById('ch-5').scrollIntoView({behavior:'smooth'})">Ch5<br><small>V/F</small></span></div></div><div class="lc-arrow">&#8594;</div><div class="lc-stage"><div class="lc-stage-header" style="background:#d4a040">会计</div><div class="lc-stage-body"><span class="ch-tag" style="background:#d4a04020;color:#d4a040;cursor:pointer" onclick="document.getElementById('ch-6').scrollIntoView({behavior:'smooth'})">Ch6<br><small>要素</small></span><span class="ch-tag" style="background:#d4a04020;color:#d4a040;cursor:pointer" onclick="document.getElementById('ch-7').scrollIntoView({behavior:'smooth'})">Ch7<br><small>固资</small></span><span class="ch-tag" style="background:#d4a04020;color:#d4a040;cursor:pointer" onclick="document.getElementById('ch-8').scrollIntoView({behavior:'smooth'})">Ch8<br><small>收入</small></span><span class="ch-tag" style="background:#d4a04020;color:#d4a040;cursor:pointer" onclick="document.getElementById('ch-9').scrollIntoView({behavior:'smooth'})">Ch9<br><small>利润</small></span><span class="ch-tag" style="background:#d4a04020;color:#d4a040;cursor:pointer" onclick="document.getElementById('ch-10').scrollIntoView({behavior:'smooth'})">Ch10<br><small>比率</small></span></div></div><div class="lc-arrow">&#8594;</div><div class="lc-stage"><div class="lc-stage-header" style="background:#c06050">筹资</div><div class="lc-stage-body"><span class="ch-tag" style="background:#c0605020;color:#c06050;cursor:pointer" onclick="document.getElementById('ch-11').scrollIntoView({behavior:'smooth'})">Ch11<br><small>成本</small></span><span class="ch-tag" style="background:#c0605020;color:#c06050;cursor:pointer" onclick="document.getElementById('ch-12').scrollIntoView({behavior:'smooth'})">Ch12<br><small>存货</small></span></div></div><div class="lc-arrow">&#8594;</div><div class="lc-stage"><div class="lc-stage-header" style="background:#8b6914">计价</div><div class="lc-stage-body"><span class="ch-tag" style="background:#8b691420;color:#8b6914;cursor:pointer" onclick="document.getElementById('ch-13').scrollIntoView({behavior:'smooth'})">Ch13<br><small>总投资</small></span><span class="ch-tag" style="background:#8b691420;color:#8b6914;cursor:pointer" onclick="document.getElementById('ch-14').scrollIntoView({behavior:'smooth'})">Ch14<br><small>定额</small></span><span class="ch-tag" style="background:#8b691420;color:#8b6914;cursor:pointer" onclick="document.getElementById('ch-15').scrollIntoView({behavior:'smooth'})">Ch15<br><small>概算</small></span><span class="ch-tag" style="background:#8b691420;color:#8b6914;cursor:pointer" onclick="document.getElementById('ch-16').scrollIntoView({behavior:'smooth'})">Ch16<br><small>清单</small></span></div></div><div class="lc-arrow">&#8594;</div><div class="lc-stage"><div class="lc-stage-header" style="background:#6a4a8a">支付</div><div class="lc-stage-body"><span class="ch-tag" style="background:#6a4a8a20;color:#6a4a8a;cursor:pointer" onclick="document.getElementById('ch-17').scrollIntoView({behavior:'smooth'})">Ch17<br><small>索赔</small></span><span class="ch-tag" style="background:#6a4a8a20;color:#6a4a8a;cursor:pointer" onclick="document.getElementById('ch-18').scrollIntoView({behavior:'smooth'})">Ch18<br><small>EPC</small></span></div></div><div class="lc-arrow">&#8594;</div><div class="lc-stage"><div class="lc-stage-header" style="background:#4a6a8a">国际</div><div class="lc-stage-body"><span class="ch-tag" style="background:#4a6a8a20;color:#4a6a8a;cursor:pointer" onclick="document.getElementById('ch-19').scrollIntoView({behavior:'smooth'})">Ch19<br><small>投标</small></span><span class="ch-tag" style="background:#4a6a8a20;color:#4a6a8a;cursor:pointer" onclick="document.getElementById('ch-20').scrollIntoView({behavior:'smooth'})">Ch20<br><small>BIM</small></span></div></div></div></div></div>
+<div id="tab-compare" style="display:none"><h2>&#x2696;&#xFE0F; 易混淆概念对比辨析</h2><p style="color:#999;margin-bottom:16px">一行对比打通章节壁垒 | 共 15 组</p><div class="cmp-wrap"><div class="cmp-title">一、单利 vs 复利 vs 名义利率 vs 有效利率</div><table class="cmp-table"><thead><tr><th>概念</th><th>公式</th><th>章节</th></tr></thead><tbody><tr><td><b>单利</b></td><td>F=P(1+n×i)</td><td>Ch1</td></tr><tr><td><b>复利</b></td><td>F=P(1+i)^n</td><td>Ch1</td></tr><tr><td><b>名义利率</b></td><td>r=i×m</td><td>Ch1</td></tr><tr><td><b>有效利率</b></td><td>i_eff=(1+r/m)^m-1</td><td>Ch1</td></tr></tbody></table><div class="cmp-title">二、投资回收期 vs FNPV vs FIRR</div><table class="cmp-table"><thead><tr><th>指标</th><th>判断标准</th><th>优缺点</th><th>章节</th></tr></thead><tbody><tr><td><b>Pt(静态投资回收期)</b></td><td>Pt≤Pc(基准)</td><td>直观简明，但不考虑回收期后现金流</td><td>Ch2</td></tr><tr><td><b>FNPV(财务净现值)</b></td><td>FNPV≥0</td><td>全面考虑全寿命周期，但依赖基准收益率ic</td><td>Ch2</td></tr><tr><td><b>FIRR(财务内部收益率)</b></td><td>FIRR≥ic</td><td>不受外部参数影响，但非常规项目可能多解或无解</td><td>Ch2</td></tr></tbody></table><div class="cmp-title">三、盈亏平衡分析 vs 敏感性分析</div><table class="cmp-table"><thead><tr><th>分析类型</th><th>目的</th><th>关键概念</th><th>章节</th></tr></thead><tbody><tr><td><b>盈亏平衡分析</b></td><td>找不盈不亏的临界点</td><td>BEP(产量/生产能力利用率)</td><td>Ch3</td></tr><tr><td><b>敏感性分析</b></td><td>找影响最大的不确定因素</td><td>敏感度系数SAF/临界点</td><td>Ch3</td></tr></tbody></table><div class="cmp-title">四、固定成本 vs 可变成本 vs 半可变成本</div><table class="cmp-table"><thead><tr><th>类型</th><th>定义</th><th>举例</th><th>章节</th></tr></thead><tbody><tr><td><b>固定成本</b></td><td>不随产量变动</td><td>折旧费/摊销费/计时工资及福利/管理费</td><td>Ch3</td></tr><tr><td><b>可变成本</b></td><td>随产量正比变动</td><td>原材料/燃料动力/计件工资</td><td>Ch3</td></tr><tr><td><b>半可变成本</b></td><td>随产量变动但不成比例</td><td>消耗性材料/工模具费</td><td>Ch3</td></tr></tbody></table><div class="cmp-title">五、有形磨损 vs 无形磨损</div><table class="cmp-table"><thead><tr><th>类型</th><th>原因</th><th>补偿方式</th><th>章节</th></tr></thead><tbody><tr><td><b>第一种有形磨损</b></td><td>使用中磨损</td><td>修理/更新</td><td>Ch4</td></tr><tr><td><b>第二种有形磨损</b></td><td>自然力作用(闲置锈蚀)</td><td>修理/更新</td><td>Ch4</td></tr><tr><td><b>第一种无形磨损</b></td><td>设备贬值(技术进步使重置成本降低)</td><td>更新/改造</td><td>Ch4</td></tr><tr><td><b>第二种无形磨损</b></td><td>出现更先进设备使原设备经济效率降低</td><td>更新</td><td>Ch4</td></tr></tbody></table><div class="cmp-title">六、设备自然/技术/经济寿命</div><table class="cmp-table"><thead><tr><th>寿命类型</th><th>定义</th><th>决定因素</th><th>章节</th></tr></thead><tbody><tr><td><b>自然寿命(物质寿命)</b></td><td>从投入使用到报废的时间</td><td>有形磨损</td><td>Ch4</td></tr><tr><td><b>技术寿命</b></td><td>从投入使用到因技术落后被淘汰</td><td>无形磨损</td><td>Ch4</td></tr><tr><td><b>经济寿命</b></td><td>从投入使用到年平均使用成本最低</td><td>有形+无形磨损综合</td><td>Ch4</td></tr></tbody></table><div class="cmp-title">七、经营成本 vs 总成本费用</div><table class="cmp-table"><thead><tr><th>成本类型</th><th>公式</th><th>章节</th></tr></thead><tbody><tr><td><b>总成本费用</b></td><td>外购原材料+燃料动力+工资福利+修理费+折旧+摊销+利息+其他</td><td>Ch7</td></tr><tr><td><b>经营成本</b></td><td>总成本费用-折旧费-摊销费-利息支出</td><td>Ch7</td></tr></tbody></table><div class="cmp-title">八、权责发生制 vs 收付实现制</div><table class="cmp-table"><thead><tr><th>会计基础</th><th>定义</th><th>适用</th><th>章节</th></tr></thead><tbody><tr><td><b>权责发生制</b></td><td>以权利/义务发生时间确认</td><td>企业通用</td><td>Ch6</td></tr><tr><td><b>收付实现制</b></td><td>以实际收付时间确认</td><td>行政/个人</td><td>Ch6</td></tr></tbody></table><div class="cmp-title">九、固定资产折旧方法对比</div><table class="cmp-table"><thead><tr><th>方法</th><th>计算</th><th>特点</th><th>章节</th></tr></thead><tbody><tr><td><b>年限平均法</b></td><td>(原值-残值)÷年限</td><td>每年相等</td><td>Ch7</td></tr><tr><td><b>工作量法</b></td><td>(原值-残值)×当年工作量÷总工作量</td><td>按使用量</td><td>Ch7</td></tr><tr><td><b>双倍余额递减法</b></td><td>年折旧率=2÷年限(不考虑残值)</td><td>前期多提/加速</td><td>Ch7</td></tr><tr><td><b>年数总和法</b></td><td>(原值-残值)×剩余年数÷年数总和</td><td>加速/比双倍平缓</td><td>Ch7</td></tr></tbody></table><div class="cmp-title">十、短期筹资 vs 长期筹资</div><table class="cmp-table"><thead><tr><th>方式</th><th>期限</th><th>特点</th><th>举例</th><th>章节</th></tr></thead><tbody><tr><td><b>短期筹资</b></td><td>≤1年</td><td>速度快/成本低/风险大</td><td>商业信用/短期借款</td><td>Ch11</td></tr><tr><td><b>长期筹资</b></td><td>>1年</td><td>速度慢/成本高/风险小</td><td>长期借款/债券/租赁/股权</td><td>Ch11</td></tr></tbody></table><div class="cmp-title">十一、个别/综合/边际资金成本</div><table class="cmp-table"><thead><tr><th>成本类型</th><th>用途</th><th>章节</th></tr></thead><tbody><tr><td><b>个别资金成本</b></td><td>比较各种筹资方式</td><td>Ch11</td></tr><tr><td><b>综合资金成本(加权)</b></td><td>进行资本结构决策</td><td>Ch11</td></tr><tr><td><b>边际资金成本</b></td><td>追加筹资决策</td><td>Ch11</td></tr></tbody></table><div class="cmp-title">十二、建筑安装工程费组成</div><table class="cmp-table"><thead><tr><th>费用</th><th>内容</th><th>章节</th></tr></thead><tbody><tr><td><b>人工费</b></td><td>计时/计件工资·奖金·津贴·加班·特殊工资</td><td>Ch13</td></tr><tr><td><b>材料费</b></td><td>原价·运杂·运输损耗·采购保管·检验试验</td><td>Ch13</td></tr><tr><td><b>施工机具使用费</b></td><td>折旧·大修·经常修理·安拆·场外·人工·燃料</td><td>Ch13</td></tr><tr><td><b>企业管理费</b></td><td>管理人员·办公·差旅·固资使用·劳动保险·财务·税金</td><td>Ch13</td></tr><tr><td><b>利润+规费+增值税</b></td><td>利润+五险一金(不可竞争)+销项税额</td><td>Ch13</td></tr></tbody></table><div class="cmp-title">十三、清单计价 vs 定额计价</div><table class="cmp-table"><thead><tr><th>方式</th><th>计量基础</th><th>价格来源</th><th>适用</th><th>章节</th></tr></thead><tbody><tr><td><b>清单计价</b></td><td>招标人提供工程量清单</td><td>自主报价(市场竞争)</td><td>国有资金为主→必须</td><td>Ch16</td></tr><tr><td><b>定额计价</b></td><td>施工图计算工程量</td><td>政府定额取费</td><td>传统方式</td><td>Ch14</td></tr></tbody></table><div class="cmp-title">十四、设计概算 vs 施工图预算</div><table class="cmp-table"><thead><tr><th>文件</th><th>编制阶段</th><th>精度</th><th>作用</th><th>章节</th></tr></thead><tbody><tr><td><b>设计概算</b></td><td>初步设计阶段</td><td>粗(±10%-30%)</td><td>确定投资限额</td><td>Ch15</td></tr><tr><td><b>施工图预算</b></td><td>施工图后</td><td>细(±5%)</td><td>编制控制价/结算</td><td>Ch15</td></tr></tbody></table><div class="cmp-title">十五、竣工结算 vs 竣工决算</div><table class="cmp-table"><thead><tr><th>类型</th><th>编制主体</th><th>内容</th><th>章节</th></tr></thead><tbody><tr><td><b>竣工结算</b></td><td>施工单位</td><td>合同价款+变更+索赔+调价</td><td>Ch17</td></tr><tr><td><b>竣工决算</b></td><td>建设单位</td><td>全部费用(含建安+设备+其他)</td><td>Ch17</td></tr></tbody></table></div></div>
+</div>
+</div>
+<script>
+function searchChapters(q){
+  document.querySelectorAll('.highlight').forEach(function(e){e.replaceWith(e.textContent)});
+  if(!q||q.length<1){document.querySelectorAll('.chapter-block').forEach(function(b){b.style.display=''});document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('ch-dim','ch-match')});return}
+  var ql=q.toLowerCase(),mc=0;
+  document.querySelectorAll('.chapter-block').forEach(function(b){
+    if(b.textContent.toLowerCase().includes(ql)){
+      b.style.display='';b.querySelector('.ch-body').style.display='block';b.querySelector('.ch-header').classList.add('open');
+      b.querySelectorAll('.section-body').forEach(function(s){s.style.display='block'});
+      mc++;
+    }else{b.style.display='none'}
+  });
+  document.getElementById('search-result').textContent=mc>0?'找到 '+mc+' 个章节':'未找到';
+  document.getElementById('search-result').style.display='block';
+}
+
+function switchTab(t){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  var labels={'tree':'树形','overview':'关系','lifecycle':'流程','compare':'对比'};
+  Array.from(document.querySelectorAll('.tab-btn')).find(function(b){return b.textContent.includes(labels[t])}).classList.add('active');
+  ['tab-tree','tab-overview','tab-lifecycle','tab-compare'].forEach(function(id){document.getElementById(id).style.display='none'});
+  document.getElementById('tab-'+t).style.display='block';
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
+</script>
+</body>
+</html>

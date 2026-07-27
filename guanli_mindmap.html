@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>建设工程管理 &mdash; 思维导图 | 金月</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f8f5f0;color:#3a2f28}
+#app{display:flex;height:100vh}
+#sidebar{width:280px;background:#2c2416;color:#e8dcc8;overflow-y:auto;flex-shrink:0}
+#sidebar h1{padding:20px 16px;font-size:18px;border-bottom:1px solid #5a4a32;line-height:1.5}
+#sidebar h1 small{font-size:12px;color:#a09070}
+#sidebar .nav-item{padding:10px 16px;cursor:pointer;font-size:13px;border-left:3px solid transparent;transition:.2s;display:flex;justify-content:space-between}
+#sidebar .nav-item:hover{background:#3a3020;border-left-color:#c9a96e}
+#sidebar .nav-item .score{font-size:11px;color:#a09070}
+#sidebar .legend{padding:12px 16px;font-size:11px;line-height:1.8;border-top:1px solid #5a4a32;margin-top:auto}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+#main{flex:1;overflow:auto;padding:20px 30px}
+#main h2{font-size:20px;color:#8b6914;border-bottom:2px solid #d4a574;padding-bottom:8px;margin-bottom:20px}
+.chapter-block{margin-bottom:10px;border:1px solid #e0d0b8;border-radius:6px;overflow:hidden}
+.ch-header{display:flex;align-items:center;padding:12px 16px;background:#f5e8d0;cursor:pointer;user-select:none}
+.ch-header:hover{background:#ecd8b8}
+.ch-header .ch-num{width:36px;height:36px;background:#8b6914;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;margin-right:12px;flex-shrink:0}
+.ch-header .ch-title{flex:1;font-size:15px;font-weight:bold;color:#5a3a10}
+.ch-header .ch-meta{font-size:12px;color:#999;margin:0 10px}
+.ch-header.open .ch-arrow{transform:rotate(90deg);display:inline-block}
+.section{margin:8px 0;border-left:3px solid #d4a574;padding:6px 12px}
+.section-header{font-size:14px;font-weight:bold;color:#6b4410;cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px}
+.section-header:hover{color:#8b6914}
+.point{padding:4px 8px;margin:2px 0;border-radius:3px;font-size:12.5px}
+.point.f1{background:#fff8e8}.point.f2{background:#ffe8c8}.point.f3{background:#ffd8a0}.point.f4{background:#ffc070}
+.point.has-subs{cursor:pointer}
+.point.has-subs:hover{filter:brightness(0.95)}
+.point-tag{display:inline-block;padding:1px 5px;border-radius:2px;font-size:10px;margin-right:6px}
+.tag-1{background:#e8e0d0;color:#888}.tag-2{background:#f0c878;color:#6b4410}.tag-3{background:#e8a040;color:#fff}.tag-4{background:#c06030;color:#fff}
+.sub-list{margin-top:4px;padding:4px 0 4px 16px;border-top:1px dashed #e0d0b8}
+.sub-item{padding:2px 0;font-size:11px;color:#777;line-height:1.6}
+.tab-bar{display:flex;gap:4px;padding:12px 0;border-bottom:2px solid #e0d0b8;margin-bottom:16px;position:sticky;top:0;background:#f8f5f0;z-index:30}
+.tab-btn{padding:8px 20px;border:1px solid #d4a574;background:#fff;color:#8b6914;border-radius:20px;cursor:pointer;font-size:13px;transition:.2s;font-weight:bold}
+.tab-btn:hover{background:#f5e8d0}
+.tab-btn.active{background:#8b6914;color:#fff;border-color:#8b6914}
+.pyramid-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 0;max-width:900px;margin:0 auto}
+.pyramid-tier{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.pyramid-node{padding:10px 14px;border-radius:8px;text-align:center;font-size:12px;cursor:pointer;transition:.2s;border:2px solid transparent;min-width:80px}
+.pyramid-node:hover{transform:scale(1.05);z-index:10}
+.pyramid-node.tier1{background:#e8f0ff;border-color:#5a8ab5;color:#2a4a6a}
+.pyramid-node.tier2{background:#e8ffe8;border-color:#5a9a4a;color:#2a5a1a}
+.pyramid-node.tier3{background:#fff8e8;border-color:#d4a040;color:#6a4a10}
+.pyramid-node.tier4{background:#ffe8e8;border-color:#c06050;color:#6a2020}
+.pyramid-label{font-size:14px;font-weight:bold;color:#8b6914;text-align:center;padding:4px 0;width:100%}
+.pyramid-arrow{font-size:20px;color:#c0b0a0;text-align:center}
+.lc-wrap{padding:20px;overflow-x:auto}
+.lc-flow{display:flex;align-items:flex-start;gap:0;min-width:900px;padding-bottom:30px}
+.lc-stage{flex:1;min-width:90px;text-align:center;padding:0 4px}
+.lc-stage-header{padding:8px 4px;border-radius:8px 8px 0 0;font-size:12px;font-weight:bold;color:#fff}
+.lc-stage-body{padding:6px 2px;background:#faf6f0;border:1px solid #e0d0b8;border-top:none;border-radius:0 0 8px 8px;min-height:50px;font-size:10px;line-height:1.6}
+.lc-stage .ch-tag{display:block;padding:2px 4px;margin:2px 0;border-radius:3px;font-size:10px;cursor:pointer}
+.lc-arrow{display:flex;align-items:center;justify-content:center;font-size:20px;color:#c0b0a0;min-width:20px}
+.cmp-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.cmp-table th{background:#f5e8d0;padding:10px;text-align:left;font-weight:bold;color:#5a3a10;border-bottom:2px solid #d4a574}
+.cmp-table td{padding:8px 10px;border-bottom:1px solid #e8dcc8;vertical-align:top;line-height:1.7}
+.cmp-table tr:hover td{background:#fdf8f0}
+.cmp-title{font-size:15px;font-weight:bold;color:#8b6914;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #e0d0b8}
+.search-wrap{padding:12px 16px;border-bottom:1px solid #5a4a32}
+.search-wrap input{width:100%;padding:8px 10px;border:1px solid #5a4a32;border-radius:4px;background:#3a3020;color:#e8dcc8;font-size:13px;outline:none}
+.search-wrap input::placeholder{color:#a09070}
+.search-result{margin:2px 0;font-size:11px;color:#c9a96e;text-align:center;display:none}
+.hamburger{display:none;position:fixed;top:10px;left:10px;z-index:200;background:#2c2416;color:#e8dcc8;border:none;font-size:22px;padding:6px 10px;border-radius:6px;cursor:pointer}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90}
+@media(max-width:768px){#sidebar{position:fixed;left:-300px;top:0;bottom:0;z-index:100;transition:left .3s;width:280px}#sidebar.open{left:0}.overlay.open{display:block}.hamburger{display:block}#main{margin-left:0!important;padding:12px 8px}.tab-bar{flex-wrap:nowrap;overflow-x:auto;gap:4px;padding:8px 4px}.tab-btn{padding:6px 12px;font-size:11px;white-space:nowrap;flex-shrink:0}#main h2{font-size:16px}.pyramid-node{padding:6px 8px;font-size:10px;min-width:60px}.lc-flow{min-width:750px}.cmp-table{font-size:10px}}</style>
+</head>
+<body>
+<div id="app">
+<button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div id="sidebar">
+<h1>建设工程管理<br><small>金月 &middot; 深度精讲 &middot; 10章 &middot; 89考点</small></h1>
+<div class="search-wrap">
+<input type="text" id="search-input" placeholder="搜索考点..." oninput="searchChapters(this.value)">
+<div class="search-result" id="search-result"></div>
+</div>
+<div id="nav-list"><div class="nav-item" onclick="document.getElementById('ch-1').scrollIntoView({behavior:'smooth'})">Ch1 建设工程项目组织、规划与控制<span class="score">11考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-2').scrollIntoView({behavior:'smooth'})">Ch2 建设工程项目管理相关体系标准<span class="score">9考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-3').scrollIntoView({behavior:'smooth'})">Ch3 建设工程招标投标与合同管理<span class="score">11考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-4').scrollIntoView({behavior:'smooth'})">Ch4 建设工程进度管理<span class="score">13考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-5').scrollIntoView({behavior:'smooth'})">Ch5 建设工程质量管理<span class="score">11考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-6').scrollIntoView({behavior:'smooth'})">Ch6 建设工程成本管理<span class="score">8考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-7').scrollIntoView({behavior:'smooth'})">Ch7 建设工程施工安全管理<span class="score">12考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-8').scrollIntoView({behavior:'smooth'})">Ch8 绿色建造及施工现场环境管理<span class="score">6考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-9').scrollIntoView({behavior:'smooth'})">Ch9 国际工程承包管理<span class="score">6考点</span></div>
+<div class="nav-item" onclick="document.getElementById('ch-10').scrollIntoView({behavior:'smooth'})">Ch10 建设工程项目管理智能化<span class="score">2考点</span></div>
+</div>
+<div class="legend">
+<div><span class="legend-dot" style="background:#e8e0d0"></span> 了解</div>
+<div><span class="legend-dot" style="background:#f0c878"></span> 掌握</div>
+<div><span class="legend-dot" style="background:#e8a040"></span> 重点</div>
+<div><span class="legend-dot" style="background:#ffc070"></span> 核心</div>
+</div>
+</div>
+<div id="main">
+<div class="tab-bar">
+<button class="tab-btn active" onclick="switchTab('tree')">&#x1F332; 树形导图</button>
+<button class="tab-btn" onclick="switchTab('overview')">&#x1F517; 关系总览</button>
+<button class="tab-btn" onclick="switchTab('lifecycle')">&#x1F504; 知识流程</button>
+<button class="tab-btn" onclick="switchTab('compare')">&#x2696;&#xFE0F; 对比辨析 (13组)</button>
+</div>
+<div id="tab-tree"><div class="chapter-block" id="ch-1">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">1</div>
+<div class="ch-title">第1章 建设工程项目组织、规划与控制</div>
+<div class="ch-meta">3节 · 11考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">1.1 工程项目投资管理与实施 <span style=font-size:11px;color:#999>12分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程项目投资管理制度</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 项目资本金制度</div><div class="sub-item">&#8226; 项目投资审批、核准或备案管理</div><div class="sub-item">&#8226; 采用直接投资和资本金注入方式的，政府投资主管部门需审批项目建议书和可行</div><div class="sub-item">&#8226; 采用投资补助、转贷和贷款贴息方式的，政府投资主管部门只审批资金申请报告</div><div class="sub-item">&#8226; 对关系国家安全、涉及全国重大生产力布局、战略性资源开发和重大公共利益等</div><div class="sub-item">&#8226; 企业办理投资项目核准手续时，仅需向核准机关提交项目申请书，不再经过批准</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程建设实施程序</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 生产准备</div><div class="sub-item">&#8226; 竣工验收</div><div class="sub-item">&#8226; 项目后评价方法。项目后评价一般应采用定性和定量相结合的方法，主要包括逻辑框架法、调查法、</div><div class="sub-item">&#8226; 政府和社会资本合作（PPP）项目实施方式及核心要求</div><div class="sub-item">&#8226; 工程承包模式</div><div class="sub-item">&#8226; 基于不同承包范围的承包模式</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程承包模式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; CM模式与Partnering模式</div><div class="sub-item">&#8226; 采用快速路径法施工</div><div class="sub-item">&#8226; CM模式在工程造价控制方面的价值</div><div class="sub-item">&#8226; 与施工总承包相比，合同价更合理性。</div><div class="sub-item">&#8226; CM单位不赚取总包与分包之间的差价。CM单位与分包单位或供货单位的合同价是公开的，建设单位可以参</div><div class="sub-item">&#8226; 应用价值工程方法挖掘节约投资的潜力。CM承包模式不同于普通承包模式的“按图施工”，CM单位早在工</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程监理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 与项目监理机构相关的施工管理工作</div><div class="sub-item">&#8226; 参加图纸会审和设计交底会议。</div><div class="sub-item">&#8226; 报审施工组织设计。</div><div class="sub-item">&#8226; 施工现场质量安全管理组织机构、制度及人员受检。</div><div class="sub-item">&#8226; 报送工程开工报审表及相关资料。</div><div class="sub-item">&#8226; 报审分包单位资格。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程质量监督</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 可以由建设行政主管部门或者其他有关部门委托的建设工程质量监督机构具体实施。”</div><div class="sub-item">&#8226; 工程质量监督内容</div><div class="sub-item">&#8226; 工程质量监督程序</div><div class="sub-item">&#8226; 成立工程质量监督组，确定质量监督负责人。</div><div class="sub-item">&#8226; 编制工程质量监督计划，并转发各参建单位。</div><div class="sub-item">&#8226; 召开首次监督会议，明确相关职责。</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">1.2 工程项目管理组织与项目经理 <span style=font-size:11px;color:#999>4分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程参建各方主体管理目标和任务</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 设计和施工总承包（D-B）；设计、采购和施工总承包（EPC）</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程项目管理组织</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 对承包单位而言，通常称为工程项目部或项目经理部。</div><div class="sub-item">&#8226; 工程项目管理组织结构形式</div><div class="sub-item">&#8226; 工程项目管理组织结构形式</div><div class="sub-item">&#8226; 责任矩阵</div><div class="sub-item">&#8226; 将施工项目管理的具体任务分配、落实到相关职能部门或人员，使施工项目部人员分工一目了然。</div><div class="sub-item">&#8226; 清楚地显示出施工项目部各部门或个人的角色、职责和相互关系，避免职责不清而出现推诿、扯皮现</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 项目经理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 项目经理是指具备相应任职条件和能力，由企业法定代表人授权对工程项目进行全面管理的责任人。</div><div class="sub-item">&#8226; 工程总承包项目经理职责和权限工程总承包项目经理任职条件：</div><div class="sub-item">&#8226; 工程建设类注册执业资格或高级专业技术职称；</div><div class="sub-item">&#8226; 具备决策、组织、领导和沟通能力，能正确处理和协调与项目发包人、项目相关方之间及企业内部各专业</div><div class="sub-item">&#8226; 具有工程总承包项目管理及相关的经济、法律法规和标准化知识；</div><div class="sub-item">&#8226; 具有类似项目的管理经验；</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">1.3 工程项目管理规划与动态控制 <span style=font-size:11px;color:#999>6分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程项目管理规划</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 项目管理规划应包括项目管理规划大纲和项目管理实施规划。</div><div class="sub-item">&#8226; 项目管理规划大纲</div><div class="sub-item">&#8226; 项目管理实施规划</div><div class="sub-item">&#8226; 明确项目需求和项目管理范围</div><div class="sub-item">&#8226; 确定项目管理目标</div><div class="sub-item">&#8226; 分析项目实施条件，进行项目工作结构分解</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工组织设计</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工组织设计的编制、审批及动态管理</div><div class="sub-item">&#8226; 工程设计有重大修改</div><div class="sub-item">&#8226; 有关法律、法规、规范和标准实施、修订和废止</div><div class="sub-item">&#8226; 主要施工方法有重大调整</div><div class="sub-item">&#8226; 主要施工资源配置有重大调整</div><div class="sub-item">&#8226; 施工环境有重大改变</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程项目目标动态控制</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工项目目标体系构建</div><div class="sub-item">&#8226; 确保工程质量、施工安全、绿色施工及环境管理目标符合工程建设强制性标准。</div><div class="sub-item">&#8226; 定性分析与定量分析相结合。质量目标通常会采用定性分析方法,而进度、成本目标则需要采用定量分</div><div class="sub-item">&#8226; 不同施工项目的各个目标可具有不同的优先等级。</div><div class="sub-item">&#8226; 施工项目目标动态控制过程及措施</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-2">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">2</div>
+<div class="ch-title">第2章 建设工程项目管理相关体系标准</div>
+<div class="ch-meta">3节 · 9考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">2.1 质量、环境、职业健康安全管理体系 <span style=font-size:11px;color:#999>6分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 质量管理体系</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 质量管理体系标准结构及关键要素</div><div class="sub-item">&#8226; 质量管理体系标准结构及关键要素</div><div class="sub-item">&#8226; 要求保持的成文信息。包括：质量管理体系的范围、质量方针、质量目标</div><div class="sub-item">&#8226; 要求保留的成文信息。包括：监视和测量资源的校准与检定证据，人员能力证据，与产品和服务有关要求</div><div class="sub-item">&#8226; 质量管理基本原则和核心</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 环境管理体系</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 环境管理体系标准分类及核心标准</div><div class="sub-item">&#8226; 环境管理体系的基本理念和核心内容</div><div class="sub-item">&#8226; 环境管理体系的基本理念和核心内容</div><div class="sub-item">&#8226; 领导作用和承诺；②环境方针；③组织的角色、职责和权限。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 职业健康安全管理体系</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 职业健康安全管理体系标准的特点</div><div class="sub-item">&#8226; 职业健康安全管理体系标准要素和作用</div><div class="sub-item">&#8226; 职业健康安全管理体系标准要素和作用</div><div class="sub-item">&#8226; 应对风险和机遇的措施。</div><div class="sub-item">&#8226; 职业健康安全目标及其实现的策划。</div><div class="sub-item">&#8226; 资源②能力③意识④沟通⑤文件化信息</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 卓越绩效管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 卓越绩效评价准则框架及评价要素</div><div class="sub-item">&#8226; 建筑企业实施卓越绩效管理的措施</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 全面一体化管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 建立全面一体化管理体系的可行性</div><div class="sub-item">&#8226; 应对风险和机遇的措施</div><div class="sub-item">&#8226; 质量/环境/职业健康安全目标及其实现的策划</div><div class="sub-item">&#8226; 确定并提供所需资源</div><div class="sub-item">&#8226; 确定并确保人员能力意识实施并保持沟通</div><div class="sub-item">&#8226; 创建、更新和控制成文信息</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">2.2 风险管理与社会责任管理体系 <span style=font-size:11px;color:#999>2分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 风险管理体系</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 风险管理原则轮中，核心是“创造和保护价值”</div><div class="sub-item">&#8226; 风险管理框架轮中，核心是“领导作用与承诺”</div><div class="sub-item">&#8226; 风险管理过程轮中，反映了风险评估的经典过程：风险识别一风险分析一风险评价。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 社会责任管理体系</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 组织治理决策程序和结构</div><div class="sub-item">&#8226; 公民和政治权利；</div><div class="sub-item">&#8226; 经济、社会和文化权利；</div><div class="sub-item">&#8226; 工作中的基本原则和权利</div><div class="sub-item">&#8226; 劳工实践</div><div class="sub-item">&#8226; 就业和劳动关系；②工作条件和社会保护；③民主管理和集体协商；④职业健康安全；</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">2.3 项目管理标准体系 <span style=font-size:11px;color:#999>3分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 项目管理标准及价值交付</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 国内外项目管理标准</div><div class="sub-item">&#8226; 项目管理原理。企业应遵循策划、实施、检查、处置（PDCA）的动态管理原理确定项目管理流程。</div><div class="sub-item">&#8226; 项目管理责任制度应作为项目管理的基本制度，项目经理责任制应是项目管理责任制度的核心内容。</div><div class="sub-item">&#8226; 价值交付</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 项目群与项目组合管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 项目群管理⑴项目群含义</div><div class="sub-item">&#8226; 项目群由具有相互依存和相互关联的项目群组件构成；</div><div class="sub-item">&#8226; 项目群为利益相关方提供收益，并帮助实现战略目标或经营目标；</div><div class="sub-item">&#8226; 项目群具有复杂性和不确定性，需要加以管理来尽可能减少复杂性和不确定性。</div><div class="sub-item">&#8226; 项目组合管理</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-3">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">3</div>
+<div class="ch-title">第3章 建设工程招标投标与合同管理</div>
+<div class="ch-meta">3节 · 11考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">3.1 工程招标与投标 <span style=font-size:11px;color:#999>7分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 招标方式与程序</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 发售招标文件和组织现场踏勘</div><div class="sub-item">&#8226; 发售招标文件。</div><div class="sub-item">&#8226; 组织现场踏勘：</div><div class="sub-item">&#8226; 投标预备会</div><div class="sub-item">&#8226; 投标文件的递交和接收</div><div class="sub-item">&#8226; 组建评标委员会</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 合同计价方式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 大多适用于边设计、边施工的紧急工程或灾后修复工程</div><div class="sub-item">&#8226; 成本加固定百分比酬金合同</div><div class="sub-item">&#8226; 成本加固定酬金合同</div><div class="sub-item">&#8226; 成本加固定百分比酬金合同</div><div class="sub-item">&#8226; 成本加固定酬金合同</div><div class="sub-item">&#8226; 实际成本=预期成本，合同价款=实际成本+酬金</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工投标</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工投标报价策略</div><div class="sub-item">&#8226; 有可能在中标后，将大部分工程分包给索价较低的一些分包商</div><div class="sub-item">&#8226; 对于分期建设的工程项目，先以低价获得首期工程，而后赢得机会创造第二期工程中的竞争优势，并在以</div><div class="sub-item">&#8226; 较长时期内，施工单位没有在建工程项目，如果再不中标，就难以维持生存</div><div class="sub-item">&#8226; 计日工单价的报价</div><div class="sub-item">&#8226; 暂定金额的报价</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程总承包投标</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程总承包招标要求</div><div class="sub-item">&#8226; 投标人资料要求</div><div class="sub-item">&#8226; 设计成果补偿</div><div class="sub-item">&#8226; 施工合同管理</div><div class="sub-item">&#8226; 工程总承包合同管理</div><div class="sub-item">&#8226; 专业分包与劳务分包合同管理</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">3.2 工程合同管理（12分） <span style=font-size:11px;color:#999>12分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工合同管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 承包人提出索赔的期限。</div><div class="sub-item">&#8226; 施工合同纠纷审理相关规定</div><div class="sub-item">&#8226; 开工日期争议解决</div><div class="sub-item">&#8226; 开工日期为发包人或者监理人发出的开工通知载明的开工日期。开工通知发出后，尚不具备开工条件的，</div><div class="sub-item">&#8226; 承包人经发包人同意已经实际进场施工的，以实际进场施工时间为开工日期。</div><div class="sub-item">&#8226; 实际竣工日期争议解决</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程总承包合同管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 设计施工总承包合同文件的组成及优先解释顺序</div><div class="sub-item">&#8226; 合同协议书；</div><div class="sub-item">&#8226; 中标通知书；</div><div class="sub-item">&#8226; 投标函及投标函附录；</div><div class="sub-item">&#8226; 专用合同条款；</div><div class="sub-item">&#8226; 通用合同条款；</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 专业分包与劳务分包合同管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 在施工场地涉及危险地区或需要安全防护措施施工时，分包人应提出安全防护措施，经承包人批准后实施，</div><div class="sub-item">&#8226; 劳务分包合同管理</div><div class="sub-item">&#8226; 负责编制施工组织设计</div><div class="sub-item">&#8226; 负责工程量定位、沉降观测、技术交底，组织图纸会审；</div><div class="sub-item">&#8226; 按时提供图纸，及时交付材料、设备；</div><div class="sub-item">&#8226; 按确定的工时计算劳务报酬的，由劳务分包人每日将提供劳务人数报工程承包人，由工程承包人确认。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 材料设备采购合同管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 材料采购合同管理</div><div class="sub-item">&#8226; 预付款：签约合同价的10%</div><div class="sub-item">&#8226; 进度款：交付材料后，支付至该批次合同材料的合同价格的95%</div><div class="sub-item">&#8226; 结清款：质量保证期届满后，支付合同价格5%的结清款</div><div class="sub-item">&#8226; 设备采购合同管理</div><div class="sub-item">&#8226; 签约合同价的10%作为预付款；</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">3.3 工程承包风险管理及担保保险 <span style=font-size:11px;color:#999>4分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程承包风险管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程担保</div><div class="sub-item">&#8226; 工程保险</div><div class="sub-item">&#8226; 工程承包常见风险</div><div class="sub-item">&#8226; 工程承包风险管理计划</div><div class="sub-item">&#8226; 工程范围说明；</div><div class="sub-item">&#8226; 招投标文件与工程合同；</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程担保</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程担保有多种，常见的有投标担保、履约担保、预付款担保、工程款支付担保、工程质量保证金等。</div><div class="sub-item">&#8226; 投标担保</div><div class="sub-item">&#8226; 投标截止前撤回投标的，书面通知招标人。招标人已收取投标保证金的，应自收到投标人书面撤回通知之</div><div class="sub-item">&#8226; 投标截止后撤销投标文件的，招标人可以不退还投标保证金。</div><div class="sub-item">&#8226; 招标人最迟应在书面合同签订后5日内向中标人和未中标的投标人退还投标保证金及银行同期存款利息。</div><div class="sub-item">&#8226; 履约担保</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程保险</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程保险种类</div><div class="sub-item">&#8226; 投保人和被保险人</div><div class="sub-item">&#8226; 保险期限。建筑工程一切险采用的是工期保险单，即保险期限是从投保工程动工之日起直至工程验收之</div><div class="sub-item">&#8226; 保险项目和责任范围。</div><div class="sub-item">&#8226; 免责范围。</div><div class="sub-item">&#8226; 投保人和被保险人</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-4">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">4</div>
+<div class="ch-title">第4章 建设工程进度管理</div>
+<div class="ch-meta">4节 · 13考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">4.1 工程进度影响因素与进度计划系统 <span style=font-size:11px;color:#999>2分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程进度影响因素</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程设计进度影响因素</div><div class="sub-item">&#8226; 工程施工进度影响因素</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程进度计划系统及表达方式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程进度计划系统</div><div class="sub-item">&#8226; 按工程进展阶段分解的监理工作计划，如施工准备阶段监理工作计划、地基与基础工程施工阶段监理工作</div><div class="sub-item">&#8226; 按时时间进展阶段分解的监理工作计划，如年度监理工作进度计划、季度监理工作进度计划、月度监理工</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">4.2 流水施工进度计划 <span style=font-size:11px;color:#999>6分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 流水施工特点及表达方式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程施工组织实施的方式分三种：依次施工、平行施工、流水施工</div><div class="sub-item">&#8226; 没有充分地利用工作面进行施工，工期长；</div><div class="sub-item">&#8226; 如果按专业组建工作队，则各专业工作队不能连续作业，工作出现间歇，劳动力及施工机具等资源无法均</div><div class="sub-item">&#8226; 如果由一个工作队完成全部施工任务，则不能实现专业化施工，不利于提高劳动生产率和工程质量；</div><div class="sub-item">&#8226; 单位时间内投入劳动力、施工机具等资源量较少，有利于资源供应的组织；</div><div class="sub-item">&#8226; 只有一个工作队进行施工作业，施工现场的组织管理比较简单。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 流水施工参数</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 一般用n 表示。如钢筋工程、模板工程、混凝土工程</div><div class="sub-item">&#8226; 非节奏流水施工</div><div class="sub-item">&#8226; 非节奏流水施工</div><div class="sub-item">&#8226; 基本特点</div><div class="sub-item">&#8226; 各施工过程在各施工段的流水节拍不全相等；</div><div class="sub-item">&#8226; 相邻施工过程的流水步距不尽相等；</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 流水施工的基本方式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 异节奏流水施工</div><div class="sub-item">&#8226; 等步距异节奏流水施工（成倍节拍流水施工）</div><div class="sub-item">&#8226; 异步距异节奏流水施工（每个施工过程成立一个专业工作队）</div><div class="sub-item">&#8226; 等步距异节奏流水施工</div><div class="sub-item">&#8226; 异节奏流水施工</div><div class="sub-item">&#8226; 等步距异节奏流水施工（成倍节拍流水施工）</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 流水施工基本方式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程网络计划技术</div><div class="sub-item">&#8226; 工程网络计划编制程序和方法</div><div class="sub-item">&#8226; 工程网络计划编制程序和方法</div><div class="sub-item">&#8226; 时间参数计算方法</div><div class="sub-item">&#8226; 关键工作及关键线路确定方法</div><div class="sub-item">&#8226; 工程网络计划类型</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">4.3 工程网络计划技术 <span style=font-size:11px;color:#999>7分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程网络计划编制程序和方法</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 时间参数计算方法</div><div class="sub-item">&#8226; 关键工作及关键线路确定方法</div><div class="sub-item">&#8226; 工程网络计划类型</div><div class="sub-item">&#8226; 箭线（工作）</div><div class="sub-item">&#8226; 双代号网络图的绘制规则</div><div class="sub-item">&#8226; 时间参数计算方法</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 时间参数计算方法</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 单代号网络计划</div><div class="sub-item">&#8226; 单代号网络计划</div><div class="sub-item">&#8226; 单代号网络计划时间参数的计算</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 关键工作及关键线路确定方法</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 关键工作：总时差最小的工作。当计划工期等于计算工期时，总时差为零的工作就是关键工作。</div><div class="sub-item">&#8226; 工程网络计划编制程序</div><div class="sub-item">&#8226; 工程网络计划编制程序</div><div class="sub-item">&#8226; 时间目标，即工期目标。</div><div class="sub-item">&#8226; 时间资源目标</div><div class="sub-item">&#8226; 时间-成本目标</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工进度计划系统及表达方式</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 网络计划特点。</div><div class="sub-item">&#8226; 能够明确表达各项工作之间的先后顺序关系（也即逻辑关系）</div><div class="sub-item">&#8226; 能够通过时间参数计算，找出影响工期的关键工作和关键线路</div><div class="sub-item">&#8226; 能够通过时间参数计算，确定各项工作的机动时间</div><div class="sub-item">&#8226; 能够利用项目管理软件进行计算、优化和调整，实现对施工进度的动态控制。</div><div class="sub-item">&#8226; 不能明确反映各项工作之间的相互联系、相互制约关系；</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">4.4 施工进度控制 <span style=font-size:11px;color:#999>1分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工进度计划实施中的检查与分析</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工进度监测系统过程</div><div class="sub-item">&#8226; 施工进度调整系统过程</div><div class="sub-item">&#8226; 实际进度与计划进度比较方法</div><div class="sub-item">&#8226; 横道图比较法</div><div class="sub-item">&#8226; S曲线比较法</div><div class="sub-item">&#8226; 前锋线比较法</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 实际进度与计划进度比较方法</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 又可用来分析预测工程项目整体进度状况的是（）。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工进度计划调整方法及措施</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 压缩某些工作的持续时间</div><div class="sub-item">&#8226; 改变某些工作间的逻辑关系</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-5">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">5</div>
+<div class="ch-title">第5章 建设工程质量管理</div>
+<div class="ch-meta">4节 · 11考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">5.1 工程质量影响因素及管理体系 <span style=font-size:11px;color:#999>4分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程质量形成过程及影响因素</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 建设工程固有特性</div><div class="sub-item">&#8226; 工程质量形成过程</div><div class="sub-item">&#8226; 工程质量影响因素</div><div class="sub-item">&#8226; 构成工程实体及配套的工艺设备和机具：电梯、暖通设备</div><div class="sub-item">&#8226; 施工过程使用的施工机具：垂直运输设备、测量仪器、各类安全设施</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 全面质量管理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 全面质量管理的思想</div><div class="sub-item">&#8226; 全面质量管理的特点【25多】</div><div class="sub-item">&#8226; 管理内容的全面性：产品质量、工程质量、工作质量、服务质量</div><div class="sub-item">&#8226; 管理范围的全面性：设计质量、制造质量和使用质量</div><div class="sub-item">&#8226; 人员参与的全面性</div><div class="sub-item">&#8226; 管理方法的多样性</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程质量管理体系</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 项目质量控制体系的特点和构成</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">5.2 施工质量抽样检验和统计分析方法 <span style=font-size:11px;color:#999>6分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工质量抽样检验方法</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工质量统计分析方法</div><div class="sub-item">&#8226; 调查表法</div><div class="sub-item">&#8226; 因果分析法【25单】</div><div class="sub-item">&#8226; 排列图法</div><div class="sub-item">&#8226; 排列图法</div><div class="sub-item">&#8226; 排列图法</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工质量统计分析方法</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 直方图法</div><div class="sub-item">&#8226; 正常直方图呈正态分布，中间高、两边低、成对称。</div><div class="sub-item">&#8226; 直方图法</div><div class="sub-item">&#8226; 控制图法</div><div class="sub-item">&#8226; 控制图法</div><div class="sub-item">&#8226; 分析用控制图：分析生产过程是否处于控制状态。一般需连续抽取20~25组样本数据，计算控制界限。</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">5.3 施工质量控制 <span style=font-size:11px;color:#999>5分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工准备质量控制</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工技术准备</div><div class="sub-item">&#8226; 施工现场准备</div><div class="sub-item">&#8226; 材料、构配件质量控制</div><div class="sub-item">&#8226; 施工过程质量控制</div><div class="sub-item">&#8226; 作业技术准备状态</div><div class="sub-item">&#8226; 施工过程中的关键工序或环节及隐蔽工程，例如预应力结构的张拉工序、钢筋混凝土结构中的钢筋架立等。</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工过程质量控制</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 应由项目技术人员编制技术交底书，并经项目技术负责人批准。</div><div class="sub-item">&#8226; 施工作业环境控制</div><div class="sub-item">&#8226; 施工质量管理环境控制</div><div class="sub-item">&#8226; 现场自然环境条件控制</div><div class="sub-item">&#8226; 作业技术活动过程质量控制</div><div class="sub-item">&#8226; 作业技术活动结果控制</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工质量检查验收</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工质量验收一般规定</div><div class="sub-item">&#8226; 施工质量验收要求和组织</div><div class="sub-item">&#8226; 主控项目的质量抽样检验均应合格。</div><div class="sub-item">&#8226; 一般项目的质量应符合国家现行相关标准的规定</div><div class="sub-item">&#8226; 具有完整的施工操作依据和质量验收记录。</div><div class="sub-item">&#8226; 所含检验批的质量均应验收合格；</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">5.4 施工质量事故预防与调查处理 <span style=font-size:11px;color:#999>1分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工质量事故分类</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 按照事故责任分类</div><div class="sub-item">&#8226; 按事故产生原因分类</div><div class="sub-item">&#8226; 按事故严重程度分类</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工质量事故预防</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工质量控制应坚持“预防为主”的原则。</div><div class="sub-item">&#8226; 施工质量事故成因分析</div><div class="sub-item">&#8226; 施工质量事故预防措施</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工质量事故调查处理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工质量施工处理要求及依据</div><div class="sub-item">&#8226; 事故处理要达到安全可靠、不留隐患、满足生产和使用要求、施工方便、经济合理的目的。</div><div class="sub-item">&#8226; 要重视消除造成质量事故的原因，注意综合治理。</div><div class="sub-item">&#8226; 要合理确定处理范围和正确选择处理的时机和方法。</div><div class="sub-item">&#8226; 要加强事故处理的检查验收工作，认真复查事故处理的实际情况。</div><div class="sub-item">&#8226; 要确保事故处理期间的安全。</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-6">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">6</div>
+<div class="ch-title">第6章 建设工程成本管理</div>
+<div class="ch-meta">4节 · 8考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">6.1 工程成本影响因素及管理流程 <span style=font-size:11px;color:#999>3分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程成本分类及影响因素</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程成本分类</div><div class="sub-item">&#8226; 控制成本：</div><div class="sub-item">&#8226; 工程成本影响因素</div><div class="sub-item">&#8226; 薪酬水平②劳动力供需关系③技能水平</div><div class="sub-item">&#8226; 价格波动②供应链问题</div><div class="sub-item">&#8226; 租赁费②维护费③燃料费用</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 工程成本管理流程</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 工程成本管理是指项目管理机构以责任成本为主线，对工程成本进行计划、控制、分析，并进行工程成本管</div><div class="sub-item">&#8226; 施工成本计划（2分）</div><div class="sub-item">&#8226; 施工责任成本构成</div><div class="sub-item">&#8226; 施工成本计划编制</div><div class="sub-item">&#8226; 施工责任成本构成</div><div class="sub-item">&#8226; 施工责任成本</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">6.2 施工成本计划 <span style=font-size:11px;color:#999>2分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工责任成本构成</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工责任成本</div><div class="sub-item">&#8226; 可考核性②可预计性③可计量性④可控制性。</div><div class="sub-item">&#8226; 施工责任成本构成</div><div class="sub-item">&#8226; 施工成本计划编制</div><div class="sub-item">&#8226; 施工成本计划的类型</div><div class="sub-item">&#8226; 施工成本计划的编制依据和程序</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工成本计划编制</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 本计划；④项目管理机构和组织的职能部门编制相应（各自）的成本计划。正确的顺序（）</div><div class="sub-item">&#8226; 施工成本计划编制方法</div><div class="sub-item">&#8226; 施工成本计划编制方法</div><div class="sub-item">&#8226; 在时标网络图上按月编制的成本计划直方图；</div><div class="sub-item">&#8226; 用时间—成本累计曲线（S型曲线）表示。</div><div class="sub-item">&#8226; 编制工程项目施工进度时标网络计划。</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">6.3 施工成本控制 <span style=font-size:11px;color:#999>1分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工成本控制过程</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 成本的过程控制中，有两类控制程序</div><div class="sub-item">&#8226; 管理行为控制程序→成本全过程控制的基础</div><div class="sub-item">&#8226; 指标控制程序→成本过程控制的重点</div><div class="sub-item">&#8226; 指标控制过程</div><div class="sub-item">&#8226; 施工成本控制方法</div><div class="sub-item">&#8226; 成本的过程控制方法</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工成本控制方法</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 费用（进度）偏差反映绝对偏差，仅适合于对同一项目作偏差分析；</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">6.4 施工成本分析与管理绩效考核 <span style=font-size:11px;color:#999>4分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工成本分析</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 相关比率法</div><div class="sub-item">&#8226; 构成比率法</div><div class="sub-item">&#8226; 动态比率法</div><div class="sub-item">&#8226; 动态比率法</div><div class="sub-item">&#8226; 竣工成本分析；</div><div class="sub-item">&#8226; 主要资源节超对比分析；</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工成本管理绩效考核</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工成本管理绩效考核的内容</div><div class="sub-item">&#8226; 施工成本管理绩效考核指标</div><div class="sub-item">&#8226; 施工成本管理绩效考核指标</div><div class="sub-item">&#8226; 项目经理责任目标总成本降低额和降低率</div><div class="sub-item">&#8226; 施工责任目标成本实际降低额和降低率</div><div class="sub-item">&#8226; 施工计划成本实际降低额和降低率</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-7">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">7</div>
+<div class="ch-title">第7章 建设工程施工安全管理</div>
+<div class="ch-meta">4节 · 12考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">7.1 施工安全管理基本理论 <span style=font-size:11px;color:#999>4分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工生产危险源及其控制</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 危险源分类及控制</div><div class="sub-item">&#8226; 能量源：变电站、锅炉、起重机械、高度差较大的场所、压力容器、带电导体、炸药/化学物质储存空间、</div><div class="sub-item">&#8226; 危险物质：一氧化碳、氮气、炸药、氯气、苯等</div><div class="sub-item">&#8226; 施工生产常见危险源</div><div class="sub-item">&#8226; 危险源辨识与风险评价方法</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 安全事故致因理论</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 事故频发倾向理论</div><div class="sub-item">&#8226; 人员选择，即通过严格的生理、心理检验，选择身体、智力、性格特征及动作特征等方面优秀的人才就业；</div><div class="sub-item">&#8226; 人事调整，即把企业中的事故频发倾向者调整岗位或解雇。</div><div class="sub-item">&#8226; 事故因果连锁论</div><div class="sub-item">&#8226; 能量意外释放理论</div><div class="sub-item">&#8226; 轨迹交叉理论</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">7.2 施工安全管理体系及基本制度 <span style=font-size:11px;color:#999>4分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工安全管理体系</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工安全管理常见缺陷</div><div class="sub-item">&#8226; 安全检查常见缺陷：①未建立安全检查制度；②未做好安全检查记录；③事故隐患的整改未做到“三</div><div class="sub-item">&#8226; 施工安全管理体系的内容</div><div class="sub-item">&#8226; 项目经理应为工程项目安全生产第一责任人</div><div class="sub-item">&#8226; 工程项目总承包单位、专业承包和劳务分包单位的项目经理、技术负责人和专职安全生产管理人员，应组</div><div class="sub-item">&#8226; 总承包单位、专业承包和劳务分包单位应按规定配备项目专职安全生产管理人员</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工安全管理基本制度</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 全员安全生产责任制</div><div class="sub-item">&#8226; 建立健全并落实本单位全员安全生产责任制，加强安全生产标准化建设。</div><div class="sub-item">&#8226; 组织制定并实施本单位安全生产规章制度和操作规程。</div><div class="sub-item">&#8226; 组织制定并实施本单位安全生产教育和培训计划。</div><div class="sub-item">&#8226; 保证本单位安全生产投入的有效实施。</div><div class="sub-item">&#8226; 组织建立并落实安全风险分级管控和隐患排查治理双重预防工作机制，督促、检查本单位的安全生产工</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">7.3 专项施工方案及施工安全技术管理 <span style=font-size:11px;color:#999>3分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 专项施工方案编制与报审</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 专项施工方案编制与报批</div><div class="sub-item">&#8226; 专项施工方案编制和审查程序</div><div class="sub-item">&#8226; 施工安全技术措施及安全技术交底</div><div class="sub-item">&#8226; 施工安全技术措施</div><div class="sub-item">&#8226; 当竖向洞口短边边长＜500mm时，应采取封堵措施；当垂直洞口短边边长≥500mm时，应在临空一侧设置高</div><div class="sub-item">&#8226; 非竖向洞口</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工安全技术措施及安全技术交底</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工现场出入口其数量不宜少于2个。</div><div class="sub-item">&#8226; 安全防护设施、用品技术要求</div><div class="sub-item">&#8226; 施工安全技术交底</div><div class="sub-item">&#8226; 施工项目部必须实行逐级安全技术交底制度，纵向延伸到班组全体作业人员；</div><div class="sub-item">&#8226; 应将工程概况、施工方法、施工程序、安全技术措施等向施工员、班组长进行详细交底，应将安全技术措</div><div class="sub-item">&#8226; 应优先采用新的安全技术措施；</div></div></div>
+<div class="point f2"><span class="point-tag tag-2">★★</span><b>施工安全事故隐患处置和应急预案</b></div>
+<div class="point f2"><span class="point-tag tag-2">★★</span><b>施工安全事故等级和应急救援</b></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工安全事故报告和调查处理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工安全事故应急预案和调查处理</div><div class="sub-item">&#8226; 施工安全事故隐患处置和应急预案</div><div class="sub-item">&#8226; 施工安全事故等级和应急救援</div><div class="sub-item">&#8226; 施工安全事故报告和调查处理</div><div class="sub-item">&#8226; 施工安全事故隐患处置和应急预案</div><div class="sub-item">&#8226; 安全风险分级管控</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">7.4 施工安全事故应急预案和调查处理 <span style=font-size:11px;color:#999>1分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工安全事故隐患处置和应急预案</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 安全风险分级管控</div><div class="sub-item">&#8226; 安全事故应急预案</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工安全事故等级和应急救援</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工安全事故的等级</div><div class="sub-item">&#8226; 施工安全事故应急救援</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工安全事故报告和调查处理</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工安全事故报告</div><div class="sub-item">&#8226; 施工安全事故调查</div><div class="sub-item">&#8226; 特别重大事故由国务院或者国务院授权有关部门组织事故调查组进行调查；</div><div class="sub-item">&#8226; 重大事故由事故发生地省级人民政府进行调查；</div><div class="sub-item">&#8226; 较大事故由设区的市级人民政府进行调查；</div><div class="sub-item">&#8226; 一般事故由县级人民政府负责调查。</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-8">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">8</div>
+<div class="ch-title">第8章 绿色建造及施工现场环境管理</div>
+<div class="ch-meta">2节 · 6考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">8.1 绿色建造管理 <span style=font-size:11px;color:#999>5分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 各方主体绿色施工责任</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 绿色建造需要将绿色发展理念融入工程策划、设计、施工、交付的建造全过程充分体现绿色化、工业化、信</div><div class="sub-item">&#8226; 绿色策划</div><div class="sub-item">&#8226; 绿色设计</div><div class="sub-item">&#8226; 应按照“被动式技术优先、主动式技术优化”的原则，优化功能空间布局，充分发掘场地空间、建筑本</div><div class="sub-item">&#8226; 应优先采用管线分离、一体化装修技术，对建筑围护结构和内外装饰装修构造节点进行精细设计.</div><div class="sub-item">&#8226; 宜采用标准化构件和部件，使用集成化模块化建筑部品，提高工程品质，降低运行维护成本。</div></div></div>
+<div class="point f2"><span class="point-tag tag-2">★★</span><b>绿色建造基本要求</b></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 各方主体绿色施工职责</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 也有观点认为,应在前述“3R”原则基础上增加“再制造”（Remanufacture）和“再生”（Recover）,扩展</div><div class="sub-item">&#8226; 绿色施工相关理念、原则和方法</div><div class="sub-item">&#8226; 目的与范围确定;</div><div class="sub-item">&#8226; 清单分析；</div><div class="sub-item">&#8226; 影响评估；</div><div class="sub-item">&#8226; 解释说明</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 绿色施工措施</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 绿色施工管理措施</div><div class="sub-item">&#8226; 节地与施工用地保护措施</div><div class="sub-item">&#8226; 环境保护措施</div><div class="sub-item">&#8226; 绿色施工技术措施</div><div class="sub-item">&#8226; 扬尘控制</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">8.2 施工现场环境管理 <span style=font-size:11px;color:#999>4分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工现场文明施工要求</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 文明施工的作用及管理理念</div><div class="sub-item">&#8226; 文明施工管理目标及工作要求</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 施工现场环境保护措施</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 施工现场环境保护评价由控制项、一般项和优选项三类指标组成，评价等级分为不合格、合格和优良三个等</div><div class="sub-item">&#8226; 装配式建筑施工的垃圾排放量不大于200t/万m</div><div class="sub-item">&#8226; 建筑垃圾回收利用率达到30%，建筑材料包装物回收利用率达到100%；</div><div class="sub-item">&#8226; 现场垃圾分类、封闭、集中堆放；</div><div class="sub-item">&#8226; 装配式建筑施工的垃圾排放量不宜大于140t/万m</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-9">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">9</div>
+<div class="ch-title">第9章 国际工程承包管理</div>
+<div class="ch-meta">3节 · 6考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">9.1 国际工程承包市场开拓 <span style=font-size:11px;color:#999>4分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 国际工程承包相关政策</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 促进对外承包工程高质量发展基本原则</div><div class="sub-item">&#8226; 对外承包市场开拓和健康发展政策要求</div><div class="sub-item">&#8226; 对外承包工程及劳务合作管理相关法规</div><div class="sub-item">&#8226; 应当维护国家利益和社会公共利益，保障外派人员的合法权益；</div><div class="sub-item">&#8226; 应当遵守工程项目所在国家或者地区的法律，信守合同，尊重当地的风俗习惯，注重生态环境保护，促进</div><div class="sub-item">&#8226; 对外承包工程的单位将工程项目分包的，应当与分包单位订立专门的工程质量和安全生产管理协议，或者</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 国际工程承包市场进入</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 企业设立条件及注册要求</div><div class="sub-item">&#8226; 承包工程许可制度</div><div class="sub-item">&#8226; 工程招标投标</div><div class="sub-item">&#8226; 外籍劳务要求</div><div class="sub-item">&#8226; 税收政策</div><div class="sub-item">&#8226; 属地主义原则，即仅对纳税人来源于本国境内的各种应税收入纳税;</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">9.2 国际工程承包风险及应对策略 <span style=font-size:11px;color:#999>1分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 国际工程承包风险</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 政治风险</div><div class="sub-item">&#8226; 经济风险</div><div class="sub-item">&#8226; 市场风险</div><div class="sub-item">&#8226; 自然风险</div><div class="sub-item">&#8226; 社会风险</div><div class="sub-item">&#8226; 合同风险</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 国际工程承包风险应对策略</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 加强市场调研，建立安全风险评估机制</div><div class="sub-item">&#8226; 综合运用多种策略，化解融资汇率风险</div><div class="sub-item">&#8226; 精准有序开拓市场，避免低价恶性竞争</div><div class="sub-item">&#8226; 建立风险处置机制，做好突发事件防范</div><div class="sub-item">&#8226; 强化安全意识，保障外派人员人身安全</div><div class="sub-item">&#8226; 开展属地化经营，与当地建立互信关系</div></div></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 国际工程投标策略</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 谨慎做好项目选择及投标</div><div class="sub-item">&#8226; 全面研究分析和把握招标文件</div><div class="sub-item">&#8226; 做实投标前的调查与现场考察</div><div class="sub-item">&#8226; 做好工程量和报价的准确估算</div></div></div>
+</div></div>
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">9.3 国际工程投标与合同管理 <span style=font-size:11px;color:#999>5分</span><span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 国际工程投标策略</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 谨慎做好项目选择及投标</div><div class="sub-item">&#8226; 全面研究分析和把握招标文件</div><div class="sub-item">&#8226; 做实投标前的调查与现场考察</div><div class="sub-item">&#8226; 做好工程量和报价的准确估算</div><div class="sub-item">&#8226; 确定恰当的报价水平和策略</div></div></div>
+</div></div>
+</div></div>
+<div class="chapter-block" id="ch-10">
+<div class="ch-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;;this.classList.toggle(&quot;open&quot;)">
+<div class="ch-num">10</div>
+<div class="ch-title">第10章 建设工程项目管理智能化</div>
+<div class="ch-meta">1节 · 2考点</div>
+<div class="ch-arrow" style="display:inline-block;transition:.3s">&#9654;</div>
+</div>
+<div class="ch-body" style="display:none">
+<div class="section">
+<div class="section-header" onclick="var b=this.nextElementSibling;b.style.display=b.style.display==&quot;block&quot;?&quot;none&quot;:&quot;block&quot;">10.2 智能建造与智慧工地<span style="font-size:10px;margin-left:auto">&#9660;</span></div>
+<div class="section-body" style="display:none">
+<div class="point f2"><span class="point-tag tag-2">★★</span><b>智能建造</b></div>
+<div class="point f2 has-subs" onclick="var d=this.querySelector('.sub-list');if(d)d.style.display=d.style.display=='none'?'':'none'"><span class="point-tag tag-2">★★</span><b>&#9656; 智慧工地</b><div class="sub-list" style="display:none"><div class="sub-item">&#8226; 智慧工地基本特点和总体架构</div><div class="sub-item">&#8226; 智慧工地建设</div><div class="sub-item">&#8226; 传感器②自动识别装置③网关和路由器④服务器</div><div class="sub-item">&#8226; 数据处理软件②数据分析软件③数据显示软件</div></div></div>
+</div></div>
+</div></div>
+</div>
+<div id="tab-overview" style="display:none"><h2>&#x1F4D0; 四层知识金字塔</h2><p style="color:#999;margin-bottom:16px">从基础到应用，逐层递进</p><div class="pyramid-wrap"><div class="pyramid-tier"><div class="pyramid-node tier4" onclick="document.getElementById('ch-9').scrollIntoView({behavior:'smooth'})">Ch9 国际</div><div class="pyramid-node tier4" onclick="document.getElementById('ch-10').scrollIntoView({behavior:'smooth'})">Ch10 智能</div></div><div class="pyramid-label">&#9650; 国际 &#9650;</div><div class="pyramid-arrow">&#9650;</div><div class="pyramid-tier"><div class="pyramid-node tier3" onclick="document.getElementById('ch-6').scrollIntoView({behavior:'smooth'})">Ch6 成本</div><div class="pyramid-node tier3" onclick="document.getElementById('ch-7').scrollIntoView({behavior:'smooth'})">Ch7 安全</div><div class="pyramid-node tier3" onclick="document.getElementById('ch-8').scrollIntoView({behavior:'smooth'})">Ch8 绿色</div></div><div class="pyramid-label">&#9650; 安全 &#9650;</div><div class="pyramid-arrow">&#9650;</div><div class="pyramid-tier"><div class="pyramid-node tier2" onclick="document.getElementById('ch-4').scrollIntoView({behavior:'smooth'})">Ch4 进度</div><div class="pyramid-node tier2" onclick="document.getElementById('ch-5').scrollIntoView({behavior:'smooth'})">Ch5 质量</div></div><div class="pyramid-label">&#9650; 控制 &#9650;</div><div class="pyramid-arrow">&#9650;</div><div class="pyramid-tier"><div class="pyramid-node tier1" onclick="document.getElementById('ch-1').scrollIntoView({behavior:'smooth'})">Ch1 组织</div><div class="pyramid-node tier1" onclick="document.getElementById('ch-2').scrollIntoView({behavior:'smooth'})">Ch2 体系</div><div class="pyramid-node tier1" onclick="document.getElementById('ch-3').scrollIntoView({behavior:'smooth'})">Ch3 合同</div></div><div class="pyramid-label">&#9650; 组织 &#9650;</div></div></div>
+<div id="tab-lifecycle" style="display:none"><h2>&#x1F504; 知识流程</h2><p style="color:#999;margin-bottom:16px">按学习路径排列各章</p><div class="lc-wrap"><div class="lc-flow"><div class="lc-stage"><div class="lc-stage-header" style="background:#5a8ab5">组织</div><div class="lc-stage-body"><span class="ch-tag" style="background:#5a8ab520;color:#5a8ab5;cursor:pointer" onclick="document.getElementById('ch-1').scrollIntoView({behavior:'smooth'})">Ch1<br><small>规划</small></span><span class="ch-tag" style="background:#5a8ab520;color:#5a8ab5;cursor:pointer" onclick="document.getElementById('ch-2').scrollIntoView({behavior:'smooth'})">Ch2<br><small>体系</small></span></div></div><div class="lc-arrow">&#8594;</div><div class="lc-stage"><div class="lc-stage-header" style="background:#5a9a4a">合同</div><div class="lc-stage-body"><span class="ch-tag" style="background:#5a9a4a20;color:#5a9a4a;cursor:pointer" onclick="document.getElementById('ch-3').scrollIntoView({behavior:'smooth'})">Ch3<br><small>招标</small></span></div></div><div class="lc-arrow">&#8594;</div><div class="lc-stage"><div class="lc-stage-header" style="background:#c06050">控制</div><div class="lc-stage-body"><span class="ch-tag" style="background:#c0605020;color:#c06050;cursor:pointer" onclick="document.getElementById('ch-4').scrollIntoView({behavior:'smooth'})">Ch4<br><small>进度</small></span><span class="ch-tag" style="background:#c0605020;color:#c06050;cursor:pointer" onclick="document.getElementById('ch-5').scrollIntoView({behavior:'smooth'})">Ch5<br><small>质量</small></span><span class="ch-tag" style="background:#c0605020;color:#c06050;cursor:pointer" onclick="document.getElementById('ch-6').scrollIntoView({behavior:'smooth'})">Ch6<br><small>成本</small></span></div></div><div class="lc-arrow">&#8594;</div><div class="lc-stage"><div class="lc-stage-header" style="background:#8b6914">安全</div><div class="lc-stage-body"><span class="ch-tag" style="background:#8b691420;color:#8b6914;cursor:pointer" onclick="document.getElementById('ch-7').scrollIntoView({behavior:'smooth'})">Ch7<br><small>安全</small></span><span class="ch-tag" style="background:#8b691420;color:#8b6914;cursor:pointer" onclick="document.getElementById('ch-8').scrollIntoView({behavior:'smooth'})">Ch8<br><small>绿色</small></span></div></div><div class="lc-arrow">&#8594;</div><div class="lc-stage"><div class="lc-stage-header" style="background:#6a4a8a">国际</div><div class="lc-stage-body"><span class="ch-tag" style="background:#6a4a8a20;color:#6a4a8a;cursor:pointer" onclick="document.getElementById('ch-9').scrollIntoView({behavior:'smooth'})">Ch9<br><small>FIDIC</small></span><span class="ch-tag" style="background:#6a4a8a20;color:#6a4a8a;cursor:pointer" onclick="document.getElementById('ch-10').scrollIntoView({behavior:'smooth'})">Ch10<br><small>BIM</small></span></div></div></div></div></div>
+<div id="tab-compare" style="display:none"><h2>&#x2696;&#xFE0F; 易混淆概念对比辨析</h2><p style="color:#999;margin-bottom:16px">一行对比打通章节壁垒 | 共 13 组</p><div class="cmp-wrap"><div class="cmp-title">一、项目管理规划大纲 vs 实施规划</div><table class="cmp-table"><thead><tr><th>类型</th><th>编制时间</th><th>编制主体</th><th>作用</th><th>章节</th></tr></thead><tbody><tr><td><b>管理规划大纲</b></td><td>投标前/签约前</td><td>企业管理层</td><td>纲领性/总体指导</td><td>Ch1§1.3</td></tr><tr><td><b>管理实施规划</b></td><td>开工前</td><td>项目经理部</td><td>操作性/具体实施</td><td>Ch1§1.3</td></tr></tbody></table><div class="cmp-title">二、施工组织设计三类对比</div><table class="cmp-table"><thead><tr><th>类型</th><th>编制主体</th><th>审批人</th><th>适用</th><th>章节</th></tr></thead><tbody><tr><td><b>施工组织总设计</b></td><td>总承包单位</td><td>总承包单位技术负责人</td><td>群体/特大型</td><td>Ch1</td></tr><tr><td><b>单位工程施工组织设计</b></td><td>施工单位</td><td>施工单位技术负责人</td><td>单位工程</td><td>Ch1</td></tr><tr><td><b>施工方案</b></td><td>项目技术负责人</td><td>项目技术负责人</td><td>分部分项(一般)</td><td>Ch1</td></tr></tbody></table><div class="cmp-title">三、DB vs EPC vs CM vs PM 承包模式</div><table class="cmp-table"><thead><tr><th>模式</th><th>特点</th><th>风险承担</th><th>适用</th><th>章节</th></tr></thead><tbody><tr><td><b>DB(设计施工)</b></td><td>设计+施工一体</td><td>承包人</td><td>内容明确</td><td>Ch1</td></tr><tr><td><b>EPC(交钥匙)</b></td><td>设计+采购+施工全包</td><td>承包人最多</td><td>技术成熟</td><td>Ch1</td></tr><tr><td><b>CM(施工管理)</b></td><td>只做管理不做施工</td><td>业主</td><td>缩短工期</td><td>Ch1</td></tr><tr><td><b>PM(项目管理)</b></td><td>全过程管理咨询</td><td>业主</td><td>全过程管理</td><td>Ch1</td></tr></tbody></table><div class="cmp-title">四、横道图 vs 网络图</div><table class="cmp-table"><thead><tr><th>方法</th><th>优点</th><th>缺点</th><th>章节</th></tr></thead><tbody><tr><td><b>横道图(Gantt)</b></td><td>直观易懂/编制简单</td><td>不能表达逻辑/无关键工作</td><td>Ch4</td></tr><tr><td><b>双代号网络图</b></td><td>逻辑清晰/可计算时参</td><td>绘制复杂/需虚工作</td><td>Ch4</td></tr><tr><td><b>单代号网络图</b></td><td>逻辑清晰/无虚工作</td><td>不便绘制时标</td><td>Ch4</td></tr><tr><td><b>双代号时标网络</b></td><td>兼有两者优点/直观</td><td>修改不便</td><td>Ch4</td></tr></tbody></table><div class="cmp-title">五、工期优化 vs 费用优化 vs 资源优化</div><table class="cmp-table"><thead><tr><th>优化类型</th><th>目标</th><th>方法</th><th>章节</th></tr></thead><tbody><tr><td><b>工期优化</b></td><td>压缩至要求工期</td><td>压缩关键工作中时间最短的</td><td>Ch4</td></tr><tr><td><b>费用优化(工期-成本)</b></td><td>寻求最低成本工期</td><td>选直接费率最低的关键工作</td><td>Ch4</td></tr><tr><td><b>资源优化</b></td><td>资源有限-工期最短</td><td>调整非关键工作时差</td><td>Ch4</td></tr></tbody></table><div class="cmp-title">六、赢得值法(挣值法)五参数</div><table class="cmp-table"><thead><tr><th>参数</th><th>公式</th><th>&gt;0含义</th><th>章节</th></tr></thead><tbody><tr><td><b>BCWP(挣得值)</b></td><td>已完成×预算单价</td><td>—</td><td>Ch6</td></tr><tr><td><b>BCWS(计划值)</b></td><td>计划×预算单价</td><td>—</td><td>Ch6</td></tr><tr><td><b>ACWP(实际值)</b></td><td>已完成×实际单价</td><td>—</td><td>Ch6</td></tr><tr><td><b>CV(费用偏差)</b></td><td>BCWP-ACWP</td><td>节支/超支</td><td>Ch6</td></tr><tr><td><b>SV(进度偏差)</b></td><td>BCWP-BCWS</td><td>提前/滞后</td><td>Ch6</td></tr><tr><td><b>CPI(费用绩效)</b></td><td>BCWP÷ACWP</td><td>>1节支/<1超支</td><td>Ch6</td></tr><tr><td><b>SPI(进度绩效)</b></td><td>BCWP÷BCWS</td><td>>1提前/<1滞后</td><td>Ch6</td></tr></tbody></table><div class="cmp-title">七、事故等级分类(质量/安全通用)</div><table class="cmp-table"><thead><tr><th>等级</th><th>死亡</th><th>重伤</th><th>直接损失(万)</th><th>章节</th></tr></thead><tbody><tr><td><b>特别重大</b></td><td>≥30</td><td>≥100</td><td>≥1亿</td><td>Ch5/7</td></tr><tr><td><b>重大</b></td><td>10-29</td><td>50-99</td><td>5000万-1亿</td><td>Ch5/7</td></tr><tr><td><b>较大</b></td><td>3-9</td><td>10-49</td><td>1000万-5000万</td><td>Ch5/7</td></tr><tr><td><b>一般</b></td><td><3</td><td><10</td><td><1000万</td><td>Ch5/7</td></tr></tbody></table><div class="cmp-title">八、总价 vs 单价 vs 成本加酬金合同</div><table class="cmp-table"><thead><tr><th>方式</th><th>风险</th><th>适用</th><th>章节</th></tr></thead><tbody><tr><td><b>总价合同</b></td><td>承包人(量价)</td><td>工程量小/工期短/技术不复杂</td><td>Ch3</td></tr><tr><td><b>单价合同</b></td><td>量(业主)价(承包人)分担</td><td>工程量不确定/工期长</td><td>Ch3</td></tr><tr><td><b>成本加酬金</b></td><td>业主大部分</td><td>紧急/新型/R&D项目</td><td>Ch3</td></tr></tbody></table><div class="cmp-title">九、五种工程担保</div><table class="cmp-table"><thead><tr><th>担保</th><th>金额</th><th>期限</th><th>章节</th></tr></thead><tbody><tr><td><b>投标担保</b></td><td>≤估算价2%</td><td>投标有效期内</td><td>Ch3</td></tr><tr><td><b>履约担保</b></td><td>≤中标价10%</td><td>至竣工</td><td>Ch3</td></tr><tr><td><b>预付款担保</b></td><td>等额预付款</td><td>至预付款扣回</td><td>Ch3</td></tr><tr><td><b>支付担保</b></td><td>等额工程款</td><td>至款付清</td><td>Ch3</td></tr><tr><td><b>质量保证金</b></td><td>≤结算价3%</td><td>缺陷责任期满</td><td>Ch3/Ch7</td></tr></tbody></table><div class="cmp-title">十、质量统计分析方法</div><table class="cmp-table"><thead><tr><th>方法</th><th>用途</th><th>特点</th><th>章节</th></tr></thead><tbody><tr><td><b>分层法</b></td><td>数据分类</td><td>基础方法</td><td>Ch5</td></tr><tr><td><b>排列图法(ABC)</b></td><td>找主要问题</td><td>0-80%=A类</td><td>Ch5</td></tr><tr><td><b>因果分析图(鱼刺图)</b></td><td>分析原因</td><td>人机料法环</td><td>Ch5</td></tr><tr><td><b>直方图法</b></td><td>判断稳定性</td><td>正常/异常/孤岛</td><td>Ch5</td></tr><tr><td><b>控制图法</b></td><td>动态监控</td><td>上下控制线</td><td>Ch5</td></tr></tbody></table><div class="cmp-title">十一、危险源三类</div><table class="cmp-table"><thead><tr><th>类型</th><th>特征</th><th>示例</th><th>章节</th></tr></thead><tbody><tr><td><b>第一类(根源)</b></td><td>意外释放的能量或物质</td><td>炸药/高压电/有毒</td><td>Ch7</td></tr><tr><td><b>第二类(状态)</b></td><td>约束失效的不安全因素</td><td>故障/失误/管理缺陷</td><td>Ch7</td></tr><tr><td><b>重大危险源</b></td><td>数量≥临界量</td><td>危险品仓库</td><td>Ch7</td></tr></tbody></table><div class="cmp-title">十二、应急预案三类</div><table class="cmp-table"><thead><tr><th>类型</th><th>内容</th><th>编制</th><th>章节</th></tr></thead><tbody><tr><td><b>综合应急预案</b></td><td>总体程序/机构/职责</td><td>生产经营单位</td><td>Ch7</td></tr><tr><td><b>专项应急预案</b></td><td>针对具体事故类别</td><td>生产经营单位</td><td>Ch7</td></tr><tr><td><b>现场处置方案</b></td><td>针对具体场所/装置</td><td>基层单位/班组</td><td>Ch7</td></tr></tbody></table><div class="cmp-title">十三、成本核算分类</div><table class="cmp-table"><thead><tr><th>分类</th><th>内容</th><th>章节</th></tr></thead><tbody><tr><td><b>按构成要素</b></td><td>人工+材料+机械+管理费+规费+税</td><td>Ch6</td></tr><tr><td><b>按核算对象</b></td><td>单位工程/分部工程成本</td><td>Ch6</td></tr><tr><td><b>按控制需要</b></td><td>预算(计划)/实际/目标(责任)</td><td>Ch6</td></tr></tbody></table></div></div>
+</div>
+</div>
+<script>
+function searchChapters(q){
+  document.querySelectorAll('.highlight').forEach(function(e){e.replaceWith(e.textContent)});
+  if(!q||q.length<1){document.querySelectorAll('.chapter-block').forEach(function(b){b.style.display=''});document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('ch-dim','ch-match')});return}
+  var ql=q.toLowerCase(),mc=0;
+  document.querySelectorAll('.chapter-block').forEach(function(b){
+    if(b.textContent.toLowerCase().includes(ql)){
+      b.style.display='';b.querySelector('.ch-body').style.display='block';b.querySelector('.ch-header').classList.add('open');
+      b.querySelectorAll('.section-body').forEach(function(s){s.style.display='block'});
+      mc++;
+    }else{b.style.display='none'}
+  });
+  document.getElementById('search-result').textContent=mc>0?'找到 '+mc+' 个章节':'未找到';
+  document.getElementById('search-result').style.display='block';
+}
+
+function switchTab(t){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  var labels={'tree':'树形','overview':'关系','lifecycle':'流程','compare':'对比'};
+  Array.from(document.querySelectorAll('.tab-btn')).find(function(b){return b.textContent.includes(labels[t])}).classList.add('active');
+  ['tab-tree','tab-overview','tab-lifecycle','tab-compare'].forEach(function(id){document.getElementById(id).style.display='none'});
+  document.getElementById('tab-'+t).style.display='block';
+}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('open')}
+</script>
+</body>
+</html>
