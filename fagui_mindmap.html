@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>建设工程法规 — 讲义全章节思维导图 | 王欣·深度精讲</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f8f5f0;color:#3a2f28}
+#app{display:flex;height:100vh}
+#sidebar{width:280px;background:#2c2416;color:#e8dcc8;overflow-y:auto;flex-shrink:0}
+#sidebar h1{padding:20px 16px;font-size:18px;border-bottom:1px solid #5a4a32;line-height:1.5}
+#sidebar h1 small{font-size:12px;color:#a09070}
+#sidebar .nav-item{padding:10px 16px;cursor:pointer;font-size:13px;border-left:3px solid transparent;transition:.2s;display:flex;justify-content:space-between}
+#sidebar .nav-item:hover{background:#3a3020;border-left-color:#c9a96e}
+#sidebar .nav-item.active{background:#4a3a20;border-left-color:#f0c040;font-weight:bold}
+#sidebar .nav-item .score{font-size:11px;color:#a09070;white-space:nowrap}
+#sidebar .legend{padding:12px 16px;font-size:11px;line-height:1.8;border-top:1px solid #5a4a32;margin-top:auto}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+#main{flex:1;overflow:auto;padding:20px 30px}
+#main h2{font-size:20px;color:#8b6914;border-bottom:2px solid #d4a574;padding-bottom:8px;margin-bottom:20px}
+.chapter-block{margin-bottom:10px;border:1px solid #e0d0b8;border-radius:6px;overflow:hidden}
+.ch-header{display:flex;align-items:center;padding:12px 16px;background:#f5e8d0;cursor:pointer;user-select:none}
+.ch-header:hover{background:#ecd8b8}
+.ch-header .ch-num{width:36px;height:36px;background:#8b6914;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;margin-right:12px;flex-shrink:0}
+.ch-header .ch-title{flex:1;font-size:15px;font-weight:bold;color:#5a3a10}
+.ch-header .ch-meta{font-size:12px;color:#999;margin:0 10px}
+.ch-header .ch-arrow{font-size:18px;color:#a09070;transition:.3s}
+.ch-header.open .ch-arrow{transform:rotate(90deg)}
+.ch-body{display:none;padding:0 0 0 64px}
+.ch-body.open{display:block}
+.section{margin:8px 0;border-left:3px solid #d4a574;padding:6px 12px}
+.section-header{font-size:14px;font-weight:bold;color:#6b4410;cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px}
+.section-header:hover{color:#8b6914}
+.section-header .star{font-size:11px;color:#d4a574}
+.section-body{display:none;padding:4px 0 8px 16px;font-size:13px;color:#555;line-height:1.9}
+.section-body.open{display:block}
+.point{padding:4px 8px;margin:2px 0;border-radius:3px;font-size:12.5px}
+.point.f1{background:#fff8e8}
+.point.f2{background:#ffe8c8}
+.point.f3{background:#ffd8a0}
+.point-tag{display:inline-block;padding:1px 5px;border-radius:2px;font-size:10px;margin-right:6px}
+.tag-1{background:#e8e0d0;color:#888}
+.tag-2{background:#f0c878;color:#6b4410}
+.tag-3{background:#e8a040;color:#fff}
+.sub-point{padding:2px 8px 2px 24px;font-size:12px;color:#777}
+.sub-point:before{content:"◦ ";color:#c9a96e}
+.include-note{display:block;margin:4px 0 4px 16px;padding:3px 8px;background:#e8f4e8;border-left:3px solid #5a9a4a;font-size:11px;color:#3a6a2a;border-radius:0 4px 4px 0}
+.include-note b{color:#2a5a1a}
+.cross-note{display:block;margin:4px 0 4px 16px;padding:3px 8px;background:#fce8e8;border-left:3px solid #d44a4a;font-size:11px;color:#8a2a2a;border-radius:0 4px 4px 0}
+.cross-note b{color:#6a1a1a}
+#detail-panel{position:fixed;bottom:20px;right:20px;width:380px;max-height:60vh;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:100;display:none;overflow-y:auto}
+#detail-panel .panel-header{padding:12px 16px;background:#f5e8d0;border-radius:8px 8px 0 0;font-weight:bold;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+#detail-panel .panel-close{cursor:pointer;font-size:18px;color:#999}
+#detail-panel .panel-body{padding:12px 16px;font-size:13px;line-height:1.8}
+.quick-jump{position:fixed;top:16px;right:20px;z-index:50;display:flex;gap:6px;flex-wrap:wrap;max-width:340px}
+.quick-jump button{padding:4px 10px;font-size:11px;border:1px solid #d4a574;background:#fff;color:#8b6914;border-radius:3px;cursor:pointer}
+.quick-jump button:hover{background:#f5e8d0}
+.controls{position:fixed;top:48px;right:20px;z-index:50}
+.controls button{padding:4px 12px;font-size:11px;border:1px solid #ccc;background:#fff;color:#555;border-radius:3px;cursor:pointer;margin-left:4px}
+.controls button:hover{background:#f0f0f0}
+/* Tab bar */
+.tab-bar{display:flex;gap:4px;padding:12px 0;border-bottom:2px solid #e0d0b8;margin-bottom:16px;position:sticky;top:0;background:#f8f5f0;z-index:30}
+.tab-btn{padding:8px 20px;border:1px solid #d4a574;background:#fff;color:#8b6914;border-radius:20px;cursor:pointer;font-size:13px;transition:.2s;font-weight:bold}
+.tab-btn:hover{background:#f5e8d0}
+.tab-btn.active{background:#8b6914;color:#fff;border-color:#8b6914}
+/* Pyramid view */
+.pyramid-wrap{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 0;max-width:900px;margin:0 auto}
+.pyramid-tier{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.pyramid-node{padding:12px 18px;border-radius:8px;text-align:center;font-size:13px;cursor:pointer;transition:.2s;border:2px solid transparent;min-width:100px}
+.pyramid-node:hover{transform:scale(1.05);z-index:10}
+.pyramid-node.tier1{background:#e8f0ff;border-color:#5a8ab5;color:#2a4a6a}
+.pyramid-node.tier2{background:#e8ffe8;border-color:#5a9a4a;color:#2a5a1a}
+.pyramid-node.tier3{background:#fff8e8;border-color:#d4a040;color:#6a4a10}
+.pyramid-node.tier4{background:#ffe8e8;border-color:#c06050;color:#6a2020}
+.pyramid-label{font-size:14px;font-weight:bold;color:#8b6914;text-align:center;padding:4px 0;width:100%}
+.pyramid-arrow{font-size:20px;color:#c0b0a0;text-align:center}
+/* Lifecycle view */
+.lc-wrap{padding:20px;overflow-x:auto}
+.lc-flow{display:flex;align-items:flex-start;gap:0;min-width:1100px;padding-bottom:30px}
+.lc-stage{flex:1;min-width:100px;text-align:center;padding:0 4px}
+.lc-stage-header{padding:10px 6px;border-radius:8px 8px 0 0;font-size:13px;font-weight:bold;color:#fff}
+.lc-stage-body{padding:8px 4px;background:#faf6f0;border:1px solid #e0d0b8;border-top:none;border-radius:0 0 8px 8px;min-height:60px;font-size:11px;line-height:1.6}
+.lc-stage .ch-tag{display:block;padding:2px 4px;margin:2px 0;border-radius:3px;font-size:10px;cursor:pointer}
+.lc-arrow{display:flex;align-items:center;justify-content:center;font-size:24px;color:#c0b0a0;min-width:24px}
+/* Matrix view */
+.mx-wrap{overflow-x:auto;padding:10px}
+.mx-table{border-collapse:collapse;font-size:12px;width:100%;min-width:900px}
+.mx-table th,.mx-table td{border:1px solid #e0d0b8;padding:6px 8px;text-align:center}
+.mx-table th{background:#f5e8d0;font-size:11px;white-space:nowrap;position:sticky;top:0}
+.mx-table .concept{text-align:left;font-weight:bold;white-space:nowrap;background:#faf6f0;position:sticky;left:0}
+.mx-table .dot{display:inline-block;width:18px;height:18px;border-radius:50%}
+.mx-table .dot.high{background:#e8a040}
+.mx-table .dot.med{background:#f0c878}
+.mx-table .dot.low{background:#e0e0d0}
+.mx-legend{display:flex;gap:16px;padding:8px;font-size:11px;color:#888}
+/* Annotation arrows for lifecycle */
+.lc-annot{font-size:10px;color:#888;text-align:center;padding:4px;font-style:italic}
+/* Search */
+.search-wrap{padding:12px 16px;border-bottom:1px solid #5a4a32}
+.search-wrap input{width:100%;padding:8px 10px;border:1px solid #5a4a32;border-radius:4px;background:#3a3020;color:#e8dcc8;font-size:13px;outline:none}
+.search-wrap input::placeholder{color:#a09070}
+.search-result{margin:2px 0;font-size:11px;color:#c9a96e;text-align:center;display:none}
+/* Highlight for search */
+.highlight{background:#ffe040;color:#3a2f28;border-radius:2px;padding:0 1px}
+.ch-dim{opacity:.3}
+.ch-match{border-left-color:#f0c040!important;background:#4a3a20!important}
+/* Compare table */
+.cmp-wrap{padding:10px 0}
+.cmp-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.cmp-table th{background:#f5e8d0;padding:10px;text-align:left;font-weight:bold;color:#5a3a10;border-bottom:2px solid #d4a574}
+.cmp-table td{padding:8px 10px;border-bottom:1px solid #e8dcc8;vertical-align:top;line-height:1.7}
+.cmp-table tr:hover td{background:#fdf8f0}
+.cmp-table .ch-ref{font-size:11px;color:#8b6914;font-weight:bold}
+.cmp-table .highlight-col{background:#fff8e8}
+.cmp-title{font-size:15px;font-weight:bold;color:#8b6914;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #e0d0b8}
+.result-count{font-size:12px;color:#999;margin-left:8px}
+/* Hamburger */
+.hamburger{display:none;position:fixed;top:10px;left:10px;z-index:200;background:#2c2416;color:#e8dcc8;border:none;font-size:22px;padding:6px 10px;border-radius:6px;cursor:pointer}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90}
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  #sidebar{position:fixed;left:-300px;top:0;bottom:0;z-index:100;transition:left .3s;width:280px}
+  #sidebar.open{left:0}
+  .overlay.open{display:block}
+  .hamburger{display:block}
+  #main{margin-left:0!important;padding:12px 8px}
+  .tab-bar{flex-wrap:nowrap;overflow-x:auto;gap:4px;padding:8px 4px;-webkit-overflow-scrolling:touch}
+  .tab-btn{padding:6px 12px;font-size:11px;white-space:nowrap;flex-shrink:0}
+  .quick-jump{display:none}
+  #tree-controls{display:none}
+  #main h2{font-size:16px}
+  .chapter-block{margin-bottom:6px}
+  .ch-header{padding:8px 10px}
+  .ch-header .ch-num{width:28px;height:28px;font-size:12px}
+  .ch-header .ch-title{font-size:13px}
+  .ch-body.open{padding:0 0 0 20px!important}
+  .section{border-left-width:2px;padding:4px 8px}
+  .section-header{font-size:12px}
+  .section-body.open{padding:2px 0 4px 8px}
+  .point{font-size:11px;padding:3px 6px}
+  .sub-point{font-size:10.5px;padding:1px 6px 1px 16px}
+  .include-note,.cross-note{font-size:10px;margin:2px 0 2px 8px}
+  /* Pyramid mobile */
+  .pyramid-node{padding:8px 10px;font-size:10px;min-width:60px}
+  .pyramid-tier{gap:4px}
+  .pyramid-label{font-size:11px}
+  /* Lifecycle mobile */
+  .lc-flow{min-width:900px}
+  .lc-stage-header{font-size:10px;padding:6px 2px}
+  .lc-stage-body{font-size:9px}
+  .lc-arrow{font-size:16px;min-width:16px}
+  /* Matrix mobile */
+  .mx-table{font-size:10px;min-width:700px}
+  .mx-table th,.mx-table td{padding:3px 4px}
+  .mx-table .dot{width:14px;height:14px}
+  /* Compare mobile */
+  .cmp-table{font-size:10px}
+  .cmp-table th,.cmp-table td{padding:5px 6px}
+  .cmp-title{font-size:13px}
+  /* Detail panel */
+  #detail-panel{width:calc(100vw-16px);right:8px;left:8px;bottom:8px;max-height:50vh}
+  /* Controls sticky */
+  .controls{top:auto;bottom:10px;right:8px}
+  .controls button{font-size:10px;padding:3px 8px}
+  /* Search in sidebar */
+  .search-wrap input{font-size:12px;padding:6px 8px}
+  .back-to-top{display:none;position:fixed;bottom:20px;right:20px;z-index:50;width:40px;height:40px;border-radius:50%;background:#8b6914;color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  @media(max-width:768px){.back-to-top{display:block}}
+}
+
+</style>
+</head>
+<body>
+<div id="app">
+<button class="hamburger" onclick="toggleSidebar()">☰</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div id="sidebar">
+<h1>📖 建设工程法规<br><small>王欣 · 深度精讲讲义 · 10章</small></h1>
+<div class="search-wrap">
+<input type="text" id="search-input" placeholder="🔍 搜索考点（如：连带责任、不可抗力...）" oninput="doSearch(this.value)" onfocus="if(window.innerWidth<=768)document.getElementById('sidebar').classList.add('open');document.getElementById('overlay').classList.add('open')">
+<div class="search-result" id="search-result"></div>
+</div>
+<div id="nav-list"></div>
+<div class="legend">
+<div><span class="legend-dot" style="background:#e8e0d0"></span> ※ 了解 (低频)</div>
+<div><span class="legend-dot" style="background:#f0c878"></span> ※※ 掌握 (中频)</div>
+<div><span class="legend-dot" style="background:#e8a040"></span> ※※※ 重点 (高频)</div>
+<div style="margin-top:4px"><span class="legend-dot" style="background:#e8f4e8;border:2px solid #5a9a4a"></span> 🟢 被包含关系</div>
+<div><span class="legend-dot" style="background:#fce8e8;border:2px solid #d44a4a"></span> 🔴 跨章关联</div>
+</div>
+</div>
+<div id="main">
+<div class="tab-bar">
+<button class="tab-btn active" onclick="switchTab('tree')">🌲 树形导图</button>
+<button class="tab-btn" onclick="switchTab('overview')">🔗 关系总览</button>
+<button class="tab-btn" onclick="switchTab('lifecycle')">🔄 全生命周期</button>
+<button class="tab-btn" onclick="switchTab('matrix')">📊 概念矩阵</button>
+<button class="tab-btn" onclick="switchTab('compare')">⚖️ 对比辨析</button>
+</div>
+<div class="quick-jump" id="quick-jump"></div>
+<div class="controls" id="tree-controls">
+<button onclick="expandAll()">全部展开</button>
+<button onclick="collapseAll()">全部折叠</button>
+</div>
+<div id="tab-tree"><div id="content"></div></div>
+<div id="tab-overview" style="display:none"><div id="content-overview"></div></div>
+<div id="tab-lifecycle" style="display:none"><div id="content-lifecycle"></div></div>
+<div id="tab-matrix" style="display:none"><div id="content-matrix"></div></div>
+<div id="tab-compare" style="display:none"><div id="content-compare"></div></div>
+</div>
+<div id="detail-panel"><div class="panel-header"><span id="panel-title">详情</span><span class="panel-close" onclick="document.getElementById('detail-panel').style.display='none'">✕</span></div><div class="panel-body" id="panel-body"></div></div>
+<button class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="回到顶部">↑</button>
+</div>
+
+<script>
+// ===== COMPLETE LECTURE NOTE DATA =====
+const data = [
+  {
+    id:1, name:"第1章 建设工程基本法律知识", score:"17-22分",
+    nav:"Ch1",
+    sections:[
+      {id:"1.1",name:"1.1 建设工程法律基础",score:"2分", stars:2, points:[
+        {name:"法律部门和法律体系",star:1, subs:["七大法律部门：宪法/民法商法/行政法/经济法/社会法/刑法/诉讼与非诉讼程序法","《民法典》《公司法》《招标投标法》属民法商法","《建筑法》属经济法；《土地管理法》属行政法"]},
+        {name:"法的形式",star:3, subs:["宪法>法律>行政法规>地方性法规>部门规章/地方政府规章","行政法规=国务院+**条例","部门规章=部委+规定/办法/实施细则"]},
+        {name:"法的效力层级",star:3, subs:["上位法优于下位法","同一机关：新优于旧、特别优于一般","不同机关冲突：地方法规vs部门规章→国务院裁决","部门规章之间冲突→国务院裁决","授权法规vs法律冲突→全国人大常委会裁决"]},
+        {name:"法的备案",star:1, subs:["省级地方法规→报全国人大常委会+国务院备案"]}
+      ]},
+      {id:"1.2",name:"1.2 建设工程物权制度",score:"3-4分", stars:3, points:[
+        {name:"物权设立/变更/转让/消灭",star:3, subs:["不动产→登记生效(登记机构所在地)","动产→交付生效","船舶/航空器/机动车→交付生效+登记对抗","预告登记→90日内未申请登记则失效","物权效力与合同效力区分(物权≠合同)"],
+          includes:[{from:"Ch5 §5.1 合同效力",why:"合同效力由《民法典·合同编》评价，物权效力由《民法典·物权编》评价"}]},
+        {name:"物权的保护",star:1, subs:["和解/调解/仲裁/诉讼","确认权利/返还原物/排除妨害/消除危险/修理重做更换","保护方式可单独或合并适用"]},
+        {name:"物权种类(所有权/用益物权/担保物权)",star:3, subs:[
+          "所有权：占有+使用+收益+处分(核心)四项权能",
+          "用益物权：建设用地使用权/宅基地使用权/土地承包经营权/地役权/居住权",
+          "建设用地使用权→出让或划拨/登记设立/住宅自动续期",
+          "地役权→合同生效设立/未登记不得对抗善意第三人",
+          "居住权→书面合同/登记设立/不得转让继承",
+          "担保物权：抵押权(不转移占有)/质权(转移占有)/留置权(法定)",
+          "可抵押：建筑物/建设用地使用权/海域使用权/在建建筑→登记设立",
+          "动产抵押→合同生效设立+登记对抗",
+          "不得抵押：土地所有权/公益设施/权属不明财产/查封财产",
+          "留置权仅限于动产/建设工程不适用留置权"
+        ],
+          includes:[{from:"Ch1 §1.5 税收/Ch5 §5.2 定金",why:"留置权不适用于建设工程→以优先受偿权替代(Ch5)"}]},
+        {name:"占有",star:1, subs:["自主占有vs他主占有","有权占有vs无权占有(善意/恶意)","返还原物请求权→侵占日起1年内行使"]}
+      ]},
+      {id:"1.3",name:"1.3 建设工程知识产权制度",score:"2-3分", stars:2, points:[
+        {name:"知识产权法律特征",star:1},
+        {name:"知识产权常见种类",star:3, subs:[
+          "专利权：发明20年/实用新型10年/外观设计15年(均自申请日起)",
+          "著作权：自然人→作者死后50年；法人→首次发表后50年",
+          "单位作品→著作权归单位；特殊职务作品→作者署名权+单位其他权利",
+          "委托作品→有约从约/无约归受托人",
+          "商标权：有效期10年(核准注册日)/可续展/使用权+禁止权",
+          "商业秘密：秘密性+价值性+保密性→受《反不正当竞争法》保护"
+        ]}
+      ]},
+      {id:"1.4",name:"1.4 建设工程侵权责任制度",score:"3-4分", stars:3, points:[
+        {name:"侵权责任主体",star:3, subs:["归责原则：过错/无过错/过错推定/公平责任","连带责任：共同侵权/教唆帮助/共同危险/分别侵权(均足以致损)","免责：受害人过错/第三人过错/自甘风险/自助行为"]},
+        {name:"损害赔偿",star:1, subs:["协商→一次性支付→分期支付(可担保)","范围含医疗/护理/残疾赔偿/死亡赔偿"]},
+        {name:"产品责任",star:2, subs:["生产者和销售者不真正连带责任","被侵权人可择一或同时请求赔偿"]},
+        {name:"建筑物和物件损害责任",star:3, subs:[
+          "倒塌塌陷→建设单位+施工单位连带(无质量缺陷除外)",
+          "脱落坠落→所有人/管理人/使用人(过错推定)",
+          "不明抛掷物→可能加害的建筑物使用人补偿(公安调查)",
+          "地面施工→施工人证明已设明显标志+安全措施则免责"
+        ],
+          includes:[{from:"Ch7 §7.4 质量保修",why:"建筑物倒塌→质量缺陷导致→衔接Ch7质量责任"},{from:"Ch6 §6.1 安全",why:"施工致害同时涉及Ch6安全生产"}]}
+      ]},
+      {id:"1.5",name:"1.5 建设工程税收制度",score:"3-5分", stars:3, points:[
+        {name:"企业所得税",star:2, subs:["纳税人：企业+其他组织(不含个人独资/合伙)","居民企业25%/高新技术企业15%/非居民20%","不征税收入：财政拨款/行政事业性收费/政府性基金"]},
+        {name:"增值税(变化)",star:2, subs:["仅对增值额征税(价外税)","一般纳税人：销项-进项/小规模：销售额×3%","不得抵扣：集体福利/个人消费/非正常损失","免征：自产农产品/古旧图书/科研进口/外国政府援助"]},
+        {name:"环境保护税",star:2, subs:["大气/水→污染当量数；固废→排放量；噪声→超标分贝数","暂免：城乡污水处理达标/机动车/综合利用固废/农业生产"],
+          includes:[{from:"Ch8 §8.1 环保制度",why:"环保税计税对象与Ch8水/气/固废/噪声污染防治制度直接衔接"}]},
+        {name:"个人所得税",star:3, subs:["综合所得(3%-45%)/经营所得(5%-35%)/利息股息财产租赁20%","免征：国债利息/保险赔款/抚恤金/军转费","减征：残疾/孤老/自然灾害重大损失"]},
+        {name:"其他相关税",star:3, subs:["城建税：以增值税+消费税为计税依据(市区7%/县城5%/其他1%)","房产税：自用1.2%(减除10-30%)/出租12%/个人非营业免","城镇土地使用税/车船税/印花税/契税"]}
+      ]},
+      {id:"1.6",name:"1.6 建设工程行政法律制度",score:"2-3分", stars:2, points:[
+        {name:"行政法基本原则",star:1, subs:["依法行政(首要)/行政合理(比例原则)/程序正当/诚信原则/高效便民/监督与救济"]},
+        {name:"行政许可/行政处罚/行政强制",star:3, subs:[
+          "行政许可→市场自律/事后监督/自主决定可不设许可",
+          "行政处罚种类：声誉罚(警告)/财产罚(罚款没收)/行为罚(吊证停产)/人身罚(拘留)",
+          "简易程序：个人≤200/单位≤3000(当场决定)",
+          "听证范围：较大罚款/没收较大财物/吊证/停产/责令关闭",
+          "行政强制措施(暂时)：限制人身/查封/扣押/冻结",
+          "行政强制执行(正式)：加处罚款/划拨/拍卖/排除妨碍/代履行",
+          "限制人身自由的强制措施只能由法律设定",
+          "行政强制vs行政处罚vs刑罚→三组对比(罚款vs罚金/没收违法所得vs没收财产/拘留vs拘役)"
+        ],
+          includes:[{from:"Ch3 §3.1 施工许可/Ch6 §6.3 安全许可",why:"施工许可/安全许可是典型行政许可→行政许可制度在Ch1奠定基础"}]}
+      ]},
+      {id:"1.7",name:"1.7 建设工程刑事法律制度",score:"2-3分", stars:2, points:[
+        {name:"法的特征和基本原则",star:1, subs:["罪刑法定/人人平等/罪责刑相适应"]},
+        {name:"犯罪构成和刑罚裁量",star:2, subs:["缓刑：拘役+3年以下/5年内无再犯/不适用累犯+首要分子","减刑：应当(重大立功6种)vs可以(悔改/立功)"]},
+        {name:"刑法种类",star:3, subs:["主刑：管制/拘役/有期徒刑/无期徒刑/死刑","附加刑：罚金/剥夺政治权利/没收财产/驱逐出境","关键区分：罚款(行政)vs罚金(刑)/没收违法所得(行政)vs没收财产(刑)/拘留(行政)vs拘役(刑)"]},
+        {name:"建设工程常见犯罪",star:2, subs:[
+          "重大责任事故罪→违反安全管理规定/严重3年以下",
+          "强令组织违章冒险作业罪→明知隐患不排除/严重5年以下",
+          "工程重大安全事故罪→降低质量标准/严重5年以下",
+          "重大劳动安全事故罪→安全设施条件不符合/严重3年以下",
+          "串通投标罪→3年以下+拘役+罚金"
+        ],
+          includes:[{from:"Ch4 §4.2 招标投标",why:"串通投标罪→Ch4招标投标中的串通行为认定"},{from:"Ch6 §6.5 安全事故",why:"重大责任事故等罪名→Ch6安全事故制度衔接"}]}
+      ]}
+    ]
+  },
+  {
+    id:2, name:"第2章 建筑市场主体制度", score:"12分",
+    nav:"Ch2",
+    sections:[
+      {id:"2.1",name:"2.1 建筑市场主体的一般规定",score:"3-4分", stars:3, points:[
+        {name:"自然人/法人和非法人组织分类",star:3, subs:["法人应具备:名称/组织机构/住所/财产或经费","法人分类:营利法人(登记)/非营利法人/特别法人","非法人组织:个人独资企业/合伙企业/专业服务机构"]},
+        {name:"企业法人和项目经理部关系",star:2, subs:["项目经理部→非法人/一次性弹性现场机构","项目经理→企业内部岗位职务","法律后果均由企业法人承担"]},
+        {name:"代理的法律特征",star:2, subs:["以被代理人名义/代理权限内/独立意思表示/后果归被代理人"]},
+        {name:"代理的种类",star:1, subs:["委托代理(意定)/法定代理","委托可书面或口头/数人可为同一事项代理人","人身性质行为不可代理"]},
+        {name:"代理的终止",star:2, subs:["期满或事务完成/取消或辞去/丧失行为能力/死亡/法人终止"]},
+        {name:"转代理",star:1, subs:["需被代理人同意/情况紧急+维护利益可例外"]},
+        {name:"无权代理VS表见代理",star:2, subs:["无权代理→效力待定(追认后有效)","表见代理→有效(被代理人过失+相对人善意)","表见代理三要件:A过失+B无权+C善意"],
+          includes:[{from:"Ch5 §5.1 合同效力",why:"表见代理导致合同对被代理人直接有效→影响Ch5合同效力判断"}]},
+        {name:"代理不当或违法行为",star:2, subs:["代理人知道违法仍代理→代理人和被代理人连带责任"]}
+      ]},
+      {id:"2.2",name:"2.2 建筑业企业资质制度",score:"2-3分", stars:3, points:[
+        {name:"资质条件",star:1, subs:["净资产/主要人员/业绩/技术装备(4个条件)"]},
+        {name:"资质序列/类别/等级",star:1, subs:["施工综合资质(10类不分级)/施工总承包(13类甲乙级)/专业承包(18类)/专业作业(备案制)"]},
+        {name:"资质证书管理",star:3, subs:["有效期5年/届满3月前申请/逾期未决定视为准予延续","撤回(不再符合)/撤销(非法取得)/吊销(违法处罚)/注销","不良记录→1年内不批升级增项(12种情形)"],
+          includes:[{from:"Ch4 §4.2 招标/Ch4 §4.1 发承包",why:"资质是不良行为的重要分类→与Ch4资质不良衔接"}]},
+        {name:"禁止行为",star:1, subs:["禁止无资质/越级/借入资质/借出资质(挂靠)"]}
+      ]},
+      {id:"2.3",name:"2.3 建造师注册执业制度",score:"2-3分", stars:2, points:[
+        {name:"建造师考试",star:2, subs:["违纪：一般(当次成绩无效)/严重(5年记录)/特别严重(长期)"]},
+        {name:"建造师注册",star:2, subs:["初始注册/延续(3年+30日前)/变更/增项","不予注册11条：无行为能力/在两个单位/刑事处罚未满/吊销未满2年/超65岁等"]},
+        {name:"建造师执业",star:2, subs:["不得同时任两个项目负责人(3种例外)","担任期间不得更换(3种例外:解约/发包方同意/不可抗力)","可在勘察/设计/监理/造价咨询等单位执业"]},
+        {name:"建造师权利义务",star:2, subs:["权利8项(使用名称/执业/签章/保管证书/报酬等)","义务7项(遵守法规/执行标准/保密/回避等)"]}
+      ]},
+      {id:"2.4",name:"2.4 建筑市场主体信用体系建设",score:"2-3分", stars:3, points:[
+        {name:"信用体系",star:2, subs:["基本信息(长期)/优良信用(3年)/不良信用(6月-3月)"]},
+        {name:"诚信行为公布",star:2, subs:["公布期限≥行政处罚期限/可缩短延长≥3月"]},
+        {name:"黑名单",star:1, subs:["虚假材料骗资质/转包出借受罚/重大事故/拖欠工程款且拒不履行"]},
+        {name:"不良行为",star:3, subs:["五大类：资质不良(6种)/承揽业务(5种)/工程质量(5种)/工程安全(24种)/拖欠工资(1种)","建造师不良行为共9条"],
+          includes:[{from:"Ch4 §4.1 发承包/Ch6 §6 安全/Ch7 §7 质量",why:"五大类不良行为分别对应Ch4、Ch6、Ch7的核心法律制度"}]}
+      ]},
+      {id:"2.5",name:"2.5 营商环境制度",score:"1-2分", stars:2, points:[
+        {name:"优化营商环境相关法条",star:2, subs:["双随机一公开：随机抽取检查对象+随机选派执法人员+结果向社会公开","招投标专项整治：禁止对不同所有制企业设置不合理限制和壁垒"]},
+        {name:"中小企业款项支付保障",star:2, subs:["机关事业：交付日30日内支付(≤60日)","大型企业：交付日60日内支付","迟延支付→逾期利息+失信惩戒"]}
+      ]}
+    ]
+  },
+  {
+    id:3, name:"第3章 建设工程许可法律制度", score:"4-6分",
+    nav:"Ch3",
+    sections:[
+      {id:"3.1",name:"3.1 建设工程规划许可",score:"2-3分", stars:2, points:[
+        {name:"规划许可证申请/核发",star:2, subs:["城市规划区→市/县规划主管部门→工程规划许可证","乡村规划区→乡村建设规划许可证","临时建设→批准(影响交安/市容/近期规划不得批)→期限内自行拆除"]},
+        {name:"工程规划的变更/验收/监督",star:2, subs:["变更→向规划部门申请","规划核实→未经核实不得组织竣工验收","竣工后6月内→报送竣工验收资料"],
+          includes:[{from:"Ch7 §7.5 竣工验收",why:"规划核实是竣工验收前置条件→Ch7验收制度"}]}
+      ]},
+      {id:"3.2",name:"3.2 建设工程施工许可",score:"2-3分", stars:3, points:[
+        {name:"施工许可证VS开工报告",star:1, subs:["施工许可(多)→房屋市政/开工报告(少)→大中型项目","申领单位：建设单位(非施工单位)"]},
+        {name:"不需要办理",star:3, subs:["限额以下(<30万或<300m²)/抢险救灾/临时建筑/农民自建/文物修缮/军用房屋"]},
+        {name:"法定批准条件",star:3, subs:["用地批准+规划许可证+拆迁符合进度+确定施工企业+施工图审查合格+资金落实+质安措施"],
+          includes:[{from:"Ch6 §6.3 安全生产许可证",why:"安全生产许可证是施工许可证的前提条件"}]},
+        {name:"证书管理",star:2, subs:["开工:3月内/延期2次各3月→超期废止","中止:1月内报告/满1年→核验","开工报告:6月内/超6月不予延期/停工满6月重新办理"]}
+      ]}
+    ]
+  },
+  {
+    id:4, name:"第4章 建设工程发承包法律制度", score:"10-12分",
+    nav:"Ch4",
+    sections:[
+      {id:"4.1",name:"4.1 建设工程发承包的一般规定",score:"2-3分", stars:3, points:[
+        {name:"工程总承包",star:2, subs:["EPC/D-B/E-P/P-C模式","总承包单位不得是代建/项目管理/监理/造价咨询/招标代理"]},
+        {name:"共同承包",star:1},
+        {name:"工程分包",star:3, subs:["合法分包：总承包→专业承包→劳务分包","违法分包：再分包/分包给个人/名为劳务实为分包","转包：全部转/支解后以分包名义转","总分包→就分包工程对建设单位连带责任"],
+          includes:[{from:"Ch6 §6.3/Ch7 §7.4",why:"总分包安全责任(Ch6)+质量责任(Ch7)→三重连带责任"}]},
+        {name:"违法行为(转包/挂靠)",star:2, subs:["挂靠认定：看五类人员归属(项目负责人/技术负责人/核算/质量/安全)"]}
+      ]},
+      {id:"4.2",name:"4.2 建设工程招标投标制度",score:"5-6分", stars:3, points:[
+        {name:"招投标要求",star:2, subs:["必须招标：施工≥400万/货物≥200万/服务≥100万+国有资金/国际贷款","公开招标(原则)/邀请招标(技术复杂+少量投标人)","可以不招标：不可替代专利/国家秘密/自建/原中标人续购"]},
+        {name:"建设工程招标",star:3, subs:["资格预审(通过<3个→重新招标)","招标文件发售≥5日","修改招标文件→投标截止15日前书面通知","投标保证金≤估算价2%"]},
+        {name:"建设工程投标",star:3, subs:["联合体→各方均具能力/按低资质/连带责任/不得更换成员","属于串通(协商放弃/行贿)/视为串通(报价规律差异/混装/同一人)","招标人与投标人串通(泄密/内定/暗示)"],
+          includes:[{from:"Ch1 §1.7 刑法",why:"串通投标罪→Ch1犯罪构成+Ch4行为认定"}]},
+        {name:"开标/评标/中标",star:3, subs:["开标=投标截止时间/密封检查/记录存档","否决投标：无协议/超限价/未盖章/未实质响应","拒收：未通过资格预审/未密封/逾期","中标候选人≤3人/履约保证金≤中标价10%"]},
+        {name:"招标投诉异议",star:2, subs:["开标异议→当场提出","评标结果→先向招标人异议→再向监督部门投诉"]}
+      ]},
+      {id:"4.3",name:"4.3 非招标采购制度",score:"2-3分", stars:2, points:[
+        {name:"竞争性谈判VS竞争性磋商",star:2},
+        {name:"询价",star:2, subs:["适用:规格统一/现货充足/价格变化小"]},
+        {name:"单一来源采购",star:1, subs:["唯一供应商/不可预见紧急/配套采购≤原合同10%"]},
+        {name:"框架协议采购",star:3, subs:["封闭式(主要)/开放式","价格优先法→第一阶段入围","集中采购目录内+小额零星可用"]},
+        {name:"合作创新采购方式",star:1}
+      ]}
+    ]
+  },
+  {
+    id:5, name:"第5章 建设工程合同法律制度", score:"13-16分",
+    nav:"Ch5",
+    sections:[
+      {id:"5.1",name:"5.1 合同的基本规定",score:"4-5分", stars:3, points:[
+        {name:"合同的订立",star:2, subs:["合同形式：书面/口头/默示","要约撤回(到达前)vs撤销(承诺前/定承诺期限的不可撤)","未用书面但已履行+对方接受→合同成立"]},
+        {name:"合同的效力",star:3, subs:["无效：违反强制规定/虚假意思/恶意串通","可撤销：欺诈/重大误解(90日)/显失公平(1年)","效力待定：无权代理/限制行为能力","合同无效≠仲裁条款无效(独立原则)"],
+          includes:[{from:"Ch2 §2.1 表见代理",why:"表见代理→合同有效(被代理人承担)"}]},
+        {name:"合同的履行",star:2, subs:["同时履行抗辩权/先履行抗辩权/不安抗辩权","内容不明：协议补充→交易习惯→法定补充"]},
+        {name:"违约责任",star:2, subs:["定金≤合同额20%/超额部分无效/实际交付变更","收受方违约→双倍返还/支付方违约→无权要求返还","定金与损害赔偿可并用","损失赔偿含可得利益","不可抗力免责(迟延后遭遇不免责)"],
+          includes:[{from:"Ch1 §1.2 担保物权",why:"定金(债权担保)vs抵押/质押(物权担保)→不同体系"}]}
+      ]},
+      {id:"5.2",name:"5.2 建设工程施工合同的规定",score:"3-5分", stars:3, points:[
+        {name:"施工合同效力",star:1, subs:["无效：无资质/借资质/应招标未招标/转包/违法分包","验收合格→折价补偿(参照合同约定)"]},
+        {name:"工期/价款纠纷解决",star:3, subs:["开工日期：开工通知>条件具备>实际进场","竣工日期：验收合格日>提交报告日(发包人拖延)>转移占有日(擅自使用)","垫资→约定有效/超LPR4倍部分不支持","优先受偿权：优于抵押权/18个月/仅含工程价款(不含利息违约金)"],
+          includes:[{from:"Ch1 §1.2 留置权",why:"建设工程不适用留置权→以优先受偿权替代(Ch1§1.2.3)"}]},
+        {name:"合同变更/解除",star:2, subs:["变更约定不明→推定为未变更","解除：通知到达生效/承包人转包→发包人可解除","债权转让→通知债务人后对债务人生效"]}
+      ]},
+      {id:"5.3",name:"5.3 相关合同制度",score:"5-6分", stars:3, points:[
+        {name:"买卖合同",star:3, subs:["风险自交付时转移/在途标的物自合同成立时转移","出卖人权利瑕疵担保+质量瑕疵担保义务"],
+          includes:[{from:"Ch1 §1.2 物权",why:"所有权转移时间点(动产交付/不动产登记)→Ch1物权制度核心"}]},
+        {name:"借款合同",star:2, subs:["自然人→实践合同/无约定→无利息/利息不得预扣"]},
+        {name:"保证合同",star:2, subs:["无约定→一般保证(先诉抗辩权)/6个月保证期间","公益为目的的非营利法人不得为保证人"]},
+        {name:"租赁合同",star:2, subs:["≤20年/超6个月应书面/买卖不破租赁/不定期租赁"]},
+        {name:"承揽合同",star:2, subs:["定作人→任意解除权(赔偿损失)/主要工作交第三人→需同意"]},
+        {name:"运输合同",star:2, subs:["承运人留置权/不可抗力灭失→运费退还"]},
+        {name:"仓储合同",star:2, subs:["诺成合同/保管不善赔偿/仓单可转让"]},
+        {name:"委托合同",star:1, subs:["垫付费用应偿还+利息"]},
+        {name:"保险合同",star:2, subs:["保险人对免责条款的明确说明义务/受益人由被保险人指定"]}
+      ]}
+    ]
+  },
+  {
+    id:6, name:"第6章 建设工程安全生产法律制度", score:"15-18分",
+    nav:"Ch6",
+    sections:[
+      {id:"6.1",name:"6.1 建设单位和相关单位的安全责任制度",score:"3-4分", stars:3, points:[
+        {name:"主要单位安全责任",star:3, subs:[
+          "建设单位：办理批准手续/提供真实资料/安全费用列入概算/不得压缩工期",
+          "设计单位：强制标准设计/三新材料提出措施建议",
+          "监理单位：审查施工方案/一般隐患→整改/严重→暂停+报告建设单位"
+        ]},
+        {name:"其他单位安全责任",star:2, subs:["起重机械：报废(明令淘汰/不达标/超年限)vs不得出租(无档案/无保护)","安装拆卸：有资质单位+编方案+专业技术人员监督"]}
+      ]},
+      {id:"6.2",name:"6.2 施工安全生产许可证制度",score:"2-3分", stars:2, points:[
+        {name:"安全生产许可条件",star:2, subs:["依法参加工伤保险/安全生产投入/培训考核合格","由企业注册地省级住建部门颁发"]},
+        {name:"安全生产许可证有效期和撤销",star:2, subs:["有效期3年/期满前3月延期","撤销(许可瑕疵)vs注销(企业终止)vs吊销(违法受罚)"],
+          includes:[{from:"Ch3 §3.2 施工许可",why:"安全生产许可证是施工许可证的前置条件"}]}
+      ]},
+      {id:"6.3",name:"6.3 施工单位安全生产责任制度",score:"3-4分", stars:3, points:[
+        {name:"管理人员安全责任",star:3, subs:["企业负责人→全面负责/项目负责人→确保安全费用有效使用","带班制度：企业负责人≥25%工作日/项目负责人≥80%施工时间","专职安全员→现场监督危大工程方案实施"]},
+        {name:"风险分级管控与隐患排查(变化)",star:2, subs:["重大事故隐患判定：特种作业人员无证上岗"]},
+        {name:"作业人员安全责任",star:2, subs:["知情权/拒绝违章指挥/紧急避险/工伤保险+民事赔偿"],
+          includes:[{from:"Ch9 §9.4 工伤保险",why:"安全事故工伤→Ch9工伤保险制度衔接"}]},
+        {name:"安全生产教育培训",star:2, subs:["新岗位/新现场/新技术/新设备须培训","特种作业人员必须取得操作资格"]}
+      ]},
+      {id:"6.4",name:"6.4 施工现场安全防护制度",score:"2-3分", stars:2, points:[
+        {name:"专项施工方案",star:2, subs:["危大工程→编制专项方案/技术负责人+总监签字","深基坑等→专家论证/论证不通过→修改后重论证"]},
+        {name:"安全费用",star:2, subs:["以建安造价计提/不可竞争/房屋3%","用于:临时用电/危险源监控/防护用品/隐患报告奖励"]},
+        {name:"消防安全",star:2, subs:["建立消防责任制/消防通道/灭火器材/用火用电制度"]}
+      ]},
+      {id:"6.5",name:"6.5 施工生产安全事故应急救援和调查",score:"2-3分", stars:3, points:[
+        {name:"事故等级VS隐患危险",star:2, subs:["一般/较大(3死+)/重大(10死+)/特别重大(30死+)"]},
+        {name:"事故报告VS调查",star:3, subs:["调查报告:经过+原因+性质+整改建议(非处理决定)","特别重大事故→30日内批复/其他→15日内批复"]}
+      ]},
+      {id:"6.6",name:"6.6 政府主管部门安全生产监督管理",score:"1-2分", stars:2, points:[
+        {name:"监督管理措施",star:2, subs:["停止供电/停止供应民用爆炸物品(拒不执行停工决定+有现实危险)","查封/强制措施"]},
+        {name:"质量终身责任",star:3, subs:["施工原因/特别恶劣→吊销+终身不予注册"],
+          includes:[{from:"Ch7 §7.6 质量保修",why:"质量终身责任同时涉及Ch6安全和Ch7质量"}]}
+      ]}
+    ]
+  },
+  {
+    id:7, name:"第7章 建设工程质量法律制度", score:"20分",
+    nav:"Ch7",
+    sections:[
+      {id:"7.1",name:"7.1 工程建设标准",score:"2-3分", stars:2, points:[
+        {name:"标准分类",star:2, subs:["强制性国标(安全/卫生/环保)→必须执行/免费公开","行业标准→推荐性(备案制)","团体标准→鼓励高于推荐性标准"]},
+        {name:"国家标准VS行业标准",star:1},
+        {name:"强制性标准监督单位",star:2, subs:["规划阶段→规划审查机构/设计→施工图审查/施工→安全监督+质量监督"]},
+        {name:"抗震管理制度",star:2, subs:["隔震减震质量追溯/学校医院人员密集场所→抗震鉴定加固","新建/扩建/改建均适用"]}
+      ]},
+      {id:"7.2",name:"7.2 无障碍环境建设制度",score:"2-3分", stars:2, points:[
+        {name:"无障碍设施",star:2, subs:["建设单位将经费纳入概预算/验收后由所有权人维护管理"]},
+        {name:"无障碍环境建设保障和监督",star:3, subs:["文明城市创建纳入无障碍/评估结果向社会公布/信息公示制度"]}
+      ]},
+      {id:"7.3",name:"7.3 建设单位及相关单位的质量责任和义务",score:"3-4分", stars:3, points:[
+        {name:"建设单位责任",star:3, subs:["不得直接发包预拌混凝土/开工前办质监手续","不得明示或暗示违反抗震设防强标"]},
+        {name:"勘察设计单位责任",star:3, subs:["设计文件注明材料规格型号性能/不得指定供应商(专用设备除外)","施工前向施工和监理单位说明设计意图"]},
+        {name:"监理单位责任",star:3, subs:["强制监理：国家重点/大中型公用/成片住宅小区","未经监理工程师签字→材料不得使用","未经总监理工程师签字→不得竣工验收"]}
+      ]},
+      {id:"7.4",name:"7.4 施工单位的质量责任和义务",score:"3-4分", stars:2, points:[
+        {name:"按图施工",star:1, subs:["发现设计问题→通过建设单位处理/不得自行修改"]},
+        {name:"材料设备检测",star:2, subs:["见证取样→比例≥应取样量30%/见证人由建设或监理单位担任","检测机构由建设单位委托(非施工单位)/不合格须单独建台账"]},
+        {name:"质量检验和返修",star:2, subs:["不论何种原因质量问题→施工单位都应返修","隐蔽前→通知建设单位和监理单位","因施工单位原因→无偿返修"],
+          includes:[{from:"Ch5 §5.2 施工合同",why:"返修费用责任归属→与Ch5合同违约制度衔接"}]}
+      ]},
+      {id:"7.5",name:"7.5 建设工程竣工验收制度",score:"2-3分", stars:3, points:[
+        {name:"竣工验收",star:3, subs:["条件：完成设计和合同内容/完整档案/主要材料试验/质量合格文件/保修书"]},
+        {name:"专项验收",star:2, subs:["规划核实/消防/环保/节能/档案验收"],
+          includes:[{from:"Ch3 §3.1 规划许可/Ch8 环保",why:"规划核实(Ch3)+环保验收(Ch8)"}]},
+        {name:"验收备案及存档",star:3, subs:["档案移交：分包→总包→建设单位(3月内)→城建档案馆","竣工验收备案表一式两份"]}
+      ]},
+      {id:"7.6",name:"7.6 建设工程质量保修制度",score:"3-4分", stars:3, points:[
+        {name:"最低保修期限",star:3, subs:["防水5年/管线2年/供热供冷2个周期/装修2年/主体=设计年限","约定低于法定→无效/保修自验收合格日起"]},
+        {name:"质量保证金",star:2, subs:["缺陷责任期≤2年/保证金≤3%结算价","已交履约保证金→不得同时预留","返还保证金后仍依法保修"]}
+      ]}
+    ]
+  },
+  {
+    id:8, name:"第8章 环境保护和历史文化遗产保护", score:"4-6分",
+    nav:"Ch8",
+    sections:[
+      {id:"8.1",name:"8.1 建设工程环境保护制度",score:"2-3分", stars:2, points:[
+        {name:"大气污染防治",star:2, subs:["扬尘治理：封闭管理(≥2.5m/1.8m)/预拌混凝土/监测联网","暂时不能开工→裸露地面覆盖(超3月→绿化铺装)"]},
+        {name:"水污染防治",star:2, subs:["排污许可证制度/饮用水源保护区→禁止排污口/禁止排放工业废渣"],
+          includes:[{from:"Ch1 §1.5 环保税",why:"水污染物排放→Ch1环保税(污染当量计税)"}]},
+        {name:"固体废物防治",star:2, subs:["危废→必须设识别标志/不得与旅客同运","建筑垃圾→分类收集/后端处置导向/泥沙分离"]},
+        {name:"噪声防治",star:2, subs:["夜间禁止施工(例外:抢修+连续作业+公示)","施工单位制定方案/建设单位列费用"]}
+      ]},
+      {id:"8.2",name:"8.2 施工中历史文化遗产保护制度",score:"2-3分", stars:2, points:[
+        {name:"文物保护",star:2, subs:["保护对象：具历史艺术科学价值的石刻/壁画/建筑","历史文化名城名镇名村→核心保护区只允许扩建必要基础设施"]},
+        {name:"文物保护范围和建设控制地带",star:2},
+        {name:"施工中发现文物",star:2, subs:["保护现场+24小时内报告/属国家所有/不得哄抢私分藏匿"]}
+      ]}
+    ]
+  },
+  {
+    id:9, name:"第9章 建设工程劳动保障法律制度", score:"9-14分",
+    nav:"Ch9",
+    sections:[
+      {id:"9.1",name:"9.1 劳动合同制度",score:"2-3分", stars:3, points:[
+        {name:"劳动合同种类",star:2, subs:["固定/无固定(连续10年或2次固定后)/以任务为期限"]},
+        {name:"劳动合同形式和内容",star:2, subs:["必备条款7项/试用期≤1月(1年)/≤2月(1-3年)/≤6月(≥3年)/仅1次"]},
+        {name:"合同履行/变更/解除",star:3, subs:[
+          "变更投资人不影响/合并分立继续有效",
+          "劳动者解除：正式工提前30日通知/用人单位暴力强迫→立即解除",
+          "用人单位解除：随时(试用期不符/严重违规/兼职影响)→提前30日(不能胜任/医疗期满)",
+          "不得解除：职业病/工伤/孕期产期哺乳期/连续15年+距退休<5年",
+          "经济补偿：满1年=1月/高工资封顶3倍+12年/违法解除→2倍赔偿"
+        ],
+          includes:[{from:"Ch5 §5.1 违约责任",why:"解除经济补偿与Ch5合同违约责任是不同制度"}]}
+      ]},
+      {id:"9.2",name:"9.2 劳动用工和工资支付保障",score:"2-3分", stars:2, points:[
+        {name:"劳务派遣",star:2, subs:["三方关系(聘用与使用分离)/仅限临时辅助替代(≤10%)/需行政许可/不得再派遣"]},
+        {name:"工资支付保障",star:1, subs:["最低工资(省级规定/不含加班津贴)"]},
+        {name:"农民工工资支付",star:2, subs:["工资保证金→10工作日内补足/专款专用","失信惩戒→期限3年"]}
+      ]},
+      {id:"9.3",name:"9.3 劳动安全卫生和保护",score:"2-3分", stars:3, points:[
+        {name:"劳动安全卫生",star:2},
+        {name:"职业病防治",star:2, subs:["预评价(可行性论证阶段)/告知危害/拒绝权"]},
+        {name:"女职工和未成年工特殊保护",star:3, subs:["禁止矿山井下作业/孕期7月+哺乳1年禁夜班加班","未成年工→不得从事矿山井下/有毒有害/四级体力劳动"]}
+      ]},
+      {id:"9.4",name:"9.4 工伤保险制度",score:"2-3分", stars:3, points:[
+        {name:"工伤认定",star:3, subs:["工作时间+场所+原因/上下班非主责事故/因工外出","不认定：故意犯罪/醉酒/自残"],
+          includes:[{from:"Ch6 §6.3 作业人员权利",why:"安全事故导致的工伤→与Ch6衔接"}]},
+        {name:"工伤申请",star:2, subs:["单位30日/个人1年内申请"]},
+        {name:"工伤保险待遇",star:1, subs:["停工留薪≤12月/四级退出岗位/协议医疗机构"]}
+      ]},
+      {id:"9.5",name:"9.5 劳动争议的解决",score:"1-2分", stars:2, points:[
+        {name:"劳动争议范围",star:1},
+        {name:"劳动争议解决方式",star:3, subs:["调解(一般不公开)/仲裁(1年时效/存续期拖欠不受限/逾期可起诉)/诉讼"],
+          includes:[{from:"Ch10 §10.2 仲裁",why:"劳动仲裁≠商事仲裁(适用不同法律)"}]}
+      ]}
+    ]
+  },
+  {
+    id:10, name:"第10章 建设工程争议解决法律制度", score:"14-17分",
+    nav:"Ch10",
+    sections:[
+      {id:"10.1",name:"10.1 争议和解/调解制度",score:"1-2分", stars:2, points:[
+        {name:"和解",star:3, subs:["双方自愿/可发生在诉讼任何阶段/和解协议无强制执行力"]},
+        {name:"调解",star:3, subs:["人民调解(不收费/群众性组织/30日内可司法确认)","法院调解(调解书=判决书效力/签收生效)","仲裁调解(有强制执行力)/行政调解(无强制执行力)"]}
+      ]},
+      {id:"10.2",name:"10.2 仲裁制度",score:"4分", stars:3, points:[
+        {name:"总纲",star:3, subs:["范围：合同+财产纠纷(不含身份)/劳动仲裁≠商事仲裁","一裁终局/不公开进行/有效仲裁协议排除法院管辖"]},
+        {name:"仲裁协议",star:3, subs:["必须书面/合同无效不影响仲裁条款独立","无协议受理→驳回/首次开庭前提交协议→驳回起诉"]},
+        {name:"仲裁庭组成/开庭/裁决",star:3, subs:[
+          "1或3人/首席共同选定或主任指定",
+          "裁决按多数意见/少数可记入笔录",
+          "撤销：无协议/超权限/程序违法/伪造证据",
+          "执行→被执行人住所地或财产所在地中级法院"
+        ],
+          includes:[{from:"Ch5 §5.2 施工合同纠纷",why:"施工合同纠纷常约定仲裁→与Ch5合同制度衔接"}]},
+        {name:"仲裁和解与调解",star:2}
+      ]},
+      {id:"10.3",name:"10.3 民事诉讼制度",score:"4分", stars:3, points:[
+        {name:"法院管辖",star:2, subs:["一般(被告住所地)/专属(施工合同→工程所在地)/协议","移送管辖(无管辖权→移送)/指定管辖"]},
+        {name:"诉讼代理人",star:2, subs:["≤2人/特别授权需载明(承认放弃变更请求+和解+上诉)"]},
+        {name:"诉讼证据",star:2, subs:["8种：书证/物证/视听/电子/证人/鉴定/勘验/当事人陈述","不能正确表达者→不得作证","有利害关系证人/当事人陈述→不能单独认定"]},
+        {name:"诉讼时效",star:2, subs:["3年/中断(请求+起诉+同意)/中止(最后6月+不可抗力)"]},
+        {name:"诉讼程序",star:2, subs:["一审：普通+简易/二审终审(例外:小额诉讼一审终审)","原告不到→撤诉/被告不到→缺席判决","中止vs终结"]},
+        {name:"执行",star:2, subs:["一审法院或同级的财产所在地法院/案外人异议→中止"]}
+      ]},
+      {id:"10.4-5",name:"10.4-10.5 行政复议/行政诉讼制度",score:"4-6分", stars:3, points:[
+        {name:"总纲",star:3, subs:["行政复议：60日内/可书面或口头/不停止执行","行政诉讼：6个月/被告举证/被告不得自行收集证据"]},
+        {name:"行政复议和行政诉讼",star:3, subs:[
+          "复议前置：自然资源权属确认/纳税争议等",
+          "行政诉讼管辖：县级政府→中级法院/国务院部门→中级法院",
+          "不可诉：抽象行政行为/内部行为/行政调解/重复处理行为/过程性行为",
+          "行政赔偿案件→可调解",
+          "政府信息公开案件→可适用简易程序"
+        ],
+          includes:[{from:"Ch1 §1.6 行政法/Ch6 §6.6 安全执法",why:"对行政处罚/许可/强制不服→Ch10行政诉讼(Ch1行政法打基础)"}]}
+      ]}
+    ]
+  }
+];
+
+// ===== RENDER =====
+function showDetail(title, content) {
+  document.getElementById('panel-title').textContent = title;
+  document.getElementById('panel-body').innerHTML = content;
+  document.getElementById('detail-panel').style.display = 'block';
+}
+
+function closeDetail() {
+  document.getElementById('detail-panel').style.display = 'none';
+}
+
+function renderAll() {
+  const container = document.getElementById('content');
+  const navList = document.getElementById('nav-list');
+  const quickJump = document.getElementById('quick-jump');
+  
+  let html = '';
+  navList.innerHTML = '';
+  quickJump.innerHTML = '';
+
+  data.forEach(ch => {
+    // Navigation
+    const navItem = document.createElement('div');
+    navItem.className = 'nav-item';
+    navItem.innerHTML = `${ch.nav} ${ch.name.replace('第'+ch.id+'章 ','')}<span class="score">${ch.score}</span>`;
+    navItem.onclick = () => {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      navItem.classList.add('active');
+      document.getElementById('ch-'+ch.id).scrollIntoView({behavior:'smooth',block:'start'});
+      // Close sidebar on mobile
+      if (window.innerWidth <= 768) toggleSidebar();
+    };
+    navList.appendChild(navItem);
+
+    // Quick jump
+    const btn = document.createElement('button');
+    btn.textContent = ch.nav;
+    btn.onclick = () => document.getElementById('ch-'+ch.id).scrollIntoView({behavior:'smooth'});
+    quickJump.appendChild(btn);
+
+    // Main content
+    const totalStars = ch.sections.reduce((sum, s) => {
+      return sum + (s.stars === undefined ? 2 : s.stars);
+    }, 0);
+    
+    html += `<div class="chapter-block" id="ch-${ch.id}">`;
+    html += `<div class="ch-header" onclick="toggleChapter(this)">`;
+    html += `<div class="ch-num">${ch.id}</div>`;
+    html += `<div class="ch-title">${ch.name}</div>`;
+    html += `<div class="ch-meta">${ch.sections.length}节 · ${ch.score}</div>`;
+    html += `<div class="ch-arrow">▶</div>`;
+    html += `</div>`;
+    html += `<div class="ch-body">`;
+
+    ch.sections.forEach(sec => {
+      const starEmoji = sec.stars <= 1 ? '※' : sec.stars <= 2 ? '※※' : '※※※';
+      const starClass = sec.stars <= 1 ? 'tag-1' : sec.stars <= 2 ? 'tag-2' : 'tag-3';
+      
+      html += `<div class="section">`;
+      html += `<div class="section-header" onclick="toggleSection(this)">`;
+      html += `<span>${sec.name}</span>`;
+      html += `<span class="star" style="color:${sec.stars>=3?'#e8a040':sec.stars>=2?'#c08030':'#999'}">${starEmoji}</span>`;
+      html += `<span style="font-size:11px;color:#999">${sec.score}</span>`;
+      html += `<span style="font-size:10px;margin-left:auto">▼</span>`;
+      html += `</div>`;
+      html += `<div class="section-body">`;
+
+      sec.points.forEach(pt => {
+        const sclass = pt.star >= 3 ? 'f3' : pt.star >= 2 ? 'f2' : 'f1';
+        const tclass = pt.star >= 3 ? 'tag-3' : pt.star >= 2 ? 'tag-2' : 'tag-1';
+        html += `<div class="point ${sclass}">`;
+        html += `<span class="point-tag ${tclass}">${pt.star>=3?'※※※':pt.star>=2?'※※':'※'}</span>`;
+        html += `<b>${pt.name}</b>`;
+        html += `</div>`;
+
+        if (pt.subs) {
+          pt.subs.forEach(sub => {
+            html += `<div class="sub-point">${sub}</div>`;
+          });
+        }
+
+        if (pt.includes) {
+          pt.includes.forEach(inc => {
+            html += `<div class="include-note"><b>📥 被包含：</b>${inc.from} → ${inc.why}</div>`;
+          });
+        }
+      });
+
+      // Section-level cross references & includes
+      // (handled at point level for most cases)
+
+      html += `</div></div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function toggleChapter(header) {
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open');
+  header.classList.toggle('open');
+  if (!isOpen) {
+    // Auto-open first section
+    const firstSec = body.querySelector('.section-body');
+    if (firstSec) firstSec.classList.add('open');
+  }
+}
+
+function toggleSection(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function expandAll() {
+  document.querySelectorAll('.ch-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('.ch-header').forEach(h => h.classList.add('open'));
+  document.querySelectorAll('.section-body').forEach(b => b.classList.add('open'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.ch-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.ch-header').forEach(h => h.classList.remove('open'));
+  document.querySelectorAll('.section-body').forEach(b => b.classList.remove('open'));
+}
+
+// Init
+renderAll();
+renderOverview();
+renderLifecycle();
+renderMatrix();
+renderCompare();
+
+// Open first chapter by default
+setTimeout(() => {
+  const firstCh = document.querySelector('.ch-header');
+  if (firstCh) toggleChapter(firstCh);
+}, 100);
+
+// ===== TAB SYSTEM =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.tab-btn[onclick*="${tab}"]`).classList.add('active');
+  ['tab-tree','tab-overview','tab-lifecycle','tab-matrix','tab-compare'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('tab-'+tab).style.display = 'block';
+  // Show/hide tree controls
+  document.getElementById('tree-controls').style.display = tab==='tree' ? 'block' : 'none';
+}
+
+// ===== VIEW 1: RELATIONSHIP OVERVIEW (四层金字塔) =====
+function renderOverview() {
+  const container = document.getElementById('content-overview');
+  let html = '<h2>📐 四层结构金字塔 —— 章节之间的逻辑依赖关系</h2>';
+  html += '<p style="color:#999;margin-bottom:16px">从底层制度基础到顶层救济保障，逐层递进。上层内容的判断依据往往在下层已有定义。</p>';
+
+  // Tier 4 (top) - Dispute Resolution
+  html += '<div class="pyramid-wrap">';
+  html += '<div class="pyramid-tier">';
+  html += '<div class="pyramid-node tier4" onclick="scrollToCh(10)"><b>第10章</b><br>争议解决<br><small>调解·仲裁·诉讼·复议</small></div>';
+  html += '</div>';
+  html += '<div class="pyramid-label">▲ 救济保障层 ▲<br><small>所有权利义务的最终救济途径</small></div>';
+  html += '<div class="pyramid-arrow">▲</div>';
+
+  // Tier 3 - Construction Management
+  html += '<div class="pyramid-label">施工管理层</div>';
+  html += '<div class="pyramid-tier">';
+  html += '<div class="pyramid-node tier3" onclick="scrollToCh(6)"><b>第6章</b><br>安全生产<br><small>15-18分</small></div>';
+  html += '<div class="pyramid-node tier3" onclick="scrollToCh(7)"><b>第7章</b><br>工程质量<br><small>20分</small></div>';
+  html += '<div class="pyramid-node tier3" onclick="scrollToCh(8)"><b>第8章</b><br>环保+文保<br><small>4-6分</small></div>';
+  html += '<div class="pyramid-node tier3" onclick="scrollToCh(9)"><b>第9章</b><br>劳动保障<br><small>9-14分</small></div>';
+  html += '</div>';
+  html += '<div class="pyramid-arrow">▲</div>';
+
+  // Tier 2 - Project Initiation
+  html += '<div class="pyramid-label">项目启动层</div>';
+  html += '<div class="pyramid-tier">';
+  html += '<div class="pyramid-node tier2" onclick="scrollToCh(3)"><b>第3章</b><br>工程许可<br><small>4-6分</small></div>';
+  html += '<div class="pyramid-node tier2" onclick="scrollToCh(4)"><b>第4章</b><br>发承包<br><small>10-12分</small></div>';
+  html += '<div class="pyramid-node tier2" onclick="scrollToCh(5)"><b>第5章</b><br>合同制度<br><small>13-16分</small></div>';
+  html += '</div>';
+  html += '<div class="pyramid-arrow">▲</div>';
+
+  // Tier 1 (bottom) - Foundation
+  html += '<div class="pyramid-label">制度基础层</div>';
+  html += '<div class="pyramid-tier">';
+  html += '<div class="pyramid-node tier1" onclick="scrollToCh(1)"><b>第1章</b><br>基本法律知识<br><small>17-22分</small></div>';
+  html += '<div class="pyramid-node tier1" onclick="scrollToCh(2)"><b>第2章</b><br>市场主体制度<br><small>12分</small></div>';
+  html += '</div>';
+  html += '</div>';
+
+  // Key cross-layer connections
+  html += '<h3 style="margin-top:24px;color:#8b6914">🔗 关键跨层连接线</h3>';
+  const connections = [
+    {from:"Ch1 §1.6 行政许可制度",to:"Ch3 施工许可 → Ch6 安全许可",type:"行政许可主线：Ch1定义基础→Ch3+Ch6具体实施"},
+    {from:"Ch1 §1.4 连带责任",to:"Ch4·Ch6·Ch7 总分包连带",type:"连带责任主线：Ch1理论→Ch4/6/7三重连带实践"},
+    {from:"Ch1 §1.2 物权+§1.5 税收",to:"Ch5 合同+Ch8 环保",type:"物权/税收理论→Ch5合同履行+Ch8环保税衔接"},
+    {from:"Ch2 法人·资质·建造师",to:"Ch3-Ch9 全部章",type:"市场主体身份→贯穿所有章（法人资格/资质/注册执业）"},
+    {from:"Ch5 合同制度",to:"Ch10 争议解决",type:"合同纠纷→仲裁/诉讼（最频繁的争议类型）"},
+    {from:"Ch1 §1.7 建设工程罪名",to:"Ch4 串通投标·Ch6 安全事故",type:"刑法→Ch4串通投标罪+Ch6安全犯罪构成"},
+    {from:"Ch6·Ch7 安全+质量",to:"Ch10 行政诉讼",type:"对安全/质量执法不服→行政复议/行政诉讼"},
+  ];
+  connections.forEach(c => {
+    html += `<div style="display:flex;align-items:center;padding:8px 12px;margin:4px 0;background:#faf6f0;border-radius:6px;border-left:4px solid #8b6914">`;
+    html += `<div style="min-width:200px;font-size:12px;color:#8b6914;font-weight:bold">${c.from}</div>`;
+    html += `<div style="font-size:20px;color:#d4a574;margin:0 12px">→</div>`;
+    html += `<div style="font-size:12px;color:#555">${c.to}</div>`;
+    html += `<div style="font-size:11px;color:#999;margin-left:auto;font-style:italic;text-align:right;max-width:280px">${c.type}</div>`;
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+// ===== VIEW 2: LIFECYCLE FLOW (全生命周期) =====
+function renderLifecycle() {
+  const container = document.getElementById('content-lifecycle');
+  let html = '<h2>🔄 建设工程全生命周期 × 法律章节对照图</h2>';
+  html += '<p style="color:#999;margin-bottom:16px">横轴按项目实际进展排列，标注每个阶段对应的核心章节和关键法律行为。点击标签跳转详情。</p>';
+  html += '<div class="lc-wrap"><div class="lc-flow">';
+
+  const stages = [
+    {name:"规划与许可",color:"#5a8ab5",chs:[
+      {ch:3,label:"Ch3 规划许可",sub:"规划许可证·施工许可证"},
+      {ch:6,label:"Ch6 安全许可",sub:"安全生产许可证→施工许可前提"},
+    ]},
+    {name:"招标发包",color:"#5a9a4a",chs:[
+      {ch:4,label:"Ch4 招标投标",sub:"必须招标范围·方式·程序"},
+      {ch:2,label:"Ch2 资质审查",sub:"投标人资质条件·挂靠认定"},
+    ]},
+    {name:"合同订立",color:"#d4a040",chs:[
+      {ch:5,label:"Ch5 合同订立",sub:"要约承诺·合同效力·定金"},
+      {ch:2,label:"Ch2 代理制度",sub:"表见代理→合同约束被代理人"},
+    ]},
+    {name:"施工阶段",color:"#c06050",chs:[
+      {ch:6,label:"Ch6 安全生产",sub:"安全责任·危大工程·事故"},
+      {ch:7,label:"Ch7 工程质量",sub:"按图施工·见证取样·返修"},
+      {ch:8,label:"Ch8 环境保护",sub:"扬尘·排水·噪声·文物"},
+      {ch:9,label:"Ch9 劳动保障",sub:"劳动合同·工伤·农民工工资"},
+    ]},
+    {name:"竣工验收",color:"#8b6914",chs:[
+      {ch:7,label:"Ch7 竣工验收",sub:"验收条件·规划核实·备案"},
+      {ch:3,label:"Ch3 规划验收",sub:"规划条件核实→验收前置"},
+    ]},
+    {name:"质量保修",color:"#6a4a8a",chs:[
+      {ch:7,label:"Ch7 质量保修",sub:"最低保修期·质保金"},
+      {ch:5,label:"Ch5 违约责任",sub:"返修逾期→违约责任"},
+    ]},
+    {name:"争议解决",color:"#4a6a8a",chs:[
+      {ch:10,label:"Ch10 争议解决",sub:"调解·仲裁·诉讼·复议"},
+    ]},
+  ];
+
+  stages.forEach((st, i) => {
+    html += `<div class="lc-stage">`;
+    html += `<div class="lc-stage-header" style="background:${st.color}">${st.name}</div>`;
+    html += `<div class="lc-stage-body">`;
+    st.chs.forEach(ch => {
+      html += `<span class="ch-tag" style="background:${st.color}20;color:${st.color};cursor:pointer" onclick="switchTab('tree');setTimeout(()=>scrollToCh(${ch.ch}),200)">${ch.label}<br><small>${ch.sub}</small></span>`;
+    });
+    html += `</div></div>`;
+    if (i < stages.length - 1) {
+      html += `<div class="lc-arrow">→</div>`;
+    }
+  });
+
+  html += '</div>';
+
+  // Bottom annotation: chapters that span the whole lifecycle
+  html += '<div class="lc-annot" style="margin-top:16px;font-size:12px">';
+  html += '<b>贯穿全生命周期的章节：</b> ';
+  html += '<span style="color:#5a8ab5">Ch1 基本法律知识</span>（法律部门·物权·侵权·税收·行政法·刑法——所有章的判断基础）| ';
+  html += '<span style="color:#5a8ab5">Ch2 市场主体制度</span>（法人·资质·建造师·信用——所有章的主体资格认定）';
+  html += '</div>';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+// ===== VIEW 3: CONCEPT MATRIX (概念矩阵) =====
+function renderMatrix() {
+  const container = document.getElementById('content-matrix');
+  let html = '<h2>📊 跨章概念热度矩阵</h2>';
+  html += '<p style="color:#999;margin-bottom:12px">行 = 贯穿多章的核心概念 | 列 = 章节 | ● = 该概念在对应章节是重点考点</p>';
+  html += '<div class="mx-legend"><span>● 高频出现</span><span>○ 中等涉及</span><span>· 略有提及</span></div>';
+  html += '<div class="mx-wrap"><table class="mx-table"><thead><tr><th style="min-width:160px">核心概念</th>';
+
+  for (let i=1;i<=10;i++) html += `<th>第${i}章</th>`;
+  html += '</tr></thead><tbody>';
+
+  const concepts = [
+    {name:"行政许可", dots:[3,1,3,1,0,2,2,1,0,0]},
+    {name:"行政处罚", dots:[3,1,0,1,0,2,0,0,0,1]},
+    {name:"连带责任", dots:[3,0,0,3,0,2,2,0,0,0]},
+    {name:"不可抗力", dots:[0,0,0,0,3,0,0,1,0,0]},
+    {name:"撤销vs撤回vs注销", dots:[1,3,1,1,0,3,0,0,0,0]},
+    {name:"无效/可撤销/效力待定", dots:[0,0,0,0,3,0,0,0,0,0]},
+    {name:"总分包法律关系", dots:[0,0,0,3,1,2,2,0,0,0]},
+    {name:"优先受偿权", dots:[1,0,0,0,3,0,0,0,0,0]},
+    {name:"定金与担保", dots:[2,0,0,0,3,0,0,0,0,0]},
+    {name:"诉讼时效", dots:[0,0,0,0,0,0,0,0,0,3]},
+    {name:"刑事责任(建设工程犯罪)", dots:[3,0,0,1,0,2,0,0,0,0]},
+    {name:"规划许可(空间维度)", dots:[0,0,3,0,0,0,2,0,0,0]},
+    {name:"合同解除权", dots:[0,0,0,0,3,0,0,0,2,0]},
+    {name:"举证责任", dots:[0,0,0,0,0,0,0,0,0,3]},
+    {name:"行政强制措施/执行", dots:[2,0,0,0,0,2,0,0,0,0]},
+  ];
+
+  concepts.forEach(c => {
+    html += '<tr>';
+    html += `<td class="concept">${c.name}</td>`;
+    c.dots.forEach(d => {
+      if (d===3) html += '<td><span class="dot high" title="高频重点"></span></td>';
+      else if (d===2) html += '<td><span class="dot med" title="中等涉及"></span></td>';
+      else if (d===1) html += '<td><span class="dot low" title="略有提及"></span></td>';
+      else html += '<td></td>';
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+
+  // Key takeaway
+  html += '<div style="margin-top:16px;padding:12px;background:#f5e8d0;border-radius:6px;font-size:13px">';
+  html += '<b>💡 备考提示：</b>矩阵中 <span style="color:#e8a040">●</span> 密集的行，就是考试中跨章综合题的命题重灾区。';
+  html += '例如<em>"连带责任"</em>在Ch1/Ch4/Ch6/Ch7均有出现，综合题往往要求同时判断发承包连带+安全连带+质量连带。';
+  html += '建议按行（概念）横向复习，打通章节壁垒。';
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+// Helper: scroll to chapter in tree view
+function scrollToCh(chId) {
+  switchTab('tree');
+  setTimeout(() => {
+    const el = document.getElementById('ch-'+chId);
+    if (el) {
+      el.scrollIntoView({behavior:'smooth',block:'start'});
+      const header = el.querySelector('.ch-header');
+      if (header && !header.classList.contains('open')) {
+        toggleChapter(header);
+      }
+    }
+  }, 200);
+}
+
+// ===== SIDEBAR TOGGLE =====
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+
+// ===== SEARCH =====
+function doSearch(query) {
+  const resultEl = document.getElementById('search-result');
+  const navItems = document.querySelectorAll('#nav-list .nav-item');
+  
+  // Reset
+  navItems.forEach(n => { n.classList.remove('ch-dim','ch-match'); });
+  document.querySelectorAll('.highlight').forEach(el => {
+    el.replaceWith(el.textContent);
+  });
+
+  if (!query || query.length < 1) {
+    resultEl.style.display = 'none';
+    navItems.forEach(n => n.classList.remove('ch-dim'));
+    return;
+  }
+
+  const q = query.toLowerCase();
+  let matchCount = 0;
+  const matchedChapters = new Set();
+
+  // Search in chapter blocks
+  document.querySelectorAll('#content .chapter-block').forEach(block => {
+    const chId = block.id.replace('ch-','');
+    const text = block.textContent.toLowerCase();
+    let found = false;
+
+    if (text.includes(q)) {
+      found = true;
+      matchedChapters.add(chId);
+      // Highlight matching text in section points
+      block.querySelectorAll('.point,.sub-point,.section-header').forEach(el => {
+        const orig = el.innerHTML;
+        const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+        if (regex.test(el.textContent)) {
+          el.innerHTML = orig.replace(regex, '<span class="highlight">$1</span>');
+        }
+      });
+    }
+
+    if (found) {
+      block.style.display = '';
+      const header = block.querySelector('.ch-header');
+      if (header && !header.classList.contains('open')) {
+        toggleChapter(header);
+      }
+      // Open all sections in matched chapters
+      block.querySelectorAll('.section-body').forEach(b => b.classList.add('open'));
+      matchCount++;
+    } else {
+      block.style.display = 'none';
+    }
+  });
+
+  // Update nav - dim non-matching, highlight matching
+  navItems.forEach(n => {
+    const chNum = n.textContent.match(/Ch(\d+)/);
+    if (chNum && matchedChapters.has(chNum[1])) {
+      n.classList.add('ch-match');
+      n.classList.remove('ch-dim');
+    } else {
+      n.classList.add('ch-dim');
+      n.classList.remove('ch-match');
+    }
+  });
+
+  // Result count
+  if (query.length >= 1) {
+    resultEl.style.display = 'block';
+    if (matchCount > 0) {
+      resultEl.textContent = `找到 ${matchCount} 个章节匹配`;
+    } else {
+      resultEl.textContent = '未找到匹配章节';
+    }
+  }
+}
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// ===== COMPARE VIEW =====
+function renderCompare() {
+  const container = document.getElementById('content-compare');
+  let html = '<h2>⚖️ 易混淆概念对比辨析</h2>';
+  html += '<p style="color:#999;margin-bottom:16px">以下概念在多个章节中以不同形态出现，考试常设陷阱。一行对比，打通章节壁垒。</p>';
+  html += '<div class="cmp-wrap">';
+
+  const comparisons = [
+    {
+      title: "一、撤销 vs 撤回 vs 注销 vs 吊销",
+      headers: ["概念", "含义", "适用场景", "出现章节"],
+      rows: [
+        ["<b>撤销</b>", "许可本身存在瑕疵（本来不该发）", "资质许可机关违反程序发证<br>超越职权发证<br>不具备条件发证", "<span class='ch-ref'>Ch2 §2.2 资质</span><br><span class='ch-ref'>Ch6 §6.2 安全许可</span>"],
+        ["<b>撤回</b>", "许可本身合法，但被许可人不再符合条件", "企业取得资质后条件变化<br>不再具备安全生产条件", "<span class='ch-ref'>Ch2 §2.2 资质</span><br><span class='ch-ref'>Ch6 §6.2 安全许可</span>"],
+        ["<b>注销</b>", "许可证的自然消灭", "企业破产/倒闭/撤销<br>有效期届满未续期", "<span class='ch-ref'>Ch2 §2.2 资质</span><br><span class='ch-ref'>Ch6 §6.2 安全许可</span>"],
+        ["<b>吊销</b>", "因违法行为被处罚取消", "合法取得后严重违法<br>被行政处罚取消资格", "<span class='ch-ref'>Ch2 §2.2 资质</span><br><span class='ch-ref'>Ch6 §6.2 安全许可</span>"],
+      ]
+    },
+    {
+      title: "二、罚款 vs 罚金 / 没收违法所得 vs 没收财产 / 拘留 vs 拘役",
+      headers: ["行政处罚（行政责任）", "刑罚（刑事责任）", "关键区别", "出现章节"],
+      rows: [
+        ["<b>罚款</b>", "<b>罚金</b>", "罚款=行政 / 罚金=刑事<br>罚金比罚款重得多", "<span class='ch-ref'>Ch1 §1.6 行政处罚</span><br><span class='ch-ref'>Ch1 §1.7 刑罚种类</span>"],
+        ["<b>没收违法所得</b>", "<b>没收财产</b>", "违法所得=行政没收/财产=刑事<br>没收财产是附加刑", "<span class='ch-ref'>Ch1 §1.6 行政处罚</span><br><span class='ch-ref'>Ch1 §1.7 刑罚种类</span>"],
+        ["<b>拘留</b>（行政）", "<b>拘役</b>（刑事）", "拘留≤15日/拘役1-6月<br>拘役是主刑，拘留是行政处罚", "<span class='ch-ref'>Ch1 §1.6 行政处罚</span><br><span class='ch-ref'>Ch1 §1.7 刑罚种类</span>"],
+      ]
+    },
+    {
+      title: "三、一般保证 vs 连带责任保证",
+      headers: ["一般保证", "连带责任保证", "考试关键点", "出现章节"],
+      rows: [
+        ["<b>先诉抗辩权</b>：债权人须先向债务人主张，强制执行不能后才找保证人", "<b>无先诉抗辩权</b>：债权人可直接要求保证人承担责任", "无约定或约定不明→<b>一般保证</b>（民法典改的！旧法是连带）", "<span class='ch-ref'>Ch5 §5.3 保证合同</span>"],
+        ["保证期间无约定→<b>6个月</b>（主债务履行期届满起）", "同左", "保证期间是除斥期间，不发生中止中断", "<span class='ch-ref'>Ch5 §5.3 保证合同</span>"],
+      ]
+    },
+    {
+      title: "四、中止 vs 终结（诉讼/执行/行政强制）",
+      headers: ["中止（暂停）", "终结（结束）", "出现章节"],
+      rows: [
+        ["<b>诉讼中止</b>：一方死亡需等继承人/法人终止未确定承受人", "<b>诉讼终结</b>：原告死亡无继承人/离婚一方死亡/被告死亡无遗产", "<span class='ch-ref'>Ch10 §10.3 民事诉讼</span>"],
+        ["<b>执行中止</b>：案外人对执行标的有异议/被执行人无财产", "<b>执行终结</b>：申请人撤销/文书被撤销/被执行人无力偿还", "<span class='ch-ref'>Ch10 §10.3 民事诉讼</span>"],
+        ["<b>行政强制中止</b>：第三人主张权利/履行困难/可能造成难以弥补损失", "<b>行政强制终结</b>：公民死亡无遗产/法人终止无财产/标的灭失", "<span class='ch-ref'>Ch1 §1.6 行政强制</span>"],
+      ]
+    },
+    {
+      title: "五、无效合同 vs 可撤销合同 vs 效力待定合同",
+      headers: ["类型", "法定情形", "法律后果", "出现章节"],
+      rows: [
+        ["<b>无效</b>", "违反强制规定/虚假意思表示<br>恶意串通/无资质/应招标未招标<br>转包/违法分包/借资质", "自始无效/当然无效<br>绝对无效", "<span class='ch-ref'>Ch5 §5.1 合同效力</span><br><span class='ch-ref'>Ch5 §5.2 施工合同效力</span>"],
+        ["<b>可撤销</b>", "欺诈/重大误解(90日)<br>显失公平(1年)/胁迫", "撤销前有效/撤销后自始无效<br>由法院或仲裁机构撤销", "<span class='ch-ref'>Ch5 §5.1 合同效力</span>"],
+        ["<b>效力待定</b>", "无权代理/限制民事行为能力人<br>超越经营范围", "追认后有效/拒绝追认无效<br>相对人可催告(30日)", "<span class='ch-ref'>Ch5 §5.1 合同效力</span><br><span class='ch-ref'>Ch2 §2.1 代理</span>"],
+      ]
+    },
+    {
+      title: "六、行政许可 vs 行政强制措施 vs 行政强制执行",
+      headers: ["行政行为", "性质", "典型例子", "出现章节"],
+      rows: [
+        ["<b>行政许可</b>", "事先控制/赋权+解禁", "施工许可证/安全生产许可证<br>规划许可证", "<span class='ch-ref'>Ch1 §1.6 行政法</span><br><span class='ch-ref'>Ch3 许可制度</span>"],
+        ["<b>行政强制措施</b>", "暂时性控制（静态）", "查封/扣押/冻结存款<br>限制人身自由", "<span class='ch-ref'>Ch1 §1.6 行政强制</span>"],
+        ["<b>行政强制执行</b>", "正式执行（动态）", "加处罚款/划拨存款<br>排除妨碍/代履行", "<span class='ch-ref'>Ch1 §1.6 行政强制</span>"],
+      ]
+    },
+    {
+      title: "七、拒收 vs 否决投标（招标投标中的两个关键节点）",
+      headers: ["拒收（接收环节）", "否决投标（评审环节）", "出现章节"],
+      rows: [
+        ["未通过资格预审<br>逾期送达<br>未按要求密封", "联合体未提交共同投标协议<br>报价超最高限价<br>未盖章签字<br>未实质响应", "<span class='ch-ref'>Ch4 §4.2 招标投标</span>"],
+      ]
+    },
+    {
+      title: "八、投标保证金 vs 履约保证金 vs 质量保证金",
+      headers: ["保证金类型", "比例上限", "退还/处理", "出现章节"],
+      rows: [
+        ["<b>投标保证金</b>", "≤招标项目估算价<b>2%</b>", "截止前撤回→退还<br>截止后撤销→可不退还", "<span class='ch-ref'>Ch4 §4.2</span>"],
+        ["<b>履约保证金</b>", "≤中标合同金额<b>10%</b>", "工程竣工后返还", "<span class='ch-ref'>Ch4 §4.2</span>"],
+        ["<b>质量保证金</b>", "≤工程价款结算总额<b>3%</b>", "缺陷责任期满后返还<br>已交履约保证金→不得同时预留", "<span class='ch-ref'>Ch7 §7.6</span>"],
+      ]
+    },
+    {
+      title: "九、劳动争议仲裁 vs 商事仲裁",
+      headers: ["劳动争议仲裁", "商事仲裁", "出现章节"],
+      rows: [
+        ["适用《劳动争议调解仲裁法》", "适用《仲裁法》", "<span class='ch-ref'>Ch9 §9.5</span><br><span class='ch-ref'>Ch10 §10.2</span>"],
+        ["不收费/先裁后审（非一裁终局）", "收费/一裁终局", ""],
+        ["申请时效<b>1年</b>（存续期拖欠不受限）", "无时效限制（有仲裁协议即可）", ""],
+        ["无须仲裁协议/法定前置", "必须书面仲裁协议", ""],
+      ]
+    },
+  ];
+
+  comparisons.forEach(cmp => {
+    html += `<div class="cmp-title">${cmp.title}</div>`;
+    html += '<table class="cmp-table"><thead><tr>';
+    cmp.headers.forEach(h => html += `<th>${h}</th>`);
+    html += '</tr></thead><tbody>';
+    cmp.rows.forEach(row => {
+      html += '<tr>';
+      row.forEach(cell => html += `<td>${cell}</td>`);
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+</script>
+</body>
+</html>
