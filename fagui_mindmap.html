@@ -101,6 +101,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f8f5f0;c
 .search-wrap input{width:100%;padding:8px 10px;border:1px solid #5a4a32;border-radius:4px;background:#3a3020;color:#e8dcc8;font-size:13px;outline:none}
 .search-wrap input::placeholder{color:#a09070}
 .search-result{margin:2px 0;font-size:11px;color:#c9a96e;text-align:center;display:none}
+.search-hl{background:#ffe060;border-radius:2px;padding:0 2px;color:#5a3a10;font-weight:bold}
 /* Highlight for search */
 .highlight{background:#ffe040;color:#3a2f28;border-radius:2px;padding:0 1px}
 .ch-dim{opacity:.3}
@@ -961,84 +962,100 @@ function toggleSidebar() {
 }
 
 // ===== SEARCH =====
+function clearHighlights() {
+  document.querySelectorAll('.search-hl').forEach(function(e){
+    var p=e.parentNode;
+    p.replaceChild(document.createTextNode(e.textContent),e);
+    p.normalize();
+  });
+}
+
 function doSearch(query) {
+  clearHighlights();
   const resultEl = document.getElementById('search-result');
   const navItems = document.querySelectorAll('#nav-list .nav-item');
   
-  // Reset
-  navItems.forEach(n => { n.classList.remove('ch-dim','ch-match'); });
-  document.querySelectorAll('.highlight').forEach(el => {
-    el.replaceWith(el.textContent);
-  });
-
-  if (!query || query.length < 1) {
+  if (!query || query.trim().length < 1) {
     resultEl.style.display = 'none';
-    navItems.forEach(n => n.classList.remove('ch-dim'));
+    navItems.forEach(n => { n.classList.remove('ch-dim','ch-match'); });
+    document.querySelectorAll('#content .chapter-block').forEach(b => { b.style.display = ''; });
     return;
   }
 
   const q = query.toLowerCase();
-  let matchCount = 0;
+  let totalFound = 0;
   const matchedChapters = new Set();
 
-  // Search in chapter blocks
-  document.querySelectorAll('#content .chapter-block').forEach(block => {
-    const chId = block.id.replace('ch-','');
-    const text = block.textContent.toLowerCase();
-    let found = false;
+  document.querySelectorAll('#content .chapter-block').forEach(function(block) {
+    var chMatch = block.textContent.toLowerCase().includes(q);
+    var pointsWithMatch = 0;
 
-    if (text.includes(q)) {
-      found = true;
-      matchedChapters.add(chId);
-      // Highlight matching text in section points
-      block.querySelectorAll('.point,.sub-point,.section-header').forEach(el => {
-        const orig = el.innerHTML;
-        const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
-        if (regex.test(el.textContent)) {
-          el.innerHTML = orig.replace(regex, '<span class="highlight">$1</span>');
+    // Search points, sub-points, section headers IN ORDER (D3 renders these specific classes)
+    block.querySelectorAll('.point,.sub-point,.section-header').forEach(function(el) {
+      if (el.textContent.toLowerCase().includes(q)) {
+        pointsWithMatch++;
+        // Expand parent section
+        var sec = el.closest('.section');
+        if (sec) {
+          var sb = sec.querySelector('.section-body');
+          if (sb) sb.classList.add('open');
         }
-      });
-    }
-
-    if (found) {
-      block.style.display = '';
-      const header = block.querySelector('.ch-header');
-      if (header && !header.classList.contains('open')) {
-        toggleChapter(header);
+        // Highlight match in this element
+        highlightInElement(el, query);
       }
-      // Open all sections in matched chapters
-      block.querySelectorAll('.section-body').forEach(b => b.classList.add('open'));
-      matchCount++;
+    });
+
+    if (chMatch || pointsWithMatch > 0) {
+      block.style.display = '';
+      matchedChapters.add(block.id.replace('ch-',''));
+      // Auto-expand chapter
+      var header = block.querySelector('.ch-header');
+      if (header && !header.classList.contains('open')) toggleChapter(header);
+      totalFound += Math.max(1, pointsWithMatch);
     } else {
       block.style.display = 'none';
     }
   });
 
-  // Update nav - dim non-matching, highlight matching
-  navItems.forEach(n => {
-    const chNum = n.textContent.match(/Ch(\d+)/);
+  // Update nav
+  navItems.forEach(function(n) {
+    var chNum = n.textContent.match(/Ch(\d+)/);
     if (chNum && matchedChapters.has(chNum[1])) {
-      n.classList.add('ch-match');
-      n.classList.remove('ch-dim');
+      n.classList.add('ch-match'); n.classList.remove('ch-dim');
     } else {
-      n.classList.add('ch-dim');
-      n.classList.remove('ch-match');
+      n.classList.add('ch-dim'); n.classList.remove('ch-match');
     }
   });
 
-  // Result count
-  if (query.length >= 1) {
-    resultEl.style.display = 'block';
-    if (matchCount > 0) {
-      resultEl.textContent = `找到 ${matchCount} 个章节匹配`;
-    } else {
-      resultEl.textContent = '未找到匹配章节';
-    }
+  resultEl.style.display = 'block';
+  if (totalFound > 0) {
+    resultEl.textContent = '找到 ' + totalFound + ' 处匹配';
+    resultEl.style.color = '#5a9a4a';
+  } else {
+    resultEl.textContent = '未找到匹配';
+    resultEl.style.color = '#c04848';
   }
 }
 
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function highlightInElement(el, q) {
+  function walk(node) {
+    if (node.nodeType === 3) {
+      var txt = node.textContent;
+      var idx = txt.toLowerCase().indexOf(q.toLowerCase());
+      if (idx >= 0) {
+        var span = document.createElement('span');
+        span.className = 'search-hl';
+        span.textContent = txt.substring(idx, idx + q.length);
+        var after = document.createTextNode(txt.substring(idx + q.length));
+        node.textContent = txt.substring(0, idx);
+        node.parentNode.insertBefore(span, node.nextSibling);
+        node.parentNode.insertBefore(after, span.nextSibling);
+      }
+    } else if (node.nodeType === 1 && !/^(SCRIPT|STYLE)$/i.test(node.tagName)) {
+      Array.from(node.childNodes).forEach(walk);
+    }
+  }
+  walk(el);
 }
 
 // ===== COMPARE VIEW =====

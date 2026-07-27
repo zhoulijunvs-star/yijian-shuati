@@ -65,6 +65,9 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f8f5f0;c
 .search-wrap input{width:100%;padding:8px 10px;border:1px solid #5a4a32;border-radius:4px;background:#3a3020;color:#e8dcc8;font-size:13px;outline:none}
 .search-wrap input::placeholder{color:#a09070}
 .search-result{margin:2px 0;font-size:11px;color:#c9a96e;text-align:center;display:none}
+.search-hl{background:#ffe060;border-radius:2px;padding:0 2px;color:#5a3a10;font-weight:bold}
+.search-match{outline:2px solid #5a9a4a;outline-offset:-2px;border-radius:3px}
+.no-match{opacity:0.3;pointer-events:none}
 .hamburger{display:none;position:fixed;top:10px;left:10px;z-index:200;background:#2c2416;color:#e8dcc8;border:none;font-size:22px;padding:6px 10px;border-radius:6px;cursor:pointer}
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90}
 @media(max-width:768px){#sidebar{position:fixed;left:-300px;top:0;bottom:0;z-index:100;transition:left .3s;width:280px}#sidebar.open{left:0}.overlay.open{display:block}.hamburger{display:block}#main{margin-left:0!important;padding:12px 8px}.tab-bar{flex-wrap:nowrap;overflow-x:auto;gap:4px;padding:8px 4px}.tab-btn{padding:6px 12px;font-size:11px;white-space:nowrap;flex-shrink:0}#main h2{font-size:16px}.pyramid-node{padding:6px 8px;font-size:10px;min-width:60px}.lc-flow{min-width:750px}.cmp-table{font-size:10px}}</style>
@@ -495,18 +498,102 @@ body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;background:#f8f5f0;c
 </div>
 <script>
 function searchChapters(q){
-  document.querySelectorAll('.highlight').forEach(function(e){e.replaceWith(e.textContent)});
-  if(!q||q.length<1){document.querySelectorAll('.chapter-block').forEach(function(b){b.style.display=''});document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('ch-dim','ch-match')});return}
-  var ql=q.toLowerCase(),mc=0;
-  document.querySelectorAll('.chapter-block').forEach(function(b){
-    if(b.textContent.toLowerCase().includes(ql)){
-      b.style.display='';b.querySelector('.ch-body').style.display='block';b.querySelector('.ch-header').classList.add('open');
-      b.querySelectorAll('.section-body').forEach(function(s){s.style.display='block'});
-      mc++;
-    }else{b.style.display='none'}
+  // Clear previous highlights
+  document.querySelectorAll('.search-hl').forEach(function(e){
+    var p=e.parentNode;
+    p.replaceChild(document.createTextNode(e.textContent),e);
+    p.normalize();
   });
-  document.getElementById('search-result').textContent=mc>0?'找到 '+mc+' 个章节':'未找到';
-  document.getElementById('search-result').style.display='block';
+  document.querySelectorAll('.no-match').forEach(function(e){e.classList.remove('no-match')});
+  
+  // Reset if empty
+  if(!q||q.trim().length<1){
+    document.querySelectorAll('.chapter-block').forEach(function(b){b.style.display=''});
+    document.querySelectorAll('.section-body').forEach(function(s){s.style.display=''});
+    document.querySelectorAll('.ch-header').forEach(function(h){h.classList.remove('open')});
+    document.querySelectorAll('.no-match').forEach(function(e){e.classList.remove('no-match')});
+    document.querySelectorAll('.search-match').forEach(function(e){e.classList.remove('search-match')});
+    document.getElementById('search-result').style.display='none';
+    return;
+  }
+  
+  var ql=q.toLowerCase();
+  var totalFound=0;
+  
+  document.querySelectorAll('.chapter-block').forEach(function(b){
+    var chMatch=b.textContent.toLowerCase().includes(ql);
+    var pointsWithMatch=[];
+    
+    // Search each point and sub-item
+    b.querySelectorAll('.point').forEach(function(pt){
+      var ptFound=pt.textContent.toLowerCase().includes(ql);
+      if(ptFound) pointsWithMatch.push(pt);
+    });
+    
+    // Search section headers
+    b.querySelectorAll('.section-header').forEach(function(sh){
+      var shFound=sh.textContent.toLowerCase().includes(ql);
+      if(shFound) pointsWithMatch.push(sh);
+    });
+    
+    if(chMatch || pointsWithMatch.length>0){
+      b.style.display='';
+      // Expand chapter
+      var hd=b.querySelector('.ch-header');
+      if(hd){hd.classList.add('open')}
+      var body=b.querySelector('.ch-body');
+      if(body){body.style.display='block'}
+      
+      if(pointsWithMatch.length>0){
+        totalFound+=pointsWithMatch.length;
+        // Expand sections containing matches
+        pointsWithMatch.forEach(function(el){
+          // Find parent section and expand it
+          var sec=el.closest('.section');
+          if(sec){
+            var sb=sec.querySelector('.section-body');
+            if(sb){sb.style.display='block'}
+          }
+          // Highlight text in this element
+          highlightText(el, q);
+          el.classList.add('search-match');
+        });
+      }
+      if(chMatch && pointsWithMatch.length===0){
+        totalFound++;
+      }
+    } else {
+      b.style.display='none';
+    }
+  });
+  
+  var msg=totalFound>0?'找到 '+totalFound+' 处匹配':'未找到';
+  var res=document.getElementById('search-result');
+  res.textContent=msg;
+  res.style.display='block';
+  res.style.color=totalFound>0?'#5a9a4a':'#c04848';
+}
+
+function highlightText(el, q){
+  // Highlight matching text within text nodes
+  function walk(node){
+    if(node.nodeType===3){
+      var txt=node.textContent;
+      var idx=txt.toLowerCase().indexOf(q.toLowerCase());
+      if(idx>=0){
+        var span=document.createElement('span');
+        span.className='search-hl';
+        span.textContent=txt.substring(idx, idx+q.length);
+        var after=document.createTextNode(txt.substring(idx+q.length));
+        node.textContent=txt.substring(0,idx);
+        node.parentNode.insertBefore(span, node.nextSibling);
+        node.parentNode.insertBefore(after, span.nextSibling);
+      }
+    }else if(node.nodeType===1 && node.tagName!=='SCRIPT' && node.tagName!=='STYLE'){
+      Array.from(node.childNodes).forEach(walk);
+    }
+  }
+  walk(el);
 }
 
 function switchTab(t){
