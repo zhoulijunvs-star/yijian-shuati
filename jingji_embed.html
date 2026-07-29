@@ -295,7 +295,8 @@ body {
   .q-num { width: 26px; height: 26px; font-size: 10px; }
   .q-nums { gap: 2px; padding: 6px; }
 }
-
+.mm-link { text-decoration: none; font-size: 13px; margin-left: 4px; opacity: 0.6; transition: opacity .15s; vertical-align: middle; }
+.mm-link:hover { opacity: 1; }
 </style>
 </head>
 <body>
@@ -367,6 +368,7 @@ let mode = 'seq'; // seq | rand
 let autoNext = false;
 let answeredQ = {};  // id -> 'correct' | letter
 let selChapter = 'all';
+const MINDMAP_URL = 'jingji_mindmap.html';
 
 // ── Load data ──
 async function load() {
@@ -808,7 +810,7 @@ function showAnalysis() {
   const recs = [];
   chapters.forEach(ch => {
     if (ch.done < 3) return;
-    if (ch.acc < 50) recs.push({ level: 'high', text: `「${ch.name}」正确率仅 ${ch.acc}%，需重点攻克，建议回看讲义原文`, ch });
+    if (ch.acc < 50) recs.push({ level: 'high', text: `「${ch.name}」正确率仅 ${ch.acc}%，需重点攻克——建议回看讲义 + <a href="${MINDMAP_URL}#ch-${(ch.fullName.match(/第(\d+)章/)||[])[1]}" target="_blank" style="color:inherit;">查看思维导图 🧠</a>`, ch });
     else if (ch.acc < 70) recs.push({ level: 'medium', text: `「${ch.name}」正确率 ${ch.acc}%，加强专项练习`, ch });
   });
   const untouched = Object.entries(chStats).filter(([_, s]) => s.done === 0);
@@ -827,9 +829,11 @@ function showAnalysis() {
 
   chapters.forEach(ch => {
     const level = ch.acc < 50 ? 'weak' : ch.acc < 70 ? 'medium' : 'strong';
+    const chNum = (ch.fullName.match(/第(\d+)章/) || [])[1];
+    const mmLink = chNum ? ` <a href="${MINDMAP_URL}#ch-${chNum}" target="_blank" class="mm-link" title="跳转到思维导图对应章节">🧠</a>` : '';
     html += `
       <div class="cb-row">
-        <div class="cb-label">${ch.name}</div>
+        <div class="cb-label">${ch.name}${mmLink}</div>
         <div class="cb-track"><div class="cb-fill ${level}" style="width:${ch.acc}%"></div></div>
         <div class="cb-val">${ch.acc}% <span style="font-weight:normal;color:#999;">(${ch.done - ch.wrong}/${ch.done})</span></div>
       </div>`;
